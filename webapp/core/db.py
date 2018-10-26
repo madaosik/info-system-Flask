@@ -1,8 +1,7 @@
-from models import db
-from models import Zamestnanec
+from webapp.core.models import *
 from datetime import datetime
 
-def convert_to_date(formdata):
+def convert_to_date(self, formdata):
     try:
         dat_nar = datetime.strptime(formdata.get("dat_nar"), '%d.%m.%Y')
         dat_nar_string = dat_nar.strftime('%Y-%m-%d')
@@ -11,7 +10,7 @@ def convert_to_date(formdata):
 
     return dat_nar_string
 
-def add(formdata):
+def add_zam(formdata):
     zam = Zamestnanec(
         kr_jmeno=formdata.get("kr_jmeno"),
         prijmeni=formdata.get("prijmeni"),
@@ -28,15 +27,15 @@ def add(formdata):
     db.session.add(zam)
     db.session.commit()
 
-def fetch_all():
+def fetch_all_zam():
     zam_all = Zamestnanec.query.all()
     return zam_all
 
-def fetch_by_id(id):
+def fetch_zam_by_id(id):
     zam = Zamestnanec.query.get(id)
     return zam
 
-def update(formdata):
+def update_zam(formdata):
 
     zam = Zamestnanec.query.get(formdata.get('current_id'))
     zam.kr_jmeno = formdata.get("kr_jmeno")
@@ -52,7 +51,7 @@ def update(formdata):
 
     db.session.commit()
 
-def delete(id):
+def delete_zam(id):
     zam = Zamestnanec.query.get(id)
     db.session.delete(zam)
     db.session.commit()

@@ -18,7 +18,7 @@ import sys, os
 sys.path.append(os.getcwd())
 
 # target_metadata = mymodel.Base.metadata
-import models
+from webapp.core import models
 
 target_metadata = models.db.Model.metadata
 

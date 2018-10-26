@@ -1,9 +1,6 @@
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, DateTime, Date, TIMESTAMP, String, Integer, func, ForeignKey, PrimaryKeyConstraint
 from flask_login import UserMixin
-from webapp import login
-
-db = SQLAlchemy()
+from webapp import db,login
 
 class Zamestnanec(db.Model):
     __tablename__ = 'zamestnanec'
