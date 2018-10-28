@@ -1,8 +1,8 @@
-"""Tables with default timestamps added
+"""Database creation
 
-Revision ID: 4bdd7f3b8c64
+Revision ID: cfb421ffa772
 Revises: 
-Create Date: 2018-10-21 10:58:42.095107
+Create Date: 2018-10-27 10:15:24.876360
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '4bdd7f3b8c64'
+revision = 'cfb421ffa772'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -28,6 +28,16 @@ def upgrade():
     sa.Column('id_typu', sa.Integer(), nullable=False),
     sa.PrimaryKeyConstraint('id_typu')
     )
+    op.create_table('uzivatel',
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('login', sa.String(length=30), nullable=False),
+    sa.Column('password_hash', sa.String(length=128), nullable=False),
+    sa.Column('email', sa.String(length=30), nullable=False),
+    sa.Column('poc_prihl', sa.Integer(), nullable=True),
+    sa.Column('posl_prihl', sa.TIMESTAMP(), nullable=True),
+    sa.Column('cas_posl_zmeny', sa.TIMESTAMP(), server_default=sa.text('now()'), nullable=True),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('vozidlo',
     sa.Column('spz', sa.String(length=10), nullable=False),
     sa.Column('znacka', sa.String(length=20), nullable=True),
@@ -38,7 +48,7 @@ def upgrade():
     sa.Column('pocet_naprav', sa.Integer(), nullable=True),
     sa.Column('emisni_trida', sa.String(length=10), nullable=True),
     sa.Column('zalozeno_cas', sa.TIMESTAMP(), server_default=sa.text('now()'), nullable=False),
-    sa.Column('posl_aktual_cas', sa.TIMESTAMP(), server_default=sa.text('now()'), nullable=False),
+    sa.Column('posl_aktual_cas', sa.TIMESTAMP(), server_default=sa.text('now()'), server_onupdate=sa.text('now()'), nullable=False),
     sa.PrimaryKeyConstraint('spz')
     )
     op.create_table('zamestnanec',
@@ -54,7 +64,7 @@ def upgrade():
     sa.Column('akt_prohlidka', sa.Integer(), nullable=True),
     sa.Column('aktivni', sa.Integer(), nullable=True),
     sa.Column('zalozen_cas', sa.TIMESTAMP(), server_default=sa.text('now()'), nullable=False),
-    sa.Column('posl_aktual_cas', sa.TIMESTAMP(), server_default=sa.text('now()'), nullable=False),
+    sa.Column('posl_aktual_cas', sa.TIMESTAMP(), server_default=sa.text('now()'), server_onupdate=sa.text('now()'), nullable=False),
     sa.PrimaryKeyConstraint('id_zam')
     )
     op.create_table('cinnost',
@@ -72,7 +82,7 @@ def upgrade():
     sa.Column('adresa_uloziste', sa.String(length=30), nullable=False),
     sa.Column('platnost_do', sa.Date(), nullable=True),
     sa.Column('zalozen_cas', sa.TIMESTAMP(), server_default=sa.text('now()'), nullable=False),
-    sa.Column('posl_editace', sa.TIMESTAMP(), server_default=sa.text('now()'), nullable=False),
+    sa.Column('posl_editace', sa.TIMESTAMP(), server_default=sa.text('now()'), server_onupdate=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['id_voz'], ['vozidlo.spz'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['id_zam'], ['zamestnanec.id_zam'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['typ_dokumentu'], ['typ_dokumentu.id_typu'], ondelete='CASCADE'),
@@ -84,7 +94,7 @@ def upgrade():
     sa.Column('rok', sa.Integer(), nullable=True),
     sa.Column('narok', sa.Integer(), nullable=True),
     sa.Column('vycerpano', sa.Integer(), nullable=True),
-    sa.Column('posl_aktual', sa.TIMESTAMP(), server_default=sa.text('now()'), nullable=False),
+    sa.Column('posl_aktual', sa.TIMESTAMP(), server_default=sa.text('now()'), server_onupdate=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['id_zam'], ['zamestnanec.id_zam'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id_naroku')
     )
@@ -93,7 +103,7 @@ def upgrade():
     sa.Column('id_zam', sa.Integer(), nullable=False),
     sa.Column('absolvovano_dne', sa.Date(), nullable=True),
     sa.Column('platnost_do', sa.Date(), nullable=True),
-    sa.Column('posl_aktual', sa.TIMESTAMP(), server_default=sa.text('now()'), nullable=False),
+    sa.Column('posl_aktual', sa.TIMESTAMP(), server_default=sa.text('now()'), server_onupdate=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['id_zam'], ['zamestnanec.id_zam'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id_prohl')
     )
@@ -104,7 +114,7 @@ def upgrade():
     sa.Column('role_zam', sa.String(length=15), nullable=True),
     sa.Column('sjednana_dne', sa.Date(), nullable=True),
     sa.Column('platnost_do', sa.Date(), nullable=True),
-    sa.Column('posl_aktual', sa.TIMESTAMP(), server_default=sa.text('now()'), nullable=False),
+    sa.Column('posl_aktual', sa.TIMESTAMP(), server_default=sa.text('now()'), server_onupdate=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['id_zam'], ['zamestnanec.id_zam'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id_sml')
     )
@@ -113,24 +123,16 @@ def upgrade():
     sa.Column('id_zam', sa.Integer(), nullable=False),
     sa.Column('absolvovano_dne', sa.Date(), nullable=True),
     sa.Column('platnost_do', sa.Date(), nullable=True),
-    sa.Column('posl_aktual', sa.TIMESTAMP(), server_default=sa.text('now()'), nullable=False),
+    sa.Column('posl_aktual', sa.TIMESTAMP(), server_default=sa.text('now()'), server_onupdate=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['id_zam'], ['zamestnanec.id_zam'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id_skol')
-    )
-    op.create_table('uzivatel',
-    sa.Column('id_zam', sa.Integer(), nullable=False),
-    sa.Column('email', sa.String(length=30), nullable=False),
-    sa.Column('poc_prihl', sa.Integer(), nullable=True),
-    sa.Column('posl_prihl', sa.TIMESTAMP(), nullable=True),
-    sa.ForeignKeyConstraint(['id_zam'], ['zamestnanec.id_zam'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id_zam', 'email')
     )
     op.create_table('denni_evidence',
     sa.Column('id_cinnosti', sa.Integer(), nullable=False),
     sa.Column('id_zam', sa.Integer(), nullable=False),
     sa.Column('den_uskut', sa.Date(), nullable=True),
     sa.Column('cas_uloz', sa.TIMESTAMP(), server_default=sa.text('now()'), nullable=False),
-    sa.Column('cas_zmeny', sa.TIMESTAMP(), server_default=sa.text('now()'), nullable=False),
+    sa.Column('cas_zmeny', sa.TIMESTAMP(), server_default=sa.text('now()'), server_onupdate=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['id_cinnosti'], ['cinnost.id_cinnosti'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['id_zam'], ['zamestnanec.id_zam'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id_cinnosti', 'id_zam')
@@ -141,7 +143,6 @@ def upgrade():
 def downgrade():
     # ### commands auto generated by Alembic - please adjust! ###
     op.drop_table('denni_evidence')
-    op.drop_table('uzivatel')
     op.drop_table('skoleni_ridicu')
     op.drop_table('pracovni_sml')
     op.drop_table('lekarska_prohl')
@@ -150,6 +151,7 @@ def downgrade():
     op.drop_table('cinnost')
     op.drop_table('zamestnanec')
     op.drop_table('vozidlo')
+    op.drop_table('uzivatel')
     op.drop_table('typ_dokumentu')
     op.drop_table('sazba')
     # ### end Alembic commands ###

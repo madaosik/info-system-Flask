@@ -1,47 +1,23 @@
 {% extends "base.html" %}
+{% from "_formhelpers.html" import render_field  %}
 
 {% block content %}
 <div class="container">
-<h1>Upravit zaměstnance: {{ employee.kr_jmeno }}&nbsp;{{ employee.prijmeni }}</h1>
+    <div class="content-container">
+        <h3>Upravit zaměstnance: {{ employee.kr_jmeno }}&nbsp;{{ employee.prijmeni }}</h3>
 
-<p><a href="{{ url_for('zamestnanci') }}"><< Zpět na přehled zaměstnanců</a></p>
+        <p><a href="{{ url_for('zamestnanci') }}"><< Zpět na přehled zaměstnanců</a></p>
 
-<form method="POST" action="/zamestnanci">
-<input type="hidden" value="{{ employee.id_zam }}" name="current_id">
-    <table>
-        <tr>
-            <td>Křestní jméno</td>
-            <td><input type="text" name="kr_jmeno" value={{ employee.kr_jmeno }}></td>
-        </tr>
-        <tr>
-            <td>Příjmení</td>
-            <td><input type="text" name="prijmeni" value={{ employee.prijmeni }}></td>
-        </tr>
-        <tr>
-            <td>Datum narození</td>
-            <td><input type="text" name="dat_nar" value={{ employee.dat_nar }}></td>
-        </tr>
-        <tr>
-            <td>Trvalé bydliště</td>
-            <td><input type="text" name="trv_bydliste" value={{ employee.trv_bydliste }}></td>
-        </tr>
-        <tr>
-            <td>Přechodné bydliště</td>
-            <td><input type="text" name="prech_bydliste" value={{ employee.prech_bydliste }}></td>
-        </tr>
-        <tr>
-            <td>Telefon</td>
-            <td><input type="text" name="telefon" value={{ employee.telefon }}></td>
-        </tr>
-        <tr>
-            <td>Číslo pracovní smlouvy</td>
-            <td><input type="text" name="prac_sml" value={{ employee.prac_sml }}></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td><input type="submit"></td>
-    </table>
-</form>
+        <form method="POST" action="/auth/zamestnanci">
+            <input type="hidden" value="{{ employee.id_zam }}" name="current_id">
+                {{ form.csrf_token }}
+                <table>
+                    {% for field in form %}
+                        {{ render_field(field,form) }}
+                    {% endfor %}
+                </table>
+        </form>
+    <div class="content-container">
 </div>
 
 {% endblock %}

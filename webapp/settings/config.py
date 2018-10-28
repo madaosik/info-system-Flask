@@ -1,3 +1,3 @@
-SQLALCHEMY_DATABASE_URI = "mysql://root:12481632@localhost/IIS"
+SQLALCHEMY_DATABASE_URI = "mysql://root:12481632@localhost/iis_proj"
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SECRET_KEY = "TajnyKlic"

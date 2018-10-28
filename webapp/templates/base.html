@@ -1,13 +1,76 @@
 {% extends "bootstrap/base.html" %}
 
+{% block styles %}
+    {{super()}}
+    <link rel="stylesheet"
+          href="{{url_for('.static', filename='styles.css')}}">
+{% endblock %}
+
 {% block title %}IS dopravní společnosti{% endblock %}
 
 {% block navbar %}
-<div class="navbar navbar-fixed-top">
-  <a href="{{ url_for('welcome') }}"><< Zpět na úvodní stránku</a>
-</div>
+    <div class="container">
+        {% if current_user.is_authenticated %}
+            <p><a href="{{ url_for('logout') }}">Odhlásit</a> uživatele <b>{{ current_user.login }}</b></p>
+            <h1>Láníček Transport s.r.o.</h1>
+        {% endif %}
+    </div>
+    {% if current_user.is_authenticated %}
+        <div class = "container">
+            <div class="navbar">
+                <a class="btn btn-primary" href="{{ url_for('logged_in') }}">Nástěnka</a>
+                <div class="dropdown">
+                  <button class="btn btn-primary dropdown-toggle" type="button" id="zamestnanciButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Zaměstnanci
+                  </button>
+                      <div class="dropdown-menu" aria-labelledby="zamestnanciButton">
+                        <a class="dropdown-item" href="{{ url_for('zamestnanci') }}">Přehled zaměstnanců</a>
+                        <a class="dropdown-item" href="#">Lékařské prohlídky</a>
+                        <a class="dropdown-item" href="#">Pracovní smlouvy</a>
+                        <a class="dropdown-item" href="#">Dovolená</a>
+                        <a class="dropdown-item" href="#">Úložiště dokumentů</a>
+                      </div>
+                </div>
+
+                <div class="dropdown">
+                  <button class="btn btn-primary dropdown-toggle" type="button" id="nastenkaButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Vozový park
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="nastenkaButton">
+                    <a class="dropdown-item" href="{{ url_for('zamestnanci') }}">Přehled vozidel</a>
+                    <a class="dropdown-item" href="#">Technické kontroly</a>
+                    <a class="dropdown-item" href="#">Plánované servisní práce</a>
+                    <a class="dropdown-item" href="#">Úložiště dokumentů</a>
+                  </div>
+                </div>
+
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="evidenceCinnostiButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Evidence činností
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="evidenceCinnostiButton">
+                    <a class="dropdown-item" href="{{ url_for('zamestnanci') }}">1</a>
+                    <a class="dropdown-item" href="#">2</a>
+                    <a class="dropdown-item" href="#">3</a>
+                    <a class="dropdown-item" href="#">4</a>
+                  </div>
+                </div>
+
+                <div class="dropdown">
+                    <div class="btn-group">
+                        <a class="btn btn-primary" href="#">
+                            Správa uživatelů
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}
+
 
 {% block content %}
 {% endblock %}
+
 

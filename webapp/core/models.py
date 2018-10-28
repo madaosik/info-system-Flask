@@ -1,6 +1,7 @@
 from sqlalchemy import Column, DateTime, Date, TIMESTAMP, String, Integer, func, ForeignKey, PrimaryKeyConstraint
 from flask_login import UserMixin
 from webapp import db,login
+from werkzeug.security import generate_password_hash, check_password_hash
 
 class Zamestnanec(db.Model):
     __tablename__ = 'zamestnanec'
@@ -8,6 +9,7 @@ class Zamestnanec(db.Model):
     id_zam = Column(Integer,primary_key=True)
     kr_jmeno = Column(String(20))
     prijmeni = Column(String(20))
+    email = Column(String(30))
     dat_nar = Column(Date)
     trv_bydliste = Column(String(50))
     prech_bydliste = Column(String(50))
@@ -16,33 +18,41 @@ class Zamestnanec(db.Model):
     akt_skol_id = Column(Integer)
     akt_prohlidka = Column(Integer)
     aktivni = Column(Integer)
-    zalozen_cas = Column(TIMESTAMP,nullable=False,server_default=func.now())
-    posl_aktual_cas = Column(TIMESTAMP,nullable=False,server_default=func.now(),onupdate=func.now())
+    zalozen_cas = Column(TIMESTAMP, nullable=False, server_default=func.now())
+    posl_aktual_cas = Column(TIMESTAMP, nullable=False, server_default=func.now(), server_onupdate=func.now())
 
     def __repr__(self):
         return "<User(id='%d', name='%s')>" % (self.id_zam, self.prijmeni)
 
 class Uzivatel(UserMixin, db.Model):
     __tablename__ = 'uzivatel'
-    __table_args__ = (PrimaryKeyConstraint('id_zam', 'email'),)
 
-    id_zam = Column(Integer,ForeignKey("zamestnanec.id_zam",ondelete='CASCADE'),nullable=False)
-    email = Column(String(30),nullable=False)
+    id = Column(Integer, autoincrement=True, primary_key=True)
+    login = Column(String(30), nullable=False)
+    password_hash = Column(String(128), nullable=False)
+    email = Column(String(30), nullable=False)
     poc_prihl = Column(Integer)
-    posl_prihl = Column(TIMESTAMP, onupdate=func.now())
+    posl_prihl = Column(TIMESTAMP)
+    cas_posl_zmeny = Column(TIMESTAMP, server_default=func.now(), server_onupdate=func.now())
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
 @login.user_loader
 def load_user(id):
-    return Uzivatel.query.get(id)
+    return Uzivatel.query.get(int(id))
 
 class Skoleni_ridicu(db.Model):
     __tablename__= 'skoleni_ridicu'
 
-    id_skol = Column(Integer,primary_key=True)
-    id_zam = Column(Integer,ForeignKey("zamestnanec.id_zam",ondelete='CASCADE'),nullable=False)
+    id_skol = Column(Integer, primary_key=True)
+    id_zam = Column(Integer, ForeignKey("zamestnanec.id_zam", ondelete='CASCADE'), nullable=False)
     absolvovano_dne = Column(Date)
     platnost_do = Column(Date)
-    posl_aktual = Column(TIMESTAMP,nullable=False,server_default=func.now(),onupdate=func.now())
+    posl_aktual = Column(TIMESTAMP, nullable=False, server_default=func.now(), server_onupdate=func.now())
 
 class Lekarska_prohl(db.Model):
     __tablename__ = 'lekarska_prohl'
@@ -51,7 +61,7 @@ class Lekarska_prohl(db.Model):
     id_zam = Column(Integer, ForeignKey("zamestnanec.id_zam", ondelete='CASCADE'), nullable=False)
     absolvovano_dne = Column(Date)
     platnost_do = Column(Date)
-    posl_aktual = Column(TIMESTAMP, nullable=False, server_default=func.now(), onupdate=func.now())
+    posl_aktual = Column(TIMESTAMP, nullable=False, server_default=func.now(), server_onupdate=func.now())
 
 class Pracovni_sml(db.Model):
     __tablename__ = 'pracovni_sml'
@@ -62,7 +72,7 @@ class Pracovni_sml(db.Model):
     role_zam = Column(String(15)) # Dalsi tabulka "Role zam"?
     sjednana_dne = Column(Date)
     platnost_do = Column(Date)
-    posl_aktual = Column(TIMESTAMP, nullable=False, server_default=func.now(), onupdate=func.now())
+    posl_aktual = Column(TIMESTAMP, nullable=False, server_default=func.now(), server_onupdate=func.now())
 
 class Dovolena_zam(db.Model):
     __tablename__ = 'dovolena_zam'
@@ -72,7 +82,7 @@ class Dovolena_zam(db.Model):
     rok = Column(Integer)
     narok = Column(Integer)
     vycerpano = Column(Integer)
-    posl_aktual = Column(TIMESTAMP, nullable=False, server_default=func.now(), onupdate=func.now())
+    posl_aktual = Column(TIMESTAMP, nullable=False, server_default=func.now(), server_onupdate=func.now())
 
 class Vozidlo(db.Model):
     __tablename__ = 'vozidlo'
@@ -85,8 +95,8 @@ class Vozidlo(db.Model):
     nosnost = Column(Integer)
     pocet_naprav = Column(Integer)
     emisni_trida = Column(String(10))
-    zalozeno_cas = Column(TIMESTAMP,nullable=False,server_default=func.now())
-    posl_aktual_cas = Column(TIMESTAMP,nullable=False,server_default=func.now(),onupdate=func.now())
+    zalozeno_cas = Column(TIMESTAMP, nullable=False, server_default=func.now())
+    posl_aktual_cas = Column(TIMESTAMP, nullable=False, server_default=func.now(), server_onupdate=func.now())
 
 
 class Typ_dokumentu(db.Model):
@@ -104,8 +114,8 @@ class Dokument(db.Model):
     typ_dokumentu = Column(Integer, ForeignKey("typ_dokumentu.id_typu", ondelete='CASCADE'))
     adresa_uloziste = Column(String(30),nullable=False)
     platnost_do = Column(Date)
-    zalozen_cas = Column(TIMESTAMP,nullable=False,server_default=func.now())
-    posl_editace = Column(TIMESTAMP,nullable=False,server_default=func.now(),onupdate=func.now())
+    zalozen_cas = Column(TIMESTAMP, nullable=False, server_default=func.now())
+    posl_editace = Column(TIMESTAMP, nullable=False, server_default=func.now(), server_onupdate=func.now())
 
 class Sazba(db.Model):
     __tablename__ = 'sazba'
@@ -117,8 +127,8 @@ class Sazba(db.Model):
 class Cinnost(db.Model):
     __tablename__ = 'cinnost'
 
-    id_cinnosti = Column(Integer,primary_key=True)
-    typ_cinnosti = Column(String(30),nullable=False)
+    id_cinnosti = Column(Integer, primary_key=True)
+    typ_cinnosti = Column(String(30), nullable=False)
     odmena = Column(Integer,ForeignKey("sazba.id_sazby", ondelete='CASCADE'), nullable=False)
 
 class Denni_evidence(db.Model):
@@ -128,5 +138,5 @@ class Denni_evidence(db.Model):
     id_cinnosti = Column(Integer, ForeignKey("cinnost.id_cinnosti", ondelete='CASCADE'), nullable=False)
     id_zam = Column(Integer, ForeignKey("zamestnanec.id_zam", ondelete='CASCADE'), nullable=False)
     den_uskut = Column(Date)
-    cas_uloz = Column(TIMESTAMP,nullable=False,server_default=func.now())
-    cas_zmeny = Column(TIMESTAMP,nullable=False,server_default=func.now(),onupdate=func.now())
+    cas_uloz = Column(TIMESTAMP, nullable=False, server_default=func.now())
+    cas_zmeny = Column(TIMESTAMP, nullable=False, server_default=func.now(), server_onupdate=func.now())

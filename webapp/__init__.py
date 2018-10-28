@@ -13,4 +13,6 @@ db = SQLAlchemy(app)
 db.init_app(app)
 
 login = LoginManager(app)
+login.login_view = 'login'
 
+from webapp.views import routes

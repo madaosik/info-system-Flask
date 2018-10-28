@@ -2,58 +2,59 @@
 
 {% block content %}
 <div class="container">
-    <h1>Zaměstnanci</h1>
+    <div class="content-container">
+        <h3>Zaměstnanci</h3>
 
-    <p><a href="{{ url_for('pridat_zam') }}">Přidat zaměstnance</a></p>
-
-    {%  if employees %}
-        <table class="table table-hover table-sm">
-            <thead class="thead-light">
+        {%  if employees %}
+            <table class="table table-hover table-sm">
+                <thead class="thead-light">
+                <tr>
+                    <th>Křestní jméno</th>
+                    <th>Příjmení</th>
+                    <th>Datum narození</th>
+                    <th>Trvalé bydliště</th>
+                    <th>Přechodné bydliště</th>
+                    <th>Telefon</th>
+                    <th>Číslo pracovní smlouvy</th>
+                    <th colspan="2">Akce</th>
+                </tr>
+                </thead>
+        {% else %}
+            <p>Neevidujeme žádné zaměstnance.</p>
+        {% endif %}
+        {% for empl in employees %}
             <tr>
-                <th>Křestní jméno</th>
-                <th>Příjmení</th>
-                <th>Datum narození</th>
-                <th>Trvalé bydliště</th>
-                <th>Přechodné bydliště</th>
-                <th>Telefon</th>
-                <th>Číslo pracovní smlouvy</th>
-                <th colspan="2">Akce</th>
+                <td>{{empl.kr_jmeno}}</td>
+                <td>{{empl.prijmeni}}</td>
+                <td>
+                    {% if empl.dat_nar %}
+                        {{empl.dat_nar}}
+                    {% else %}
+                        &nbsp;
+                    {% endif %}
+                </td>
+                <td>{{empl.trv_bydliste}}</td>
+                <td>{{empl.prech_bydliste}}</td>
+                <td>{{empl.telefon}}</td>
+                <td>{{empl.prac_sml}}</td>
+                <td>
+                    <form method="POST" action="/auth/zamestnanci/{{empl.id_zam}}/upravit_zam">
+                      <input type="hidden" value="{{empl.id_zam}}" name="id_zam">
+                      <input type="submit" value="Upravit">
+                    </form>
+                </td>
+                <td>
+                    <form method="POST" action="/auth/smazat_zam">
+                      <input type="hidden" value="{{empl.id_zam}}" name="id_zam">
+                      <input type="submit" value="Smazat">
+                    </form>
+                </td>
             </tr>
-            </thead>
-    {% else %}
-        <p>Neevidujeme žádné zaměstnance.</p>
-    {% endif %}
-    {% for empl in employees %}
-        <tr>
-            <td>{{empl.kr_jmeno}}</td>
-            <td>{{empl.prijmeni}}</td>
-            <td>
-                {% if empl.dat_nar %}
-                    {{empl.dat_nar}}
-                {% else %}
-                    &nbsp;
-                {% endif %}
-            </td>
-            <td>{{empl.trv_bydliste}}</td>
-            <td>{{empl.prech_bydliste}}</td>
-            <td>{{empl.telefon}}</td>
-            <td>{{empl.prac_sml}}</td>
-            <td>
-                <form method="POST" action="zamestnanci/{{empl.id_zam}}/upravit_zam">
-                  <input type="hidden" value="{{empl.id_zam}}" name="id_zam">
-                  <input type="submit" value="Upravit">
-                </form>
-            </td>
-            <td>
-                <form method="POST" action="./smazat_zam">
-                  <input type="hidden" value="{{empl.id_zam}}" name="id_zam">
-                  <input type="submit" value="Smazat">
-                </form>
-            </td>
-        </tr>
-    {% endfor %}
-    {% if employees %}
-        </table>
-    {%  endif %}
+        {% endfor %}
+        {% if employees %}
+            </table>
+        {%  endif %}
+        <p><a href="{{ url_for('pridat_zam') }}">Přidat zaměstnance</a></p>
+    </div>
 </div>
 {% endblock %}

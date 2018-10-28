@@ -1,16 +1,20 @@
 {% extends "base.html" %}
-{% from "_formhelpers.html" import render_field %}
+{% from "_formhelpers.html" import render_field  %}
 
 {% block title %}IS - Přihlášení{% endblock %}
 {% block content %}
 <div class="container">
-    <h1>Vítejte!</h1>
-    <form method="POST" action="/">
-        {{ form.csrf_token }}
-        {{ render_field(form.email) }}
-        {{ render_field(form.password) }}
-        <input type="submit" value="Login">
-    </form>
-<p>Nový uživatel? <a href="{{ url_for('register') }}">Klikněte pro registraci!</a></p>
+    <div class="content-container">
+        <h1>Přihlášení do systému</h1>
+        <form action="" method="post" novalidate>
+            {{ form.csrf_token }}
+            <table>
+                {% for field in form %}
+                {{ render_field(field,form) }}
+            {% endfor %}
+            </table>
+        <p>Nový uživatel? <a href="{{ url_for('register') }}">Klikněte pro registraci!</a></p>
+        </form>
+    </div>
 </div>
 {% endblock %}

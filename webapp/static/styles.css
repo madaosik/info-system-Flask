@@ -1,0 +1,29 @@
+.content-container {
+    padding-top: 20px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.dropdown-menu {
+    margin: 0px;
+}
+
+p.uptodate {
+    padding-left: 20px;
+    font-weight: bold;
+    color: green;
+}
+
+.btn-primary:hover, .dropdown-item:hover {
+    background-color: red;
+    color: white;
+}
+
+.dropdown:hover>.dropdown-menu {
+    display: block;
+}
+
+.dropdown>.dropdown-toggle:active {
+  /*Without this, clicking will make it sticky*/
+    pointer-events: none;
+}

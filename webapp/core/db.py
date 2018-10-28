@@ -1,7 +1,7 @@
 from webapp.core.models import *
 from datetime import datetime
 
-def convert_to_date(self, formdata):
+def convert_to_date(formdata):
     try:
         dat_nar = datetime.strptime(formdata.get("dat_nar"), '%d.%m.%Y')
         dat_nar_string = dat_nar.strftime('%Y-%m-%d')
@@ -55,3 +55,12 @@ def delete_zam(id):
     zam = Zamestnanec.query.get(id)
     db.session.delete(zam)
     db.session.commit()
+
+def fetch_all_pending_approvals():
+    pass
+
+def fetch_all_pending_vacation():
+    pass
+
+def fetch_notifications():
+    pass

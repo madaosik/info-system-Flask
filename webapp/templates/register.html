@@ -1,9 +1,18 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div class="container">
     <h1>Registrace nového uživatele</h1>
     <form action="" method="post">
         {{ form.hidden_tag() }}
+        <p>
+            {{ form.login.label }}<br>
+            {{ form.login(size=64) }}<br>
+            {% for error in form.login.errors %}
+            <span style="color: #ff000c;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+
         <p>
             {{ form.email.label }}<br>
             {{ form.email(size=64) }}<br>
@@ -27,4 +36,5 @@
         </p>
         <p>{{ form.submit() }}</p>
     </form>
+</div>
 {% endblock %}
