@@ -1,25 +1,21 @@
 {% extends "base.html" %}
 
-{% block content %}
-<div class="container">
-    <div class="content-container">
-        <h3>Vítej, {{ current_user.login }}!</h3>
-        <br>
-        <h4>Aktivity ke schválení:</h4>
-        {% if act %}
-        {% else %}
-            <p class="uptodate">Nenašli jsme žádné aktivity vyžadující Vaše schválení.</p>
-        {% endif %}
-        <h4>Dovolená ke schválení:</h4>
-        {% if vac %}
-        {% else %}
-            <p class="uptodate">Nenašli jsme žádné žádosti o dovolenou vyžadující Vaše schválení.</p>
-        {% endif %}
-        <h4>Upozornění:</h4>
-        {% if notif %}
-        {% else %}
-            <p class="uptodate">Nenašli jsme žádné skutečnosti hodné Vaší pozornosti.</p>
-        {% endif %}
-    </div>
-</div>
+{% block app_content %}
+    <h3>Vítej, {{ current_user.login }}!</h3>
+    <br>
+    <h4>Aktivity ke schválení:</h4>
+    {% if act %}
+    {% else %}
+        <p class="uptodate">Nenašli jsme žádné aktivity vyžadující Vaše schválení.</p>
+    {% endif %}
+    <h4>Dovolená ke schválení:</h4>
+    {% if vac %}
+    {% else %}
+        <p class="uptodate">Nenašli jsme žádné žádosti o dovolenou vyžadující Vaše schválení.</p>
+    {% endif %}
+    <h4>Upozornění:</h4>
+    {% if notif %}
+    {% else %}
+        <p class="uptodate">Nenašli jsme žádné skutečnosti hodné Vaší pozornosti.</p>
+    {% endif %}
 {% endblock %}

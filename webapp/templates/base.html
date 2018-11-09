@@ -11,7 +11,7 @@
 {% block navbar %}
     <div class="container">
         {% if current_user.is_authenticated %}
-            <p><a href="{{ url_for('logout') }}">Odhlásit</a> uživatele <b>{{ current_user.login }}</b></p>
+            <p class="login"><a href="{{ url_for('logout') }}">Odhlásit</a> uživatele <b>{{ current_user.login }}</b></p>
             <h1>Láníček Transport s.r.o.</h1>
         {% endif %}
     </div>
@@ -19,13 +19,24 @@
         <div class = "container">
             <div class="navbar">
                 <a class="btn btn-primary" href="{{ url_for('logged_in') }}">Nástěnka</a>
+
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="evidenceCinnostiButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Evidence činností
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="evidenceCinnostiButton">
+                    <a class="dropdown-item" href="#">Přehled aktivit</a>
+                    <a class="dropdown-item" href="#">Docházka</a>
+                  </div>
+                </div>
+
                 <div class="dropdown">
                   <button class="btn btn-primary dropdown-toggle" type="button" id="zamestnanciButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Zaměstnanci
                   </button>
                       <div class="dropdown-menu" aria-labelledby="zamestnanciButton">
                         <a class="dropdown-item" href="{{ url_for('zamestnanci') }}">Přehled zaměstnanců</a>
-                        <a class="dropdown-item" href="#">Lékařské prohlídky</a>
+                        <a class="dropdown-item" href="{{ url_for('lek_prohlidky') }}">Lékařské prohlídky</a>
                         <a class="dropdown-item" href="#">Pracovní smlouvy</a>
                         <a class="dropdown-item" href="#">Dovolená</a>
                         <a class="dropdown-item" href="#">Úložiště dokumentů</a>
@@ -37,7 +48,7 @@
                     Vozový park
                   </button>
                   <div class="dropdown-menu" aria-labelledby="nastenkaButton">
-                    <a class="dropdown-item" href="{{ url_for('zamestnanci') }}">Přehled vozidel</a>
+                    <a class="dropdown-item" href="#">Přehled vozidel</a>
                     <a class="dropdown-item" href="#">Technické kontroly</a>
                     <a class="dropdown-item" href="#">Plánované servisní práce</a>
                     <a class="dropdown-item" href="#">Úložiště dokumentů</a>
@@ -45,20 +56,8 @@
                 </div>
 
                 <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle" type="button" id="evidenceCinnostiButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Evidence činností
-                  </button>
-                  <div class="dropdown-menu" aria-labelledby="evidenceCinnostiButton">
-                    <a class="dropdown-item" href="{{ url_for('zamestnanci') }}">1</a>
-                    <a class="dropdown-item" href="#">2</a>
-                    <a class="dropdown-item" href="#">3</a>
-                    <a class="dropdown-item" href="#">4</a>
-                  </div>
-                </div>
-
-                <div class="dropdown">
                     <div class="btn-group">
-                        <a class="btn btn-primary" href="#">
+                        <a class="btn btn-primary" href="{{ url_for('user_maintenance') }}">
                             Správa uživatelů
                         </a>
                     </div>
@@ -69,8 +68,16 @@
     {% endif %}
 {% endblock %}
 
-
 {% block content %}
+    <div class="container">
+        <div class="content-container">
+            {% block app_content %}
+            {% endblock %}
+        </div>
+    </div>
 {% endblock %}
+
+
+
 
 

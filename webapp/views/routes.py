@@ -19,6 +19,7 @@ def login():
             flash('Neznámý e-mail nebo neplatné heslo!')
             return redirect(url_for('login'))
         login_user(user, remember=form.remember_me.data)
+        log_visit(user)
         return redirect(url_for('logged_in'))
     return render_template('login.html', title='Přihlášení', form=form)
 
@@ -85,3 +86,14 @@ def smazat_zam():
 def logout():
     logout_user()
     return redirect(url_for('login'))
+
+@app.route('/users')
+@login_required
+def user_maintenance():
+    users = fetch_all_users()
+    return render_template('users.html', users=users)
+
+@app.route('/lek_prohlidky')
+@login_required
+def lek_prohlidky():
+    return render_template('lek_prohlidky.html')

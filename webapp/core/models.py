@@ -31,6 +31,7 @@ class Uzivatel(UserMixin, db.Model):
     login = Column(String(30), nullable=False)
     password_hash = Column(String(128), nullable=False)
     email = Column(String(30), nullable=False)
+    role = Column(String(10), server_default='user')
     poc_prihl = Column(Integer)
     posl_prihl = Column(TIMESTAMP)
     cas_posl_zmeny = Column(TIMESTAMP, server_default=func.now(), server_onupdate=func.now())

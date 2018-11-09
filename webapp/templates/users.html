@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <h3>Registrovaní uživatelé</h3>
+        <table class="table table-hover table-sm">
+                <thead class="thead-light">
+                <tr>
+                    <th>Login</th>
+                    <th>E-mail</th>
+                    <th>Počet přihlášení</th>
+                    <th>Poslední přihlášení</th>
+                    <th>Čas poslední změny</th>
+                    <th colspan="2">Akce</th>
+                </tr>
+                </thead>
+        {% for user in users %}
+            <tr>
+                <td>{{user.login}}</td>
+                <td>{{user.email}}</td>
+                <td>{{user.poc_prihl}}</td>
+                <td>{{user.posl_prihl}}</td>
+                <td>{{user.cas_posl_zmeny}}</td>
+                <td>
+                    <form method="POST" action="/auth/users/{{user.id}}/upravit">
+                      <input type="hidden" value="{{user.id}}" name="id_zam">
+                      <input type="submit" value="Upravit">
+                    </form>
+                </td>
+                <td>
+                    <form method="POST" action="/auth/users/smazat">
+                      <input type="hidden" value="{{user.id}}" name="id_zam">
+                      <input type="submit" value="Smazat">
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+{% endblock %}

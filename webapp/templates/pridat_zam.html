@@ -1,22 +1,17 @@
 {% extends "base.html" %}
 {% from "_formhelpers.html" import render_field  %}
 
-{% block content %}
-<div class="container">
-    <div class="content-container">
-        <h3>Přidat zaměstnance</h3>
-            <a href="{{ url_for('zamestnanci') }}"><< Zpět na přehled zaměstnanců</a>
-        <br><br>
+{% block app_content %}
+    <h3>Přidat zaměstnance</h3>
+        <a href="{{ url_for('zamestnanci') }}"><< Zpět na přehled zaměstnanců</a>
+    <br><br>
 
-        <form method="post" action="/auth/zamestnanci" novalidate>
-            {{ form.csrf_token }}
-            <table>
-            {% for field in form %}
-                    {{ render_field(field,form) }}
-            {% endfor %}
-            </table>
-        </form>
-    </div>
-</div>
-
+    <form method="post" action="/auth/zamestnanci" novalidate>
+        {{ form.csrf_token }}
+        <table>
+        {% for field in form %}
+                {{ render_field(field,form) }}
+        {% endfor %}
+        </table>
+    </form>
 {% endblock %}

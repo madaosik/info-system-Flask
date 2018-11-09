@@ -14,6 +14,10 @@ p.uptodate {
     color: green;
 }
 
+p.login {
+    float: right;
+}
+
 .btn-primary:hover, .dropdown-item:hover {
     background-color: red;
     color: white;
