@@ -1,5 +1,5 @@
-#Informační systém dopravní společnosti
-##Technologie & moduly
+# Informační systém dopravní společnosti
+## Technologie & moduly
 
 - Python (Flask framework) + MySQL (viz soubor requirements.txt)
     - modul Alembic na správu migrací databáze
@@ -7,7 +7,7 @@
     - modul FlaskWTForms na jednoduché vytváření formulářů
     - a další
     
-##Funkcionality & popis částí systému
+## Funkcionality & popis částí systému
 
 - **Nástěnka**
     - role *vedoucí & admin & finance*:
