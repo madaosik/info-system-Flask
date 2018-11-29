@@ -1,45 +1,45 @@
 from webapp.core.models import *
-from datetime import datetime
+from webapp.views.forms import *
+#from datetime import datetime
 import sqlalchemy as sa
 
-def convert_to_date(formdata):
-    try:
-        dat_nar = datetime.strptime(formdata.get("dat_nar"), '%d.%m.%Y')
-        dat_nar_string = dat_nar.strftime('%Y-%m-%d')
-    except:
-        dat_nar_string = None
 
-    return dat_nar_string
+def get_db_entity(i):
+    switcher = {
+        'zamestnanci': {
+            'instance': Zamestnanec(),
+            'form': Zam_form(),
+            'add_text': "Přidat zaměstnance",
+            'edit_text': "Upravit zaměstnance:",
+            'homepage_view': "zamestnanci",
+            'form_page': "zam_form.html",
+        },
+        'vozidla': {
+            'instance': Vozidlo(),
+            'form': Auto_form(),
+            'add_text': "Přidat vozidlo",
+            'edit_text': "Upravit vozidlo:",
+            'homepage_view': "vozidla",
+            'form_page': "auto_form.html",
+        }
+    }
+    return switcher.get(i, "Neznámá entita")
 
-def add_zam(formdata):
-    zam = Zamestnanec(
-        kr_jmeno=formdata.get("kr_jmeno"),
-        prijmeni=formdata.get("prijmeni"),
-        trv_bydliste=formdata.get("trv_bydliste"),
-        prech_bydliste=formdata.get("prech_bydliste"),
-        telefon=formdata.get("telefon"),
-        prac_sml=formdata.get("prac_sml")
-    )
+# def convert_to_date(formdata):
+#     try:
+#         dat_nar = datetime.strptime(formdata.get("dat_nar"), '%d.%m.%Y')
+#         dat_nar_string = dat_nar.strftime('%Y-%m-%d')
+#     except:
+#         dat_nar_string = None
+#
+#     return dat_nar_string
 
-    dat_nar_string = convert_to_date(formdata)
-    if dat_nar_string:
-        zam.dat_nar = dat_nar_string
-
-    db.session.add(zam)
+def db_add(object):
+    db.session.add(object)
     db.session.commit()
 
 
 def add_car(formdata):
-    car = Vozidlo(
-        spz=formdata.get("spz"),
-        znacka=formdata.get("znacka"),
-        model=formdata.get("model"),
-        rok_vyroby=formdata.get("rok_vyroby"),
-        vykon=formdata.get("vykon"),
-        nosnost=formdata.get("nosnost"),
-        pocet_naprav=formdata.get("pocet_naprav"),
-        emisni_trida = formdata.get("emisni_trida"),
-    )
     db.session.add(car)
     db.session.commit()
 

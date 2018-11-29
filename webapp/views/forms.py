@@ -30,7 +30,7 @@ class Zam_form(FlaskForm):
     submit = SubmitField('Uložit')
 
 
-class Car_form(FlaskForm):
+class Auto_form(FlaskForm):
     spz = StringField('SPZ', validators=[InputRequired("Zadejte SPZ!")])
     znacka = StringField('Značka', validators=[InputRequired("Zadejte značku vozidla!")])
     model = StringField('Model')

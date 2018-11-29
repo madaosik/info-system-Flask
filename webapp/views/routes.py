@@ -2,7 +2,6 @@ from flask import render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_user, login_required, logout_user
 
 from webapp import app
-from webapp.core.models import Uzivatel
 from webapp.views.forms import *
 
 from webapp.core.db import *
@@ -59,19 +58,18 @@ def zamestnanci():
 @app.route('/auth/<entity>/new',methods=['GET','POST'])
 @login_required
 def pridat(entity):
-    if entity=='zamestnanci':
-        add_form = Zam_form()
+    db_entity = get_db_entity(entity)
+    add_form = db_entity['form']
     if add_form.validate_on_submit():
-        employee = Zamestnanec()
-        add_form.populate_obj(employee)
-        db.session.add(employee)
-        db.session.commit()
-        return redirect(url_for('zamestnanci'))
-    return render_template('zam_form.html', action="Přidat zaměstnance", form=add_form)
+        add_form.populate_obj(db_entity['instance'])
+        db_add(db_entity['instance'])
+        return redirect(url_for(db_entity['homepage_view']))
+    return render_template(db_entity['form_page'], action=db_entity['add_text'], form=add_form)
 
 @app.route('/auth/<entity>/uprav/<id>',methods=['GET','POST'])
 @login_required
 def upravit(entity, id):
+    db_entity = get_db_entity(entity)
     if entity == 'zamestnanci':
         employee = Zamestnanec.query.get(id)
         edit_form = Zam_form(obj=employee)
@@ -79,7 +77,7 @@ def upravit(entity, id):
         edit_form.populate_obj(employee)
         db.session.commit()
         return redirect(url_for('zamestnanci'))
-    return render_template('zam_form.html', action="Upravit zaměstnance:", empl=employee, form=edit_form)
+    return render_template('zam_form.html', action="Upravit zaměstnance:", object=employee, form=edit_form)
 
 
 @app.route('/auth/<entity>/smazat/<id>',methods=['GET','POST'])

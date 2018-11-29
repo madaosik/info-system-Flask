@@ -9,7 +9,7 @@
     {% if action=='Přidat zaměstnance'%}
     <form method="POST" action="{{ url_for('pridat',entity='zamestnanci') }}">
     {% else %}
-    <form method="POST" action="{{ url_for('upravit',entity='zamestnanci', id=empl.id_zam) }}">
+    <form method="POST" action="{{ url_for('upravit',entity='zamestnanci', id=object.id_zam) }}">
     {% endif %}
         {{ form.csrf_token }}
         <table class="form_table">

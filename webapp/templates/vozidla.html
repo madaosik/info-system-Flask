@@ -11,7 +11,7 @@
                 <th>Model</th>
                 <th>Platnost technické kontroly</th>
                 <th>Platnost LÄRMES certifikátu</th>
-                <th></th>
+                <th colspan="2">Akce</th>
             </tr>
             </thead>
     {% else %}
@@ -24,9 +24,13 @@
             <td></td>
             <td></td>
             <td>
-                <form method="POST" action="/auth/vozidla/{{car.spz}}/detail">
-                  <input type="hidden" value="{{car.spz}}" name="spz">
+                <form method="GET" action="{{ url_for('upravit', entity='vozidla', id = car.spz) }}">
                   <input type="submit" value="Detail">
+                </form>
+            </td>
+            <td>
+                <form method="GET" action="{{ url_for('smazat', entity='vozidla', id = car.spz) }}">
+                  <input type="submit" value="Smazat">
                 </form>
             </td>
         </tr>
@@ -34,5 +38,5 @@
     {% if cars %}
         </table>
     {%  endif %}
-    <p><a href="{{ url_for('pridat_vozidlo') }}">Přidat vozidlo</a></p>
+    <p><a href="{{ url_for('pridat', entity='vozidla') }}">Přidat vozidlo</a></p>
 {% endblock %}
