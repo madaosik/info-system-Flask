@@ -25,7 +25,7 @@
                         Evidence činností
                   </button>
                   <div class="dropdown-menu" aria-labelledby="evidenceCinnostiButton">
-                    <a class="dropdown-item" href="#">Přehled aktivit</a>
+                    <a class="dropdown-item" href="{{ url_for('show_all', entity='aktivity') }}">Přehled aktivit</a>
                     <a class="dropdown-item" href="#">Docházka</a>
                   </div>
                 </div>
@@ -35,8 +35,8 @@
                     Zaměstnanci
                   </button>
                       <div class="dropdown-menu" aria-labelledby="zamestnanciButton">
-                        <a class="dropdown-item" href="{{ url_for('zamestnanci') }}">Přehled zaměstnanců</a>
-                        <a class="dropdown-item" href="{{ url_for('lek_prohlidky') }}">Lékařské prohlídky</a>
+                        <a class="dropdown-item" href="{{ url_for('show_all', entity='zamestnanci') }}">Přehled zaměstnanců</a>
+                        <a class="dropdown-item" href="{{ url_for('show_all', entity='lekarske_prohlidky') }}">Lékařské prohlídky</a>
                         <a class="dropdown-item" href="#">Pracovní smlouvy</a>
                         <a class="dropdown-item" href="#">Dovolená</a>
                         <a class="dropdown-item" href="#">Úložiště dokumentů</a>
@@ -48,7 +48,7 @@
                     Vozový park
                   </button>
                   <div class="dropdown-menu" aria-labelledby="nastenkaButton">
-                    <a class="dropdown-item" href="{{ url_for('vozidla') }}">Přehled vozidel</a>
+                    <a class="dropdown-item" href="{{ url_for('show_all', entity='vozidla') }}">Přehled vozidel</a>
                     <a class="dropdown-item" href="#">Technické kontroly</a>
                     <a class="dropdown-item" href="#">Plánované servisní práce</a>
                     <a class="dropdown-item" href="#">Úložiště dokumentů</a>
@@ -57,7 +57,7 @@
 
                 <div class="dropdown">
                     <div class="btn-group">
-                        <a class="btn btn-primary" href="{{ url_for('user_maintenance') }}">
+                        <a class="btn btn-primary" href="{{ url_for('show_all', entity='uzivatele') }}">
                             Správa uživatelů
                         </a>
                     </div>

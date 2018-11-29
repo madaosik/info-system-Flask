@@ -4,8 +4,55 @@ from flask_login import current_user, login_user, login_required, logout_user
 from webapp import app
 from webapp.views.forms import *
 
-from webapp.core.db import *
+from webapp.core import db
 from webapp.core.auth import LoginForm, RegistrationForm
+
+# ----------- BASIC VIEWS AND MODIFICATIONS ----------------------------
+
+@app.route('/auth/<entity>/new',methods=['GET','POST'])
+@login_required
+def pridat(entity):
+    db_entity = db.get_db_entity(entity)
+    add_form = db_entity['form_class']()
+    if add_form.validate_on_submit():
+        instance = db.get_obj_by_clsname(db_entity['class'])
+        add_form.populate_obj(instance)
+        db.add(instance)
+        return redirect(url_for('show_all', entity=entity))
+    return render_template(db_entity['form_page'], action=db_entity['add_text'], form=add_form)
+
+@app.route('/auth/<entity>/uprav/<id>',methods=['GET','POST'])
+@login_required
+def upravit(entity, id):
+    db_entity = db.get_db_entity(entity)
+    instance = db.get_obj_by_id(db_entity['class'],id)
+    edit_form = db.get_obj_by_clsname(db_entity['form_class'],initobject=instance)
+    if edit_form.validate_on_submit():
+        db.update_from_form(instance,edit_form)
+        return redirect(url_for('show_all', entity=entity))
+    return render_template(db_entity['form_page'], action=db_entity['edit_text'], object=instance, form=edit_form)
+
+
+@app.route('/auth/<entity>/smazat/<id>',methods=['GET','POST'])
+@login_required
+def smazat(entity, id):
+    db_entity = db.get_db_entity(entity)
+    instance = db.get_obj_by_id(db_entity['class'],id)
+    db.delete(instance)
+    return redirect(url_for('show_all', entity=entity))
+
+
+@app.route('/auth/<entity>')
+@login_required
+def show_all(entity):
+    db_entity = db.get_db_entity(entity)
+    all_instances = db.fetch_all_by_cls(db_entity['class'])
+    return render_template(db_entity['homepage'], all=all_instances)
+
+
+
+# ------------ USER MANAGEMENT VIEW FUNCTIONS-----------------
+
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
@@ -39,75 +86,17 @@ def register():
 @app.route('/auth')
 @login_required
 def logged_in():
-    approvals_activites = fetch_all_pending_approvals()
-    approvals_vacation = fetch_all_pending_vacation()
-    notifications = fetch_notifications()
+    approvals_activites = db.fetch_all_pending_approvals()
+    approvals_vacation = db.fetch_all_pending_vacation()
+    notifications = db.fetch_notifications()
     return render_template('auth_index.html',
                            title='Interní IS dopravní společnosti',
                            act=approvals_activites,
                            vac=approvals_vacation,
                            notif=notifications)
 
-@app.route('/auth/zamestnanci', methods=['GET', 'POST'])
-@login_required
-def zamestnanci():
-    employees = Zamestnanec.query.all()
-    return render_template('zamestnanci.html', employees=employees)
-
-
-@app.route('/auth/<entity>/new',methods=['GET','POST'])
-@login_required
-def pridat(entity):
-    db_entity = get_db_entity(entity)
-    add_form = db_entity['form']
-    if add_form.validate_on_submit():
-        add_form.populate_obj(db_entity['instance'])
-        db_add(db_entity['instance'])
-        return redirect(url_for(db_entity['homepage_view']))
-    return render_template(db_entity['form_page'], action=db_entity['add_text'], form=add_form)
-
-@app.route('/auth/<entity>/uprav/<id>',methods=['GET','POST'])
-@login_required
-def upravit(entity, id):
-    db_entity = get_db_entity(entity)
-    if entity == 'zamestnanci':
-        employee = Zamestnanec.query.get(id)
-        edit_form = Zam_form(obj=employee)
-    if edit_form.validate_on_submit():
-        edit_form.populate_obj(employee)
-        db.session.commit()
-        return redirect(url_for('zamestnanci'))
-    return render_template('zam_form.html', action="Upravit zaměstnance:", object=employee, form=edit_form)
-
-
-@app.route('/auth/<entity>/smazat/<id>',methods=['GET','POST'])
-@login_required
-def smazat(entity, id):
-    if entity == 'zamestnanci':
-        zam = Zamestnanec.query.get(id)
-        db.session.delete(zam)
-        db.session.commit()
-        return redirect("/auth/zamestnanci")
-
-@app.route('/auth/vozidla', methods=['GET', 'POST'])
-@login_required
-def vozidla():
-    cars = Vozidlo.query.all()
-    return render_template('vozidla.html', cars=cars)
-
 @app.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('login'))
 
-@app.route('/users')
-@login_required
-def user_maintenance():
-    users = Uzivatel.query.all()
-    return render_template('users.html', users=users)
-
-
-@app.route('/lek_prohlidky')
-@login_required
-def lek_prohlidky():
-    return render_template('lek_prohlidky.html')

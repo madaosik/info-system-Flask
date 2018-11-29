@@ -35,10 +35,11 @@ class Auto_form(FlaskForm):
     znacka = StringField('Značka', validators=[InputRequired("Zadejte značku vozidla!")])
     model = StringField('Model')
     rok_vyroby = IntegerField('Rok výroby', validators=[NumberRange(min=1995,max=2018,message="Zadejte platný rok výroby!")])
-    výkon = IntegerField('Výkon(kw)')
+    vykon = IntegerField('Výkon(kw)')
     nosnost = IntegerField('Nosnost')
     pocet_naprav = IntegerField('Počet náprav', validators=[NumberRange(min=2,max=10,message="Zadejte počet náprav mezi 2 a 10!")])
     emisni_trida = StringField('Emisní třída')
     submit = SubmitField('Přidat')
 
-
+class Lekar_form(FlaskForm):
+    pass

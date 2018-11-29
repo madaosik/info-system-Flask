@@ -3,7 +3,7 @@
 
 {% block app_content %}
     <h3>{{ action }} {{ name }}</h3>
-        <a href="{{ url_for('zamestnanci') }}"><< Zpět na přehled zaměstnanců</a>
+        <a href="{{ url_for('show_all', entity='zamestnanci') }}"><< Zpět na přehled zaměstnanců</a>
     <br><br>
 
     {% if action=='Přidat zaměstnance'%}
