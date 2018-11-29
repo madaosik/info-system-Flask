@@ -11,13 +11,7 @@
                 <th>Příjmení</th>
                 <th>Platnost lékařské prohlídky</th>
                 <th>Platnost profesního školení</th>
-                <th></th>
-                {#<th>Datum narození</th>
-                <th>Trvalé bydliště</th>
-                <th>Přechodné bydliště</th>
-                <th>Telefon</th>
-                <th>Číslo pracovní smlouvy</th>
-                <th colspan="2">Akce</th>#}
+                <th colspan="2">Akce</th>
             </tr>
             </thead>
     {% else %}
@@ -29,35 +23,20 @@
             <td>{{empl.prijmeni}}</td>
             <td></td>
             <td></td>
-            {#
             <td>
-                {% if empl.dat_nar %}
-                    {{empl.dat_nar}}
-                {% else %}
-                    &nbsp;
-                {% endif %}
-            </td>
-            <td>{{empl.trv_bydliste}}</td>
-            <td>{{empl.prech_bydliste}}</td>
-            <td>{{empl.telefon}}</td>
-            <td>{{empl.prac_sml}}</td>#}
-            <td>
-                <form method="POST" action="/auth/zamestnanci/{{empl.id_zam}}/detail">
-                  <input type="hidden" value="{{empl.id_zam}}" name="id_zam">
+                <form method="GET" action="{{ url_for('upravit', entity='zamestnanci', id = empl.id_zam) }}">
                   <input type="submit" value="Detail">
                 </form>
             </td>
-            {#
             <td>
-                <form method="POST" action="/auth/smazat_zam">
-                  <input type="hidden" value="{{empl.id_zam}}" name="id_zam">
+                <form method="GET" action="{{ url_for('smazat',entity='zamestnanci', id = empl.id_zam) }}">
                   <input type="submit" value="Smazat">
                 </form>
-            </td>  #}
+            </td>
         </tr>
     {% endfor %}
     {% if employees %}
         </table>
     {%  endif %}
-    <p><a href="{{ url_for('pridat_zam') }}">Přidat zaměstnance</a></p>
+    <p><a href="{{ url_for('pridat',entity='zamestnanci') }}">Přidat zaměstnance</a></p>
 {% endblock %}

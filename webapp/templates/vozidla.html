@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <h3>Vozidla v evidenci</h3>
+
+    {%  if cars %}
+        <table class="table table-hover table-sm">
+            <thead class="thead-light">
+            <tr>
+                <th>SPZ</th>
+                <th>Model</th>
+                <th>Platnost technické kontroly</th>
+                <th>Platnost LÄRMES certifikátu</th>
+                <th></th>
+            </tr>
+            </thead>
+    {% else %}
+        <p>Neevidujeme žádná vozidla.</p>
+    {% endif %}
+    {% for car in cars %}
+        <tr>
+            <td>{{car.spz}}</td>
+            <td>{{car.model}}</td>
+            <td></td>
+            <td></td>
+            <td>
+                <form method="POST" action="/auth/vozidla/{{car.spz}}/detail">
+                  <input type="hidden" value="{{car.spz}}" name="spz">
+                  <input type="submit" value="Detail">
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+    {% if cars %}
+        </table>
+    {%  endif %}
+    <p><a href="{{ url_for('pridat_vozidlo') }}">Přidat vozidlo</a></p>
+{% endblock %}

@@ -18,6 +18,23 @@ p.login {
     float: right;
 }
 
+.form_error {
+    font-color: red;
+}
+
+table.form_table {
+    border-spacing: 7px;
+    border-collapse: separate;
+}
+
+td.form_error {
+    color: red;
+}
+
+table th {
+    text-align: center;
+}
+
 .btn-primary:hover, .dropdown-item:hover {
     background-color: red;
     color: white;

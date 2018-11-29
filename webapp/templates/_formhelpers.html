@@ -5,14 +5,12 @@
         <td>{{ field(**kwargs)|safe }}</td>
     {% else %}
         <td>{{ field.label }}</td>
-        <td>{{ field(**kwargs)|safe }}</td>
+        <td>{{ field(size=30,**kwargs)|safe }}</td>
     {% endif %}
-  </tr>
-  {% if field.errors %}
-    <ul class=errors>
-    {% for error in field.errors %}
-      <li>{{ error }}</li>
-    {% endfor %}
-    </ul>
+    {% if field.errors %}
+        {% for error in field.errors %}
+            <td class="form_error">{{ error }}</td>
+        {% endfor %}
   {% endif %}
+  </tr>
 {% endmacro %}

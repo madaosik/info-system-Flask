@@ -52,35 +52,50 @@ def logged_in():
 @app.route('/auth/zamestnanci', methods=['GET', 'POST'])
 @login_required
 def zamestnanci():
-    if request.form:
-        if request.form.get('current_id'):
-            update_zam(request.form)
-        else:
-            add_zam(request.form)
-    employees = fetch_all_zam()
+    employees = Zamestnanec.query.all()
     return render_template('zamestnanci.html', employees=employees)
 
 
-@app.route('/auth/zamestnanci/new')
+@app.route('/auth/<entity>/new',methods=['GET','POST'])
 @login_required
-def pridat_zam():
-    form = Zam_form()
-    return render_template('pridat_zam.html', form=form)
+def pridat(entity):
+    if entity=='zamestnanci':
+        add_form = Zam_form()
+    if add_form.validate_on_submit():
+        employee = Zamestnanec()
+        add_form.populate_obj(employee)
+        db.session.add(employee)
+        db.session.commit()
+        return redirect(url_for('zamestnanci'))
+    return render_template('zam_form.html', action="Přidat zaměstnance", form=add_form)
 
-@app.route('/auth/zamestnanci/<id_zam>/upravit_zam',methods=['POST'])
+@app.route('/auth/<entity>/uprav/<id>',methods=['GET','POST'])
 @login_required
-def upravit_zam(id_zam):
-    employee = fetch_zam_by_id(id_zam)
-    form = Zam_form()
-    form.set_default_values(employee)
-    return render_template('upravit_zam.html', employee=employee, form=form)
+def upravit(entity, id):
+    if entity == 'zamestnanci':
+        employee = Zamestnanec.query.get(id)
+        edit_form = Zam_form(obj=employee)
+    if edit_form.validate_on_submit():
+        edit_form.populate_obj(employee)
+        db.session.commit()
+        return redirect(url_for('zamestnanci'))
+    return render_template('zam_form.html', action="Upravit zaměstnance:", empl=employee, form=edit_form)
 
-@app.route('/auth/smazat_zam',methods=['POST'])
+
+@app.route('/auth/<entity>/smazat/<id>',methods=['GET','POST'])
 @login_required
-def smazat_zam():
-    id_zam = request.form.get('id_zam')
-    delete_zam(id_zam)
-    return redirect("/auth/zamestnanci")
+def smazat(entity, id):
+    if entity == 'zamestnanci':
+        zam = Zamestnanec.query.get(id)
+        db.session.delete(zam)
+        db.session.commit()
+        return redirect("/auth/zamestnanci")
+
+@app.route('/auth/vozidla', methods=['GET', 'POST'])
+@login_required
+def vozidla():
+    cars = Vozidlo.query.all()
+    return render_template('vozidla.html', cars=cars)
 
 @app.route('/logout')
 def logout():
@@ -90,8 +105,9 @@ def logout():
 @app.route('/users')
 @login_required
 def user_maintenance():
-    users = fetch_all_users()
+    users = Uzivatel.query.all()
     return render_template('users.html', users=users)
+
 
 @app.route('/lek_prohlidky')
 @login_required
