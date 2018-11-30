@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from webapp.core.models import *
 from webapp.views.forms import *
 #from datetime import datetime
