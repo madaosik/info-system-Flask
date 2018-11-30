@@ -42,6 +42,9 @@ class Uzivatel(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+    def get_user_role(self):
+        return self.role
+
 @login.user_loader
 def load_user(id):
     return Uzivatel.query.get(int(id))

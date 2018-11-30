@@ -1,16 +1,21 @@
 from flask import render_template, request, redirect, url_for, flash
-from flask_login import current_user, login_user, login_required, logout_user
+from flask_login import current_user, login_user, logout_user
 
 from webapp import app
-from webapp.views.forms import *
+from webapp.views import forms
 
 from webapp.core import db
-from webapp.core.auth import LoginForm, RegistrationForm
+from webapp.core.auth import LoginForm, RegistrationForm, login_required
+
+ADMIN = "admin"
+BOSS = "boss"
+USER = "user"
+ANY = "ANY"
 
 # ----------- BASIC VIEWS AND MODIFICATIONS ----------------------------
 
 @app.route('/auth/<entity>/new',methods=['GET','POST'])
-@login_required
+@login_required(roles=[ADMIN,BOSS])
 def pridat(entity):
     db_entity = db.get_db_entity(entity)
     add_form = db_entity['form_class']()
@@ -22,7 +27,7 @@ def pridat(entity):
     return render_template(db_entity['form_page'], action=db_entity['add_text'], form=add_form)
 
 @app.route('/auth/<entity>/uprav/<id>',methods=['GET','POST'])
-@login_required
+@login_required(roles=[ADMIN,BOSS])
 def upravit(entity, id):
     db_entity = db.get_db_entity(entity)
     instance = db.get_obj_by_id(db_entity['class'],id)
@@ -34,7 +39,7 @@ def upravit(entity, id):
 
 
 @app.route('/auth/<entity>/smazat/<id>',methods=['GET','POST'])
-@login_required
+@login_required(roles=[ADMIN,BOSS])
 def smazat(entity, id):
     db_entity = db.get_db_entity(entity)
     instance = db.get_obj_by_id(db_entity['class'],id)
@@ -43,7 +48,7 @@ def smazat(entity, id):
 
 
 @app.route('/auth/<entity>')
-@login_required
+@login_required(roles=[ADMIN,BOSS,USER])
 def show_all(entity):
     db_entity = db.get_db_entity(entity)
     all_instances = db.fetch_all_by_cls(db_entity['class'])
@@ -77,14 +82,14 @@ def register():
         return redirect(url_for('logged_in'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = db.create_user(login=form.login.data,email=form.email.data,passwd=form.password.data)
+        db.create_user(login=form.login.data,email=form.email.data,passwd=form.password.data)
         flash('Registrace proběhla úspěšně, přihlašte se, prosím!')
         form = LoginForm()
         return render_template('login.html', title='Přihlášení', form=form)
     return render_template('register.html', title='Registrace uživatele', form=form)
 
 @app.route('/auth')
-@login_required
+@login_required(roles=[ANY])
 def logged_in():
     approvals_activites = db.fetch_all_pending_approvals()
     approvals_vacation = db.fetch_all_pending_vacation()

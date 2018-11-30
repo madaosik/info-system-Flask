@@ -4,15 +4,17 @@
 
     <h3>Vítej, {{ current_user.login }}!</h3>
     <br>
-    <h4>Aktivity ke schválení:</h4>
-    {% if act %}
-    {% else %}
-        <p class="uptodate">Nenašli jsme žádné aktivity vyžadující Vaše schválení.</p>
-    {% endif %}
-    <h4>Dovolená ke schválení:</h4>
-    {% if vac %}
-    {% else %}
-        <p class="uptodate">Nenašli jsme žádné žádosti o dovolenou vyžadující Vaše schválení.</p>
+    {% if current_user.role == 'admin' or current_user.role == 'boss' %}
+        <h4>Aktivity ke schválení:</h4>
+        {% if act %}
+        {% else %}
+            <p class="uptodate">Nenašli jsme žádné aktivity vyžadující Vaše schválení.</p>
+        {% endif %}
+        <h4>Dovolená ke schválení:</h4>
+        {% if vac %}
+        {% else %}
+            <p class="uptodate">Nenašli jsme žádné žádosti o dovolenou vyžadující Vaše schválení.</p>
+        {% endif %}
     {% endif %}
     <h4>Upozornění:</h4>
     {% if notif %}

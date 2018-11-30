@@ -29,40 +29,41 @@
                     <a class="dropdown-item" href="#">Docházka</a>
                   </div>
                 </div>
+                {% if current_user.role == 'admin' or current_user.role == 'boss' %}
+                    <div class="dropdown">
+                      <button class="btn btn-primary dropdown-toggle" type="button" id="zamestnanciButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Zaměstnanci
+                      </button>
+                          <div class="dropdown-menu" aria-labelledby="zamestnanciButton">
+                            <a class="dropdown-item" href="{{ url_for('show_all', entity='zamestnanci') }}">Přehled zaměstnanců</a>
+                            <a class="dropdown-item" href="{{ url_for('show_all', entity='lekarske_prohlidky') }}">Lékařské prohlídky</a>
+                            <a class="dropdown-item" href="#">Pracovní smlouvy</a>
+                            <a class="dropdown-item" href="#">Dovolená</a>
+                            <a class="dropdown-item" href="#">Úložiště dokumentů</a>
+                          </div>
+                    </div>
 
-                <div class="dropdown">
-                  <button class="btn btn-primary dropdown-toggle" type="button" id="zamestnanciButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Zaměstnanci
-                  </button>
-                      <div class="dropdown-menu" aria-labelledby="zamestnanciButton">
-                        <a class="dropdown-item" href="{{ url_for('show_all', entity='zamestnanci') }}">Přehled zaměstnanců</a>
-                        <a class="dropdown-item" href="{{ url_for('show_all', entity='lekarske_prohlidky') }}">Lékařské prohlídky</a>
-                        <a class="dropdown-item" href="#">Pracovní smlouvy</a>
-                        <a class="dropdown-item" href="#">Dovolená</a>
+                    <div class="dropdown">
+                      <button class="btn btn-primary dropdown-toggle" type="button" id="nastenkaButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Vozový park
+                      </button>
+                      <div class="dropdown-menu" aria-labelledby="nastenkaButton">
+                        <a class="dropdown-item" href="{{ url_for('show_all', entity='vozidla') }}">Přehled vozidel</a>
+                        <a class="dropdown-item" href="#">Technické kontroly</a>
+                        <a class="dropdown-item" href="#">Plánované servisní práce</a>
                         <a class="dropdown-item" href="#">Úložiště dokumentů</a>
                       </div>
-                </div>
-
-                <div class="dropdown">
-                  <button class="btn btn-primary dropdown-toggle" type="button" id="nastenkaButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Vozový park
-                  </button>
-                  <div class="dropdown-menu" aria-labelledby="nastenkaButton">
-                    <a class="dropdown-item" href="{{ url_for('show_all', entity='vozidla') }}">Přehled vozidel</a>
-                    <a class="dropdown-item" href="#">Technické kontroly</a>
-                    <a class="dropdown-item" href="#">Plánované servisní práce</a>
-                    <a class="dropdown-item" href="#">Úložiště dokumentů</a>
-                  </div>
-                </div>
-
-                <div class="dropdown">
-                    <div class="btn-group">
-                        <a class="btn btn-primary" href="{{ url_for('show_all', entity='uzivatele') }}">
-                            Správa uživatelů
-                        </a>
                     </div>
-                </div>
-
+                    {% if current_user.role == 'admin'%}
+                        <div class="dropdown">
+                            <div class="btn-group">
+                                <a class="btn btn-primary" href="{{ url_for('show_all', entity='uzivatele') }}">
+                                    Správa uživatelů
+                                </a>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endif %}
             </div>
         </div>
     {% endif %}
@@ -71,6 +72,13 @@
 {% block content %}
     <div class="container">
         <div class="content-container">
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                {% for message in messages %}
+                    <p class="flashes_success">{{ message }}</p>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
             {% block app_content %}
             {% endblock %}
         </div>
