@@ -18,8 +18,8 @@ p.login {
     float: right;
 }
 
-.form_error {
-    font-color: red;
+p.flashes_success {
+    color: green;
 }
 
 table.form_table {
@@ -27,7 +27,7 @@ table.form_table {
     border-collapse: separate;
 }
 
-td.form_error {
+p.error, td.form_error {
     color: red;
 }
 

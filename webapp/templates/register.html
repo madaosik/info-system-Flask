@@ -1,38 +1,16 @@
 {% extends "base.html" %}
+{% from "_formhelpers.html" import render_field  %}
 
 {% block app_content %}
     <h1>Registrace nového uživatele</h1>
+    <a href="{{ url_for('login') }}"><< Zpět na přihlášení</a>
+    <br>
     <form action="" method="post">
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.login.label }}<br>
-            {{ form.login(size=64) }}<br>
-            {% for error in form.login.errors %}
-            <span style="color: #ff000c;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-
-        <p>
-            {{ form.email.label }}<br>
-            {{ form.email(size=64) }}<br>
-            {% for error in form.email.errors %}
-            <span style="color: #ff000c;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.password.label }}<br>
-            {{ form.password(size=32) }}<br>
-            {% for error in form.password.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.password2.label }}<br>
-            {{ form.password2(size=32) }}<br>
-            {% for error in form.password2.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>{{ form.submit() }}</p>
-    </form>
+            {{ form.csrf_token }}
+            <table class="form_table">
+                {% for field in form %}
+                    {{ render_field(field,form) }}
+                {% endfor %}
+            </table>
+        </form>
 {% endblock %}

@@ -43,3 +43,6 @@ class Auto_form(FlaskForm):
 
 class Lekar_form(FlaskForm):
     pass
+
+class Uzivatel_form(FlaskForm):
+    pass

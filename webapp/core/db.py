@@ -32,7 +32,7 @@ def get_db_entity(entity_name):
         },
         'uzivatele': {
             'class': Uzivatel,
-            'form_class': Lekar_form,
+            'form_class': Uzivatel_form,
             'edit_text': "Upravit uživatele:",
             'homepage': "users.html",
             'form_page': "uzivatel_form.html",
@@ -56,12 +56,21 @@ def get_db_entity(entity_name):
 def get_obj_by_id(classname,id):
     return classname.query.get(id)
 
+def create_user(login,email,passwd):
+    user = Uzivatel(login=login, email=email)
+    user.set_password(passwd)
+    db.session.add(user)
+    db.session.commit()
+
 def get_obj_by_clsname(classname,**kwargs):
     if 'initobject' in kwargs:
         instance = classname(obj=kwargs['initobject'])
     else:
         instance = classname()
     return instance
+
+def get_user_by_login(login):
+    return Uzivatel.query.filter_by(login=login).first()
 
 def fetch_all_by_cls(classname):
     return classname.query.all()

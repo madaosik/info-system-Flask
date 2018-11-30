@@ -56,18 +56,20 @@ def show_all(entity):
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
+    error = None
     if current_user.is_authenticated:
         return redirect(url_for('logged_in'))
     form = LoginForm()
     if form.validate_on_submit():
-        user = Uzivatel.query.filter_by(login=form.login.data).first()
+        user = db.get_user_by_login(form.login.data)
         if user is None or not user.check_password(form.password.data):
-            flash('Neznámý e-mail nebo neplatné heslo!')
-            return redirect(url_for('login'))
-        login_user(user, remember=form.remember_me.data)
-        log_visit(user)
-        return redirect(url_for('logged_in'))
-    return render_template('login.html', title='Přihlášení', form=form)
+            error = "Neznámý e-mail nebo neplatné heslo!"
+        else:
+            login_user(user, remember=form.remember_me.data)
+            db.log_visit(user)
+            flash("Přihlášení proběhlo úspěšně!")
+            return redirect(url_for('logged_in'))
+    return render_template('login.html', title='Přihlášení', form=form, error=error)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -75,13 +77,11 @@ def register():
         return redirect(url_for('logged_in'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = Uzivatel(login=form.login.data, email=form.email.data)
-        user.set_password(form.password.data)
-        db.session.add(user)
-        db.session.commit()
-        flash('Congratulations, you are now a registered user!')
-        return redirect(url_for('login'))
-    return render_template('register.html', title='Register', form=form)
+        user = db.create_user(login=form.login.data,email=form.email.data,passwd=form.password.data)
+        flash('Registrace proběhla úspěšně, přihlašte se, prosím!')
+        form = LoginForm()
+        return render_template('login.html', title='Přihlášení', form=form)
+    return render_template('register.html', title='Registrace uživatele', form=form)
 
 @app.route('/auth')
 @login_required

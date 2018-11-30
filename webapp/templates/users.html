@@ -20,14 +20,13 @@
                 <td>{{user.poc_prihl}}</td>
                 <td>{{user.posl_prihl}}</td>
                 <td>{{user.cas_posl_zmeny}}</td>
-                <td>
-                    <form method="POST" action="/auth/users/{{user.id}}/upravit">
-                      <input type="hidden" value="{{user.id}}" name="id_zam">
+                <!--<td>
+                    <form method="POST" action="{{ url_for('upravit', entity='uzivatele', id = user.id) }}">
                       <input type="submit" value="Upravit">
                     </form>
-                </td>
+                </td>-->
                 <td>
-                    <form method="POST" action="/auth/users/smazat">
+                    <form method="POST" action="{{ url_for('smazat', entity='uzivatele', id = user.id) }}">
                       <input type="hidden" value="{{user.id}}" name="id_zam">
                       <input type="submit" value="Smazat">
                     </form>
