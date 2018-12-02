@@ -8,6 +8,7 @@ from webapp.views import forms
 
 from webapp.core import db
 from webapp.core.auth import login_required, roles_arr, ADMIN, BOSS, USER, ANY
+from webapp.core.models import Zamestnanec
 
 import datetime
 
@@ -54,11 +55,23 @@ def smazat(entity, id):
     return redirect(url_for('show_all', entity=entity))
 
 
+@app.route('/auth/<entity>/schvalit/<id>',methods=['GET','POST'])
+@login_required(roles=[ADMIN,BOSS])
+def schvalit(entity, id):
+    db_entity = db.get_db_entity(entity)
+    instance = db.get_obj_by_id(db_entity['class'], id)
+    db.approve(db_entity['class'], id)
+    return redirect(url_for('show_all', entity=entity))
+
+
 @app.route('/auth/<entity>')
-@login_required(roles=[ADMIN,BOSS,USER])
+@login_required(roles=[ADMIN,BOSS])
 def show_all(entity):
     db_entity = db.get_db_entity(entity)
     all_instances = db.fetch_all_by_cls(db_entity['class'])
+    if entity == 'dovolena_zaznam':
+        empl= db.fetch_all_by_cls(Zamestnanec)
+        return render_template(db_entity['homepage'], all=all_instances, empl=empl)
     return render_template(db_entity['homepage'], all=all_instances)
 
 

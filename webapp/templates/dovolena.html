@@ -20,17 +20,21 @@
     {% endif %}
     {% for dovolena in all %}
         <tr>
-            <td>{{dovolena.id}}</td>
-            <td>{{dovolena.vycerpano}}</td>
+            <td>{% for zamestnanec in empl %}
+                    {% if zamestnanec.id_zam == dovolena.id_zam %}
+                        {{ zamestnanec.kr_jmeno }}
+                        <td>{{zamestnanec.prijmeni}}</td>
+                    {% endif %}
+                {% endfor %}</td>
             <td>{{dovolena.od}}</td>
-            <td>{{dovolena.do}}}</td>
+            <td>{{dovolena.do}}</td>
             <td>{{dovolena.celkem}}</td>
             <td>
-                <form method="GET" action="{{ url_for('upravit', entity='zamestnanci', id = dovolena.id_zam) }}">
-                  <input type="submit" value="Potvrdit">
+                <form method="POST" action="{{ url_for('schvalit', entity='dovolena_zaznam', id = dovolena.id_zaznamu) }}">
+                  <input type="submit" value=&#9745; class="approve_button">
                 </form>
-                <form method="GET" action="{{ url_for('smazat',entity='zamestnanci', id = dovolena.id_zam) }}">
-                  <input type="submit" value="Smazat">
+                <form method="POST" action="{{ url_for('smazat',entity='dovolena_zaznam', id = dovolena.id_zaznamu) }}">
+                  <input type="submit" value=&#9746; class="deny_button">
                 </form>
             </td>
         </tr>

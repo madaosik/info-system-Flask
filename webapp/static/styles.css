@@ -48,3 +48,10 @@ table th {
   /*Without this, clicking will make it sticky*/
     pointer-events: none;
 }
+
+.approve_button{
+    background-color: springgreen;
+}
+.deny_button{
+    background-color: lightsalmon;
+}

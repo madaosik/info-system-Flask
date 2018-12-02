@@ -99,13 +99,22 @@ def get_user_by_login(login):
 def fetch_all_by_cls(classname):
     return classname.query.all()
 
+
 def add(object):
     db.session.add(object)
     db.session.commit()
 
+
 def delete(object):
     db.session.delete(object)
     db.session.commit()
+
+
+def approve(classname, id):
+    q = classname.query.get(id)
+    q.potvrzeni = True
+    db.session.commit()
+
 
 def update_from_form(instance,form):
     form.populate_obj(instance)
