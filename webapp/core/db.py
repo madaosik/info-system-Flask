@@ -2,6 +2,7 @@
 
 from webapp.core.models import *
 from webapp.views.forms import *
+from webapp.core.auth import roles_arr
 #from datetime import datetime
 import sqlalchemy as sa
 
@@ -36,6 +37,9 @@ def get_db_entity(entity_name):
         'uzivatele': {
             'class': Uzivatel,
             'form_class': Uzivatel_form,
+            'edit_form_class': Uzivatel_edit_form,
+            'form_init': roles_arr,
+            'add_text': "Přidat uživatele",
             'edit_text': "Úprava uživatele",
             'homepage': "users.html",
             'form_page': "uzivatel_form.html",
@@ -71,20 +75,57 @@ def get_db_entity(entity_name):
 #
 #     return dat_nar_string
 
+
 def get_obj_by_id(classname,id):
     return classname.query.get(id)
 
 def get_obj_by_id_zam(classname, id):
     return classname.query.filter_by(id_zam=id)
 
-
 def create_user(login,email,passwd):
     user = Uzivatel(login=login, email=email)
     user.set_password(passwd)
+
+def get_user_by_attr(**kwargs):
+    if 'login' in kwargs:
+        user = Uzivatel.query.filter_by(login=kwargs['login']).first()
+    elif 'id' in kwargs:
+        user = Uzivatel.query.get(kwargs['id'])
+    return user
+
+def check_login(login):
+    error = None
+    if get_user_by_attr(login=login) is not None:
+            error = "Použijte, prosím, jiné uživatelské jméno!"
+    return error
+
+def create_user(form):
+    error = check_login(login=form.login.data)
+    if error:
+        return error
+    try:
+        user = Uzivatel(login=form.login.data, email=form.email.data, role=form.role.data)
+    except AttributeError:
+        user = Uzivatel(login=form.login.data, email=form.email.data)
+
+    try:
+        user.set_password(form.password.data)
+    except AttributeError:
+        pass
+
     db.session.add(user)
-    zam = Zamestnanec(email=email, prijmeni=login)
-    db.session.add(zam)
     db.session.commit()
+
+
+def edit_user(id,form_data_dict):
+    user = get_user_by_attr(id=id)
+    user.email = form_data_dict['email']
+    user.role = form_data_dict['role']
+
+    if form_data_dict['password']:
+        user.set_password(form_data_dict['password'])
+    db.session.commit()
+
 
 def get_obj_by_clsname(classname,**kwargs):
     if 'initobject' in kwargs:
@@ -92,9 +133,6 @@ def get_obj_by_clsname(classname,**kwargs):
     else:
         instance = classname()
     return instance
-
-def get_user_by_login(login):
-    return Uzivatel.query.filter_by(login=login).first()
 
 def fetch_all_by_cls(classname):
     return classname.query.all()

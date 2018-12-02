@@ -4,9 +4,9 @@
 {% block title %}IS - Přihlášení{% endblock %}
 {% block app_content %}
         <h1>Přihlášení do systému</h1>
-        {% if error %}
+        <!--{% if error %}
             <p class=error><strong>CHYBA:</strong> {{ error }}
-        {% endif %}
+        {% endif %}-->
         <form action="" method="post" novalidate>
             {{ form.csrf_token }}
             <table class="form_table">

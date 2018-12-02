@@ -4,9 +4,6 @@
 {% block app_content %}
     <h1>Registrace nového uživatele</h1>
     <a href="{{ url_for('login') }}"><< Zpět na přihlášení</a>
-    {% if error %}
-        <p class=error><strong>CHYBA:</strong> {{ error }}
-    {% endif %}
     <br>
     <form action="" method="post">
         {{ form.csrf_token }}
