@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block app_content %}
-    <h3>Dovolena</h3>
+    <h3>Dovolená</h3>
 
     {%  if all %}
         <table class="table table-hover table-sm">
@@ -9,14 +9,14 @@
             <tr>
                 <th>Křestní jméno</th>
                 <th>Příjmení</th>
-                <th>Datum zacatku</th>
+                <th>Datum začátku</th>
                 <th>Datum konce</th>
-                <th>Celkem dni</th>
-                <th colspan="2">Potvrzeni</th>
+                <th>Celkem dní</th>
+                <th colspan="2">Potvrzení</th>
             </tr>
             </thead>
     {% else %}
-        <p>Neevidujeme žádné zadosti o dovolenou.</p>
+        <p>Neevidujeme žádné žádosti o dovolenou.</p>
     {% endif %}
     {% for dovolena in all %}
         <tr>
