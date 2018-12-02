@@ -6,11 +6,11 @@
     <a href="{{ url_for('login') }}"><< Zpět na přihlášení</a>
     <br>
     <form action="" method="post">
-            {{ form.csrf_token }}
-            <table class="form_table">
-                {% for field in form %}
-                    {{ render_field(field,form) }}
-                {% endfor %}
-            </table>
-        </form>
+        {{ form.csrf_token }}
+        <table class="form_table">
+            {% for field in form %}
+                {{ render_field(field,form) }}
+            {% endfor %}
+        </table>
+    </form>
 {% endblock %}

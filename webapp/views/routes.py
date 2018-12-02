@@ -56,6 +56,25 @@ def show_all(entity):
     all_instances = db.fetch_all_by_cls(db_entity['class'])
     return render_template(db_entity['homepage'], all=all_instances)
 
+@app.route('/auth/<entity>/<id>')
+@login_required(roles=[USER])
+def show_me(entity, id):
+    db_entity = db.get_db_entity(entity)
+    instance = db.get_obj_by_id(db_entity['class'],id)
+    return render_template(db_entity['me_page'], id=id, me=instance)
+
+
+@app.route('/auth/<entity>/<id>/me',methods=['GET','POST'])
+@login_required(roles=[USER])
+def upravit_mne(entity, id):
+    db_entity = db.get_db_entity(entity)
+    instance = db.get_obj_by_id(db_entity['class'],id)
+    edit_form = db.get_obj_by_clsname(db_entity['form_class_me'],initobject=instance)
+    if edit_form.validate_on_submit():
+        db.update_from_form(instance,edit_form)
+        return redirect(url_for('show_me', entity=entity, id= id))
+    return render_template(db_entity['form_page'], action= 'upravit_mne', object=instance, form=edit_form)
+
 
 
 # ------------ USER MANAGEMENT VIEW FUNCTIONS-----------------
@@ -87,7 +106,7 @@ def register():
         db.create_user(login=form.login.data,email=form.email.data,passwd=form.password.data)
         flash('Registrace proběhla úspěšně, přihlašte se, prosím!')
         form = LoginForm()
-        return render_template('login.html', title='Přihlášení', form=form)
+        return redirect(url_for('login'))
     return render_template('register.html', title='Registrace uživatele', form=form)
 
 @app.route('/auth')

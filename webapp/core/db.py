@@ -11,10 +11,12 @@ def get_db_entity(entity_name):
         'zamestnanci': {
             'class': Zamestnanec,
             'form_class': Zam_form,
+            'form_class_me': Zam_form_ja,
             'add_text': "Přidat zaměstnance",
             'edit_text': "Upravit zaměstnance:",
             'homepage': "zamestnanci.html",
             'form_page': "zam_form.html",
+            'me_page': "show_me.html",
         },
         'vozidla': {
             'class': Vozidlo,
@@ -42,7 +44,14 @@ def get_db_entity(entity_name):
         'aktivity': {
             'class': Denni_evidence,
             'homepage': "aktivity.html",
+        },
+        'dovolena': {
+            'class': Dovolena_zam,
+            'form_class': Dovo_form,
+            'homepage': 'dovolena.html',
+
         }
+
     }
     return switcher.get(entity_name, "Neznámá entita")
 
@@ -62,6 +71,8 @@ def create_user(login,email,passwd):
     user = Uzivatel(login=login, email=email)
     user.set_password(passwd)
     db.session.add(user)
+    zam = Zamestnanec(email=email, prijmeni=login)
+    db.session.add(zam)
     db.session.commit()
 
 def get_obj_by_clsname(classname,**kwargs):

@@ -31,6 +31,12 @@ class Zam_form(FlaskForm):
     aktivni = BooleanField('Aktivní', default='checked')
     submit = SubmitField('Uložit')
 
+class Zam_form_ja(FlaskForm):
+    trv_bydliste = StringField('Trvalé bydliště')
+    prech_bydliste = StringField('Přechodné bydliště')
+    telefon = StringField('Telefon')
+    email = StringField('* E-mail', validators=[Email(message="E-mailová adresa nemá správný formát!")])
+    submit = SubmitField('Uložit')
 
 class Auto_form(FlaskForm):
     spz = StringField('* SPZ', validators=[InputRequired("Zadejte SPZ!")])
@@ -46,6 +52,9 @@ class Auto_form(FlaskForm):
 class User_form(FlaskForm):
     login = StringField('* Uživatelské jméno', validators=[InputRequired(message="Doplňte uživatelské jméno!")])
 
+class Dovo_form(FlaskForm):
+    dat_od = CzechDateField('Datum zacatku', validators=[InputRequired(message="Doplňte datum pocatku dovolene!")])
+    dat_do = CzechDateField('Datum konce', validators=[InputRequired(message="Doplňte datum konce dovolene!")])
 
 class Lekar_form(FlaskForm):
     pass
