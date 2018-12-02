@@ -2,20 +2,24 @@
 {% from "_formhelpers.html" import render_field  %}
 
 {% block app_content %}
-    <h3>{{ action }}: {{ name }}</h3>
-        <a href="{{ url_for('show_all', entity='uzivatele') }}"><< Zpět na přehled uživatelů</a>
+    {% if action == 'Úprava uživatele' %}
+        <h3>{{ action }}: <strong>{{ object.login }}</strong></h3>
+    {% else %}
+        <h3>{{ action }}</h3>
+    {% endif %}
+    <a href="{{ url_for('show_all', entity='uzivatele') }}"><< Zpět na přehled uživatelů</a>
     <br><br>
 
     {% if action=='Přidat uživatele' %}
-        <form method="POST" action="{{ url_for('add_user') }}">
+        <form method="POST" action="{{ url_for('pridat_uzivatele', entity='uzivatele') }}">
     {% else %}
-        <form method="POST" action="{{ url_for('edit_user', id=user.id) }}">
+        <form method="POST" action="{{ url_for('upravit_uzivatele', entity='uzivatele', id=object.id) }}">
     {% endif %}
-{{ form.csrf_token }}
-<table class="form_table">
-    {% for field in form %}
-                {{ render_field(field,form) }}
-        {% endfor %}
-        </table>
-    </form>
+    {{ form.csrf_token }}
+    <table class="form_table">
+        {% for field in form %}
+                    {{ render_field(field,form) }}
+            {% endfor %}
+            </table>
+        </form>
 {% endblock %}

@@ -4,12 +4,12 @@ from functools import wraps
 from flask_login import current_user
 from webapp import login
 
-ADMIN ="admin"
-BOSS="boss"
-USER="user"
-ANY="ANY"
+ADMIN = "admin"
+BOSS = "boss"
+USER = "user"
+ANY = "ANY"
 
-roles_arr=[ADMIN,BOSS,USER,ANY]
+roles_arr = [(ADMIN, ADMIN), (BOSS, BOSS), (USER, USER)]
 
 def login_required(roles=["ANY"]):
     def wrapper(fn):

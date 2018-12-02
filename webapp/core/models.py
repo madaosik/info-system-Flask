@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Date, TIMESTAMP, String, Integer, func, ForeignKey, PrimaryKeyConstraint, Boolean
 from flask_login import UserMixin
-from webapp import db,login
+from webapp import db, login
 from werkzeug.security import generate_password_hash, check_password_hash
 
 class Zamestnanec(db.Model):

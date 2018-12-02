@@ -20,6 +20,7 @@ p.login {
 
 p.flashes_success {
     color: green;
+    text-align: center;
 }
 
 table.form_table {
@@ -29,6 +30,7 @@ table.form_table {
 
 p.error, td.form_error {
     color: red;
+    text-align: center;
 }
 
 table th {

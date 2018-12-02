@@ -5,7 +5,11 @@
         <td>{{ field(**kwargs)|safe }}</td>
     {% else %}
         <td>{{ field.label }}</td>
-        <td>{{ field(size=30,**kwargs)|safe }}</td>
+        {% if field.type == 'SelectField' %}
+            <td>{{ field(size=3,**kwargs)|safe }}</td>
+        {% else %}
+            <td>{{ field(size=30,**kwargs)|safe }}</td>
+        {% endif %}
     {% endif %}
     {% if field.errors %}
         {% for error in field.errors %}
