@@ -2,8 +2,13 @@
 {% from "_formhelpers.html" import render_field  %}
 
 {% block app_content %}
-    <h3>Přidat vozidlo</h3>
-        <a href="{{ url_for('show_all', entity='vozidla') }}"><< Zpět na přehled vozidel</a>
+    {% if action == 'Úprava vozidla' %}
+        <h3>{{ action }}: {{ object.spz }}</h3>
+    {% else %}
+        <h3>Přidat vozidlo</h3>
+    {% endif %}
+
+    <a href="{{ url_for('show_all', entity='vozidla') }}"><< Zpět na přehled vozidel</a>
     <br><br>
 
     {% if action=='Přidat vozidlo'%}

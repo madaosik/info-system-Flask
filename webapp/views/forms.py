@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, BooleanField, IntegerField
-from wtforms.validators import InputRequired, Email, NumberRange, Optional
+from wtforms import StringField, SubmitField, BooleanField, IntegerField, PasswordField, SelectField
+from wtforms.validators import InputRequired, DataRequired, Email, NumberRange, ValidationError, EqualTo
 from wtforms.fields.html5 import DateField
 import datetime
 
@@ -18,6 +18,19 @@ class CzechDateField(DateField):
             except ValueError:
                 self.data = None
                 raise ValueError(self.gettext('Neplatný formát data!'))
+
+class LoginForm(FlaskForm):
+    login = StringField('Uživatelské jméno',validators=[InputRequired(message="Zadejte uživatelské jméno!")])
+    password = PasswordField('Heslo', validators=[InputRequired(message="Zadejte heslo!")])
+    remember_me = BooleanField('Pamatuj si mě')
+    submit = SubmitField('Přihlásit se')
+
+class RegistrationForm(FlaskForm):
+    login = StringField('Uživatelské jméno', validators=[DataRequired(message="Zadejte uživatelské jméno")])
+    email = StringField('E-mail', validators=[DataRequired(),Email(message="Nepovolený tvar e-mailové adresy!")])
+    password = PasswordField('Heslo', validators=[DataRequired(message="Zadejte heslo!")])
+    password2 = PasswordField('Zopakování hesla', validators=[DataRequired(), EqualTo('password',message="Zadaná hesla se neshodují!")])
+    submit = SubmitField('Registrace')
 
 class Zam_form(FlaskForm):
     kr_jmeno = StringField('* Křestní jméno', validators=[InputRequired(message="Doplňte křestní jméno!")])
@@ -47,7 +60,7 @@ class Auto_form(FlaskForm):
     nosnost = IntegerField('Nosnost')
     pocet_naprav = IntegerField('* Počet náprav', validators=[NumberRange(min=2,max=10,message="Zadejte počet náprav mezi 2 a 10!")])
     emisni_trida = StringField('Emisní třída')
-    submit = SubmitField('Přidat')
+    submit = SubmitField('Uložit')
 
 class User_form(FlaskForm):
     login = StringField('* Uživatelské jméno', validators=[InputRequired(message="Doplňte uživatelské jméno!")])
@@ -59,5 +72,8 @@ class Dovo_form(FlaskForm):
 class Lekar_form(FlaskForm):
     pass
 
-class Uzivatel_form(FlaskForm):
-    pass
+class Uzivatel_form(RegistrationForm):
+    submit = SubmitField('Uložit')
+
+    def __init__(self, roles):
+        role = SelectField('Role', choices=roles)

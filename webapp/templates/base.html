@@ -82,6 +82,7 @@
 {% block content %}
     <div class="container">
         <div class="content-container">
+
             {% with messages = get_flashed_messages() %}
               {% if messages %}
                 {% for message in messages %}
@@ -89,6 +90,9 @@
                 {% endfor %}
               {% endif %}
             {% endwith %}
+            {% if error %}
+                <p class="error"><strong>CHYBA:</strong> {{ error }}
+            {% endif %}
             {% block app_content %}
             {% endblock %}
         </div>

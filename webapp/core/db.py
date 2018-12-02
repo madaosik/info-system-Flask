@@ -5,7 +5,6 @@ from webapp.views.forms import *
 #from datetime import datetime
 import sqlalchemy as sa
 
-
 def get_db_entity(entity_name):
     switcher = {
         'zamestnanci': {
@@ -13,7 +12,7 @@ def get_db_entity(entity_name):
             'form_class': Zam_form,
             'form_class_me': Zam_form_ja,
             'add_text': "Přidat zaměstnance",
-            'edit_text': "Upravit zaměstnance:",
+            'edit_text': "Úprava zaměstnance",
             'homepage': "zamestnanci.html",
             'form_page': "zam_form.html",
             'me_page': "show_me.html",
@@ -22,7 +21,7 @@ def get_db_entity(entity_name):
             'class': Vozidlo,
             'form_class': Auto_form,
             'add_text': "Přidat vozidlo",
-            'edit_text': "Upravit vozidlo:",
+            'edit_text': "Úprava vozidla",
             'homepage': "vozidla.html",
             'form_page': "auto_form.html",
         },
@@ -30,14 +29,14 @@ def get_db_entity(entity_name):
             'class': Lekarska_prohl,
             'form_class': Lekar_form,
             'add_text': "Přidat lékařskou prohlídku",
-            'edit_text': "Upravit lékařskou prohlídku:",
+            'edit_text': "Úprava lékařské prohlídky",
             'homepage': "lek_prohlidky.html",
             'form_page': "prohl_form.html",
         },
         'uzivatele': {
             'class': Uzivatel,
             'form_class': Uzivatel_form,
-            'edit_text': "Upravit uživatele:",
+            'edit_text': "Úprava uživatele",
             'homepage': "users.html",
             'form_page': "uzivatel_form.html",
         },

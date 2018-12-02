@@ -1,7 +1,14 @@
 {% extends "base.html" %}
 
 {% block app_content %}
-
+    <!--
+    {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                {% for message in messages %}
+                    <p class="flashes_success">{{ message }}</p>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}-->
     <h3>Vítej, {{ current_user.login }}!</h3>
     <br>
     {% if current_user.role == 'admin' or current_user.role == 'boss' %}

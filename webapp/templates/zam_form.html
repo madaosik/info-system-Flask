@@ -2,7 +2,12 @@
 {% from "_formhelpers.html" import render_field  %}
 
 {% block app_content %}
-    <h3>{{ action }} {{ name }}</h3>
+    {% if action == 'Úprava zaměstnance' %}
+        <h3>{{ action }}: {{ object.kr_jmeno }} {{ object.prijmeni }}</h3>
+    {% else %}
+        <h3>Přidat zaměstnance</h3>
+    {% endif %}
+
     {%  if action != 'upravit_mne' %}
         <a href="{{ url_for('show_all', entity='zamestnanci') }}"><< Zpět na přehled zaměstnanců</a>
     {% endif %}
@@ -11,7 +16,7 @@
     {% if action=='Přidat zaměstnance' %}
         <form method="POST" action="{{ url_for('pridat',entity='zamestnanci') }}">
     {% elif action== 'upravit_mne' %}
-        <form method="POST" action="{{ url_for('upravit_mne',entity='zamestnanci', id= current_user.id) }}">
+        <form method="POST" action="{{ url_for('upravit_mne',entity='zamestnanci', id=current_user.id) }}">
     {% else %}
         <form method="POST" action="{{ url_for('upravit',entity='zamestnanci', id=object.id_zam) }}">
     {% endif %}

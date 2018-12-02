@@ -3,28 +3,17 @@
 
 {% block title %}IS - Přihlášení{% endblock %}
 {% block app_content %}
-<!--<div class="container">
-    <div class="content-container">-->
         <h1>Přihlášení do systému</h1>
         {% if error %}
             <p class=error><strong>CHYBA:</strong> {{ error }}
         {% endif %}
-        {% with messages = get_flashed_messages() %}
-          {% if messages %}
-            {% for message in messages %}
-                <p class="flashes_success">{{ message }}</p>
-            {% endfor %}
-          {% endif %}
-        {% endwith %}
         <form action="" method="post" novalidate>
             {{ form.csrf_token }}
-            <table>
+            <table class="form_table">
                 {% for field in form %}
                 {{ render_field(field,form) }}
             {% endfor %}
             </table>
         <p>Nový uživatel? <a href="{{ url_for('register') }}">Klikněte pro registraci!</a></p>
         </form>
-    <!--</div>
-</div>-->
 {% endblock %}
