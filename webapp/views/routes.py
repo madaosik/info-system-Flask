@@ -9,20 +9,28 @@ from webapp.views import forms
 from webapp.core import db
 from webapp.core.auth import login_required, roles_arr, ADMIN, BOSS, USER, ANY
 
+import datetime
+
 
 # ----------- BASIC VIEWS AND MODIFICATIONS ----------------------------
 
 @app.route('/auth/<entity>/new',methods=['GET','POST'])
-@login_required(roles=[ADMIN,BOSS])
+@login_required(roles=[ADMIN,BOSS,USER])
 def pridat(entity):
     db_entity = db.get_db_entity(entity)
     add_form = db_entity['form_class']()
     if add_form.validate_on_submit():
         instance = db.get_obj_by_clsname(db_entity['class'])
         add_form.populate_obj(instance)
+        if entity == 'dovolena_zaznam':
+            instance.id_zam= current_user.id
+            instance.celkem = (instance.do - instance.od).days + 1
+            db.add(instance)
+            return redirect(url_for('show_me', entity=entity, id=current_user.id))
         db.add(instance)
         return redirect(url_for('show_all', entity=entity))
     return render_template(db_entity['form_page'], action=db_entity['add_text'], form=add_form)
+
 
 @app.route('/auth/<entity>/uprav/<id>',methods=['GET','POST'])
 @login_required(roles=[ADMIN,BOSS])
@@ -53,11 +61,15 @@ def show_all(entity):
     all_instances = db.fetch_all_by_cls(db_entity['class'])
     return render_template(db_entity['homepage'], all=all_instances)
 
+
 @app.route('/auth/<entity>/<id>')
 @login_required(roles=[USER])
 def show_me(entity, id):
     db_entity = db.get_db_entity(entity)
-    instance = db.get_obj_by_id(db_entity['class'],id)
+    if entity == 'dovolena_zaznam':
+        instance = db.get_obj_by_id_zam(db_entity['class'], id)
+    else:
+        instance = db.get_obj_by_id(db_entity['class'], id)
     return render_template(db_entity['me_page'], id=id, me=instance)
 
 

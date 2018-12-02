@@ -20,18 +20,16 @@
     {% endif %}
     {% for dovolena in all %}
         <tr>
-            <td>{{dovolena.id_zam}}</td>
+            <td>{% set zamest= get_obj_by_id(Zamestnanec,id)%}{{ zamest.kr_jmeno }}</td>
             <td>{{dovolena.vycerpano}}</td>
-            <td>s</td>
-            <td>s</td>
-            d
+            <td>{{dovolena.od}}</td>
+            <td>{{dovolena.do}}}</td>
+            <td>{{dovolena.celkem}}</td>
             <td>
-                <form method="GET" action="{{ url_for('upravit', entity='zamestnanci', id = empl.id_zam) }}">
+                <form method="GET" action="{{ url_for('upravit', entity='zamestnanci', id = dovolena.id_zam) }}">
                   <input type="submit" value="Detail">
                 </form>
-            </td>
-            <td>
-                <form method="GET" action="{{ url_for('smazat',entity='zamestnanci', id = empl.id_zam) }}">
+                <form method="GET" action="{{ url_for('smazat',entity='zamestnanci', id = dovolena.id_zam) }}">
                   <input type="submit" value="Smazat">
                 </form>
             </td>

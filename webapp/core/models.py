@@ -1,4 +1,4 @@
-from sqlalchemy import Column, DateTime, Date, TIMESTAMP, String, Integer, func, ForeignKey, PrimaryKeyConstraint
+from sqlalchemy import Column, Date, TIMESTAMP, String, Integer, func, ForeignKey, PrimaryKeyConstraint, Boolean
 from flask_login import UserMixin
 from webapp import db,login
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -87,6 +87,17 @@ class Dovolena_zam(db.Model):
     narok = Column(Integer)
     vycerpano = Column(Integer)
     posl_aktual = Column(TIMESTAMP, nullable=False, server_default=func.now(), server_onupdate=func.now())
+
+class Dovolena_zam_hist(db.Model):
+    __tablename__ = 'dovolena_zam_hist'
+
+    id_zaznamu = Column(Integer, primary_key=True)
+    id_zam = Column(Integer, ForeignKey("zamestnanec.id_zam", ondelete='CASCADE'), nullable=False)
+    rok = Column(Integer)
+    od = Column(Date)
+    do = Column(Date)
+    celkem = Column(Integer)
+    potvrzeni = Column(Boolean, default=False)
 
 class Vozidlo(db.Model):
     __tablename__ = 'vozidlo'

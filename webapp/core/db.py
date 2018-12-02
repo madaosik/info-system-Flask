@@ -49,6 +49,14 @@ def get_db_entity(entity_name):
             'form_class': Dovo_form,
             'homepage': 'dovolena.html',
 
+        },
+        'dovolena_zaznam': {
+            'class': Dovolena_zam_hist,
+            'form_class': Dovo_zaz_form,
+            'add_text': "Přidat dovolenou",
+            'homepage': 'dovolena.html',
+            'form_page': "dovo_zam_form.html",
+            'me_page': 'dovolena_zamestnanec.html',
         }
 
     }
@@ -65,6 +73,10 @@ def get_db_entity(entity_name):
 
 def get_obj_by_id(classname,id):
     return classname.query.get(id)
+
+def get_obj_by_id_zam(classname, id):
+    return classname.query.filter_by(id_zam=id)
+
 
 def create_user(login,email,passwd):
     user = Uzivatel(login=login, email=email)

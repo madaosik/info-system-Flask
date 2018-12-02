@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% from "_formhelpers.html" import render_field %}
+
+{% block app_content %}
+    <h3>Nová žádost o dovolenou</h3>
+
+    <form method="POST" action="{{ url_for('pridat',entity= 'dovolena_zaznam', id= current_user.id) }}">
+
+        {{ form.csrf_token }}
+        <table class="form_table">
+            {% for field in form %}
+                {{ render_field(field,form) }}
+            {% endfor %}
+        </table>
+    </form>
+{% endblock %}

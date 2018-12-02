@@ -62,12 +62,30 @@ class Auto_form(FlaskForm):
     emisni_trida = StringField('Emisní třída')
     submit = SubmitField('Uložit')
 
+
 class User_form(FlaskForm):
     login = StringField('* Uživatelské jméno', validators=[InputRequired(message="Doplňte uživatelské jméno!")])
 
+
 class Dovo_form(FlaskForm):
-    dat_od = CzechDateField('Datum zacatku', validators=[InputRequired(message="Doplňte datum pocatku dovolene!")])
+    dat_od = CzechDateField('Datum začátku', validators=[InputRequired(message="Doplňte datum pocatku dovolene!")])
     dat_do = CzechDateField('Datum konce', validators=[InputRequired(message="Doplňte datum konce dovolene!")])
+
+
+class Dovo_zaz_form(FlaskForm):
+    od = CzechDateField('Datum začátku', validators=[InputRequired(message="Doplňte datum pocatku dovolene!")])
+    do = CzechDateField('Datum konce (včetne)', validators=[InputRequired(message="Doplňte datum konce dovolene!")])
+    submit = SubmitField('Uložit')
+
+    def validate(self):
+        if not FlaskForm.validate(self):
+            return False
+        result = True
+        if self.od.data > self.do.data:
+            self.od.errors.append('Od musi byt driv nez do!')
+            result = False
+        return result
+
 
 class Lekar_form(FlaskForm):
     pass

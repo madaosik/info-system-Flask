@@ -23,11 +23,11 @@
                 <div class="dropdown">
                     <button class="btn btn-primary dropdown-toggle" type="button" id="mujProfilButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Můj profil
-                  </button>
-                  <div class="dropdown-menu" aria-labelledby="mujProfilButton">
-                    <a class="dropdown-item" href="#">Dovolená</a>
-                    <a class="dropdown-item" href="{{ url_for('show_me',entity= 'zamestnanci', id= current_user.id) }}">Moje údaje</a>
-                  </div>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="mujProfilButton">
+                        <a class="dropdown-item" href="{{ url_for('show_me',entity= 'zamestnanci', id= current_user.id) }}">Moje údaje</a>
+                        <a class="dropdown-item" href="{{ url_for('show_me',entity= 'dovolena_zaznam', id= current_user.id) }}">Dovolená</a>
+                    </div>
                 </div>
                  {% endif %}
                 <div class="dropdown">
@@ -48,7 +48,7 @@
                             <a class="dropdown-item" href="{{ url_for('show_all', entity='zamestnanci') }}">Přehled zaměstnanců</a>
                             <a class="dropdown-item" href="{{ url_for('show_all', entity='lekarske_prohlidky') }}">Lékařské prohlídky</a>
                             <a class="dropdown-item" href="#">Pracovní smlouvy</a>
-                            <a class="dropdown-item" href="{{ url_for('show_all', entity='dovolena') }}">Dovolená</a>
+                            <a class="dropdown-item" href="{{ url_for('show_all', entity='dovolena_zaznam') }}">Dovolená</a>
                             <a class="dropdown-item" href="#">Úložiště dokumentů</a>
                           </div>
                     </div>
