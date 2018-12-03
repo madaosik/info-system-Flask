@@ -35,22 +35,39 @@
 <table>
 <tbody><tr><th>Login</th><th>Heslo</th><th>Role</th></tr>
 <tr><td>tester</td><td>test</td><td>Administrátor</td></tr>
-<tr><td>prodavac</td><td>prodavac</td><td>Prodavaè</td></tr>
-<tr><td>franta</td><td>franta</td><td>Zákazník</td></tr>
+<tr><td>sef</td><td>boss</td><td>Vedoucí</td></tr>
+<tr><td>zamestnanec</td><td>zam</td><td>Zamìstnanec</td></tr>
 </tbody></table>
 
 <h2>Implementace</h2>
-<p>Struèná dokumentace k implementaci, která popisuje, které PHP skripty implementují jednotlivé pøípady pou¾ití uvedené v use-case diagramu z IDS. V pøípadì, ¾e bylo nutno pøi implementaci uèinit zmìny v návrhu, musí být v dokumentaci zdùvodnìny.</p>
+<p>Informaèní systém je implementován v Pythonu, konkrétnì micro-frameworku Flask. Spousta vývojového èasu byla vìnována
+    relativnì komplexní infrastruktuøe. Ta je postavená na ORM zprostøedkovaným Python modulem SQLAlchemy a dále modulem Alembic, který výraznì napomahá ve správì databáze a její aktualizaci.
+    Hlavním øídícím mozkem aplikace je soubor webapp/views/routes.py, který si mimo jiné volá potøebné modelové funkce z webapp/core/db.py a dále získává instance tøíd formuláøù
+    (webapp/views/forms.py), které dále posílá do ¹ablon (webapp/templates), kde jsou Jinja template enginem (souèást frameworku Flask) vykreslovány.
+</p>
+<p>
+    Autentifikace u¾ivatelù a pøístupová práva k rùzným modulùm jsou ve Flasku øe¹ena velmi elegantnì skrz funkèní dekorátory, ke kterým jsme si doimplementovali vlastní obsluhy.
+</p>
+
 
 <h2>Instalace</h2>
 <ul>
-<li>Struènì popi¹te postup instalace na server</li>
-<li>Softwarové po¾adavky (verze PHP apod.)</li>
-<li>Jak rozbalit, konfigurovat, inicializovat databází, ...</li>
+<li>Pøedpoklad: Python 3.7 instalován na serveru</li>
+    <li>Ideálnì vytvoøení virtuálního prostøedí pro python (není nutné). V koøenovém adresáøi projektu pøíkaz: <i>python3 -m venv venv</i></li>
+    <li>Aktivace virtuálního prostøedí pøíkazem: <i>source venv/bin/activate</i></li>
+    <li>Instalace po¾adovaných verzí Python modulù: pøíkaz <i>pip3 install -r requirements.txt</i></li>
+    <li>Vytvoøení cílové MySQL databáze na serveru a editace konfiguraèních souborù alembic.ini a webapp/settings/config.py o nastavení pøístupu k ní.</li>
+    <li>Jakmile jsou pøístupy správnì nastaveny, tak k vytvoøení databáze dojde pøíkazem v koøenovém adresáøi: <i>alembic upgrade head</i></li>
+    <li>Pøíkaz <i>export FLASK_APP=run.py</i>, kterým se vyexportuje environment variable potøebná pro spu¹tìní Flask aplikace</li>
+    <li>Pøíkazem <i>flask run</i> v koøenovém adresáøi dojde ke spu¹tìní aplikace a poskytnutí adresy jejího umístìní.</li>
 </ul>
 
 <h2>Známé problémy</h2>
-<p>Zde popi¹te, které body zadání (IDS a IIS) nejsou implementovány a z jakého dùvodu. Napø. &#8222;Z èasových dùvodù nebyla implementována správa u¾ivatelù.&#8221; Pomù¾ete tím zrychlit opravování, kdy¾ neimplementované funkce nebudeme muset dlouze hledat.</p>
+<p>V systému je plnì implementována správa u¾ivatelù, tedy rùzné role, jejich správa, pøidávání a mazání u¾ivatelù. Dále je funkèní modul dovolených,
+kdy si zamìstnanci zadávají ¾ádosti o dovolenou na dané èasové intervaly a u¾ivatel s rolí vedoucího (boss) je pak schvaluje. Jen rozpracován zùstal
+    prozatím z dùvodù èasové tísnì modul správy aktivit, který bude slou¾it k vykazování jízd zamìstnancù - aktuálnì je vykreslen jen formuláø na základì
+    vozidel z evidence, ale není dále zpracován. V modulu zamìstnanci funguje pøidávání a editace nových zamìstnancù, v modulu vozový park pøidávání a editace vozidel.
+    Implementovat zbylé èásti modulù jsme z èasových dùvodù nestihli.</p>
 
 
 
