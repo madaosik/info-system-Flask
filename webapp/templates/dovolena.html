@@ -12,7 +12,7 @@
                 <th>Datum začátku</th>
                 <th>Datum konce</th>
                 <th>Celkem dní</th>
-                <th>Potvrzení</th>
+                <th colspan="2">Potvrzení</th>
             </tr>
             </thead>
     {% else %}
@@ -34,6 +34,8 @@
                 <form method="POST" action="{{ url_for('schvalit', entity='dovolena_zaznam', id = dovolena.id_zaznamu) }}">
                   <input type="submit" value=&#9745; class="btn approve_button">
                 </form>
+            </td>
+            <td>
                 <form method="POST" action="{{ url_for('smazat', entity='dovolena_zaznam', id = dovolena.id_zaznamu) }}">
                   <input type="submit" value=&#9746; class="btn deny_button">
                 </form>

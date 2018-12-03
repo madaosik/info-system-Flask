@@ -2,8 +2,6 @@
 {% from "_formhelpers.html" import render_field %}
 
 {% block app_content %}
-    <a href="{{ url_for('show_user_activities', id=current_user.id) }}"><< Zpět na přehled zaměstnanců</a>
-    <br><br>
     <h3>Přidat novou aktivitu</h3>
     <form method="POST" action="{{ url_for('show_user_activities', id=current_user.id) }}">
     {{ form.csrf_token }}
