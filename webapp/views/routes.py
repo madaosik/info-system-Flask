@@ -99,7 +99,6 @@ def upravit_mne(entity, id):
     return render_template(db_entity['form_page'], action= 'upravit_mne', object=instance, form=edit_form)
 
 
-
 # ------------ USER MANAGEMENT VIEW FUNCTIONS-----------------
 
 

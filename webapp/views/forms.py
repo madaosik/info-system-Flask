@@ -68,13 +68,13 @@ class User_form(FlaskForm):
 
 
 class Dovo_form(FlaskForm):
-    dat_od = CzechDateField('Datum začátku', validators=[InputRequired(message="Doplňte datum pocatku dovolene!")])
-    dat_do = CzechDateField('Datum konce', validators=[InputRequired(message="Doplňte datum konce dovolene!")])
+    dat_od = CzechDateField('Datum začátku', validators=[InputRequired(message="Doplňte datum začátku dovolené!")])
+    dat_do = CzechDateField('Datum konce', validators=[InputRequired(message="Doplňte datum konce dovolené!")])
 
 
 class Dovo_zaz_form(FlaskForm):
-    od = CzechDateField('Datum začátku', validators=[InputRequired(message="Doplňte datum pocatku dovolene!")])
-    do = CzechDateField('Datum konce (včetne)', validators=[InputRequired(message="Doplňte datum konce dovolene!")])
+    od = CzechDateField('Datum začátku', validators=[InputRequired(message="Doplňte datum pocatku dovolené!")])
+    do = CzechDateField('Datum konce (včetně)', validators=[InputRequired(message="Doplňte datum konce dovolené!")])
     submit = SubmitField('Uložit')
 
     def validate(self):
@@ -82,7 +82,7 @@ class Dovo_zaz_form(FlaskForm):
             return False
         result = True
         if self.od.data > self.do.data:
-            self.od.errors.append('Od musi byt driv nez do!')
+            self.od.errors.append('Začátek dovolené musí mít dřívejší datum než její konec!')
             result = False
         return result
 

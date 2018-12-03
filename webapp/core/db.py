@@ -79,12 +79,10 @@ def get_db_entity(entity_name):
 def get_obj_by_id(classname,id):
     return classname.query.get(id)
 
+
 def get_obj_by_id_zam(classname, id):
     return classname.query.filter_by(id_zam=id)
 
-def create_user(login,email,passwd):
-    user = Uzivatel(login=login, email=email)
-    user.set_password(passwd)
 
 def get_user_by_attr(**kwargs):
     if 'login' in kwargs:
@@ -93,20 +91,42 @@ def get_user_by_attr(**kwargs):
         user = Uzivatel.query.get(kwargs['id'])
     return user
 
-def check_login(login):
+
+def get_empl_by_attr(**kwargs):
+    if 'email' in kwargs:
+        user = Zamestnanec.query.filter_by(email=kwargs['email']).first()
+    elif 'id_zam' in kwargs:
+        user = Zamestnanec.query.filter_by(id_zam=kwargs['id_zam']).first()
+    return user
+
+
+def check_login_and_email(login,email):
     error = None
     if get_user_by_attr(login=login) is not None:
-            error = "Použijte, prosím, jiné uživatelské jméno!"
-    return error
+        error = "Použijte, prosím, jiné uživatelské jméno. %s již existuje!" % login
+        return error
 
-def create_user(form):
-    error = check_login(login=form.login.data)
+    empl = get_empl_by_attr(email=email)
+    if empl:
+        if Uzivatel.query.filter_by(id_zam=empl.id_zam).first() is not None:
+            error = "Uživatelský účet spojený s e-mailem %s již existuje. Kontaktujte správce!" % email
+    else:
+        error = "Zaměstnanec s e-mailem %s není veden v databázi. Kontaktujte správce!" % email
+
     if error:
         return error
+    else:
+        return empl.id_zam
+
+
+def create_user(form):
+    id_zam = check_login_and_email(login=form.login.data, email=form.email.data)
+    if not isinstance(id_zam,int):
+        return id_zam
     try:
-        user = Uzivatel(login=form.login.data, email=form.email.data, role=form.role.data)
+        user = Uzivatel(login=form.login.data, email=form.email.data, role=form.role.data, id_zam=id_zam)
     except AttributeError:
-        user = Uzivatel(login=form.login.data, email=form.email.data)
+        user = Uzivatel(login=form.login.data, email=form.email.data, id_zam=id_zam)
 
     try:
         user.set_password(form.password.data)
