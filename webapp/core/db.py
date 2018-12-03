@@ -161,6 +161,8 @@ def get_obj_by_clsname(classname,**kwargs):
 def fetch_all_by_cls(classname):
     if classname == Zamestnanec:
         return classname.query.order_by('prijmeni')
+    elif classname == Dovolena_zam_hist:
+        return classname.query.order_by('od')
     return classname.query.all()
 
 
