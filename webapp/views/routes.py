@@ -99,6 +99,17 @@ def upravit_mne(entity, id):
     return render_template(db_entity['form_page'], action= 'upravit_mne', object=instance, form=edit_form)
 
 
+@app.route('/auth/<id>/my_activities',methods=['GET','POST'])
+@login_required(roles=[ADMIN,BOSS,USER])
+def show_user_activities(id):
+    return render_template('user_activities.html')
+
+@app.route('/auth/<id>/my_activities/new',methods=['GET','POST'])
+@login_required(roles=[ADMIN,BOSS,USER])
+def add_user_activity(id):
+    return render_template('new_activity.html')
+
+
 # ------------ USER MANAGEMENT VIEW FUNCTIONS-----------------
 
 

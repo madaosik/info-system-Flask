@@ -20,26 +20,20 @@
             <div class="navbar">
                 <a class="btn btn-primary" href="{{ url_for('logged_in') }}">Nástěnka</a>
                  {% if current_user.role == 'user'%}
-                <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle" type="button" id="mujProfilButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Můj profil
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="mujProfilButton">
-                        <a class="dropdown-item" href="{{ url_for('show_me',entity= 'zamestnanci', id= current_user.id) }}">Moje údaje</a>
-                        <a class="dropdown-item" href="{{ url_for('show_me',entity= 'dovolena_zaznam', id= current_user.id) }}">Dovolená</a>
-                    </div>
-                </div>
+                     <a class="btn btn-primary" href="{{ url_for('show_me',entity= 'zamestnanci', id= current_user.id) }}">Můj profil</a>
+                     <a class="btn btn-primary" href="{{ url_for('show_me',entity= 'dovolena_zaznam', id= current_user.id) }}">Plánovaná dovolená</a>
+                     <a class="btn btn-primary" href="{{ url_for('show_user_activities', id=current_user.id) }}">Moje aktivity</a>
                  {% endif %}
-                <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle" type="button" id="evidenceCinnostiButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Evidence činností
-                  </button>
-                  <div class="dropdown-menu" aria-labelledby="evidenceCinnostiButton">
-                    <a class="dropdown-item" href="{{ url_for('show_all', entity='aktivity') }}">Přehled aktivit</a>
-                    <a class="dropdown-item" href="#">Docházka</a>
-                  </div>
-                </div>
                 {% if current_user.role == 'admin' or current_user.role == 'boss' %}
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="evidenceCinnostiButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Evidence činností
+                      </button>
+                      <div class="dropdown-menu" aria-labelledby="evidenceCinnostiButton">
+                        <a class="dropdown-item" href="{{ url_for('show_all', entity='aktivity') }}">Přehled aktivit</a>
+                        <a class="dropdown-item" href="#">Docházka</a>
+                      </div>
+                    </div>
                     <div class="dropdown">
                       <button class="btn btn-primary dropdown-toggle" type="button" id="zamestnanciButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Zaměstnanci
@@ -75,6 +69,12 @@
                     {% endif %}
                 {% endif %}
             </div>
+            {% if current_user.role == 'user'%}
+                <div class="navbar second_menu_row">
+                    <a class="btn btn-secondary" href="{{ url_for('add_user_activity', id=current_user.id) }}">Přidat aktivitu</a>
+                    <a class="btn btn-secondary" href="{{ url_for('pridat', entity= 'dovolena_zaznam') }}">Nová žádost o dovolenou</a>
+                </div>
+            {% endif %}
         </div>
     {% endif %}
 {% endblock %}

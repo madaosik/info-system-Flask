@@ -33,6 +33,27 @@ p.error, td.form_error {
     text-align: center;
 }
 
+.second_menu_row {
+    display: block;
+    float: right;
+}
+
+.second_menu_row a {
+    background-color: red;
+    border: none;
+}
+
+.btn-secondary {
+    padding-top: 0.1rem;
+    pading-right: 0.3rem;
+    padding-left: 0.3rem;
+    padding-bottom: 0.1rem;
+}
+
+.btn-secondary:hover {
+    background-color: #007bff;
+}
+
 table th {
     text-align: center;
 }
