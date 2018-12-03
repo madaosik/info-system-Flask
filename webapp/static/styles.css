@@ -14,6 +14,17 @@ p.uptodate {
     color: green;
 }
 
+p.pending {
+    padding-left: 20px;
+    font-weight: bold;
+    color: red;
+}
+
+p.pending a {
+    color: red;
+    text-decoration: underline;
+}
+
 p.login {
     float: right;
 }

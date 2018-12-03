@@ -19,7 +19,7 @@
         {% endif %}
         <h4>Dovolená ke schválení:</h4>
         {% if vac %}
-            Mate nove zadosti o dovolenou. <a href="{{ url_for('show_all', entity='dovolena_zaznam') }}">K potvrzeni</a><br>
+            <p class="pending">Evidujeme nevyřízené <a href="{{ url_for('show_all', entity='dovolena_zaznam') }}">>> žádosti o dovolenou <<</a>!</p>
         {% else %}
             <p class="uptodate">Nenašli jsme žádné žádosti o dovolenou vyžadující Vaše schválení.</p>
         {% endif %}
@@ -27,6 +27,6 @@
     <h4>Upozornění:</h4>
     {% if notif %}
     {% else %}
-        <p class="uptodate">Nenašli jsme žádné skutečnosti hodné Vaší pozornosti.</p>
+        <p class="uptodate">Žádné důležité novinky.</p>
     {% endif %}
 {% endblock %}
