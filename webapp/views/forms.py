@@ -99,6 +99,7 @@ class Uzivatel_form(RegistrationForm):
 
 class Uzivatel_edit_form(Uzivatel_form):
     # Heslo při editaci nechceme jako povinné pole a login nejde měnit.....
+    email = None
     login = None
     password = PasswordField('Heslo')
     password2 = PasswordField('Zopakování hesla',validators=[EqualTo('password', message="Zadaná hesla se neshodují!")])
