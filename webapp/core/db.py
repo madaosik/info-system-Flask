@@ -197,8 +197,10 @@ def log_visit(user=Uzivatel):
 def fetch_all_pending_approvals():
     pass
 
+
 def fetch_all_pending_vacation():
-    pass
+    return Dovolena_zam_hist.query.filter_by(potvrzeni=False).first()
+
 
 def fetch_notifications():
     pass

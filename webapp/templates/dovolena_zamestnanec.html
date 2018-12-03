@@ -20,7 +20,11 @@
         <tr>
             <td>{{ dovolena.od }}</td>
             <td>{{ dovolena.do }}</td>
-            <td>{{ dovolena.potvrzeni }}</td>
+            <td>{% if dovolena.potvrzeni == True %}
+            Áno
+            {%  else %}
+            Ne
+            {% endif %}</td>
         </tr>
     {% endfor %}
 
