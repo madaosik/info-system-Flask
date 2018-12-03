@@ -20,11 +20,11 @@
     {% else %}
         <form method="POST" action="{{ url_for('upravit',entity='zamestnanci', id=object.id_zam) }}">
     {% endif %}
-{{ form.csrf_token }}
-<table class="form_table">
-    {% for field in form %}
-        {{ render_field(field,form) }}
-    {% endfor %}
-</table>
-</form>
+    {{ form.csrf_token }}
+            <table class="form_table">
+                {% for field in form %}
+                    {{ render_field(field,form) }}
+                {% endfor %}
+            </table>
+        </form>
 {% endblock %}

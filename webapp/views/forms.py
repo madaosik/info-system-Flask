@@ -3,7 +3,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, BooleanField, IntegerField, PasswordField, SelectField
 from wtforms.validators import InputRequired, DataRequired, Email, NumberRange, ValidationError, EqualTo
-from wtforms.fields.html5 import DateField
+from wtforms.fields.html5 import DateField, DateTimeField, DateTimeLocalField
 import datetime
 
 class CzechDateField(DateField):
@@ -73,7 +73,7 @@ class Dovo_form(FlaskForm):
 
 
 class Dovo_zaz_form(FlaskForm):
-    od = CzechDateField('Datum začátku', validators=[InputRequired(message="Doplňte datum pocatku dovolené!")])
+    od = CzechDateField('Datum začátku', validators=[InputRequired(message="Doplňte datum začátku dovolené!")])
     do = CzechDateField('Datum konce (včetně)', validators=[InputRequired(message="Doplňte datum konce dovolené!")])
     submit = SubmitField('Uložit')
 
@@ -105,3 +105,13 @@ class Uzivatel_edit_form(Uzivatel_form):
     role = SelectField('Role')
     submit = SubmitField('Uložit')
 
+class New_activity_form(FlaskForm):
+
+    misto_z = StringField('Odkud', default="Brno-Tuřany")
+    misto_pres = StringField('Přes')
+    misto_kam = StringField('Kam', default="Brno-Tuřany")
+    datum_od = DateTimeLocalField('Datum a čas odjezdu', default=datetime.datetime.now, format="%Y-%m-%dT%H:%M",
+                              validators=[InputRequired(message="Doplňte den začátku aktivity!")])
+    datum_do = DateTimeLocalField('Datum a čas návratu', default=datetime.datetime.now, format="%Y-%m-%dT%H:%M",
+                              validators=[InputRequired(message="Doplňte den konce aktivity!")])
+    submit = SubmitField('Zaznamenat a odeslat k potvrzení')

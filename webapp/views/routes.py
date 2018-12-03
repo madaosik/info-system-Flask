@@ -127,7 +127,8 @@ def show_user_activities(id):
 @app.route('/auth/<id>/my_activities/new',methods=['GET','POST'])
 @login_required(roles=[ADMIN,BOSS,USER])
 def add_user_activity(id):
-    return render_template('new_activity.html')
+    activity_form = forms.New_activity_form()
+    return render_template('new_activity.html', form=activity_form)
 
 
 # ------------ USER MANAGEMENT VIEW FUNCTIONS-----------------
