@@ -16,7 +16,7 @@
     {% if action=='Přidat zaměstnance' %}
         <form method="POST" action="{{ url_for('pridat',entity='zamestnanci') }}">
     {% elif action== 'upravit_mne' %}
-        <form method="POST" action="{{ url_for('upravit_mne',entity='zamestnanci', id=current_user.id) }}">
+        <form method="POST" action="{{ url_for('upravit_mne',entity='zamestnanci', id=current_user.id_zam) }}">
     {% else %}
         <form method="POST" action="{{ url_for('upravit',entity='zamestnanci', id=object.id_zam) }}">
     {% endif %}

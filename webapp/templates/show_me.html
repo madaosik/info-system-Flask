@@ -13,7 +13,7 @@
     <tr><td>Číslo pracovní sml. : </td><td>{{ me.prac_sml }}</td></tr>
     </table>
     <br>
-    <form method="GET" action="{{ url_for('upravit_mne', entity='zamestnanci', id = id) }}">
+    <form method="GET" action="{{ url_for('upravit_mne', entity='zamestnanci', id = current_user.id_zam) }}">
                   <input type="submit" value="Upravit">
                 </form>
 {% endblock %}

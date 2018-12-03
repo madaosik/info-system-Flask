@@ -61,6 +61,8 @@ def get_db_entity(entity_name):
             'homepage': 'dovolena.html',
             'form_page': "dovo_zam_form.html",
             'me_page': 'dovolena_zamestnanec.html',
+            'history_page': 'dovolena_historie.html',
+            'detail_history_page': 'dovolena_historie_detail.html',
         }
 
     }

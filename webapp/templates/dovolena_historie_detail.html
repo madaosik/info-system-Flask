@@ -1,9 +1,11 @@
 {% extends "base.html" %}
 
 {% block app_content %}
-    <h3>Plánovaná dovolená</h3>
+    <h2>{{ empl.kr_jmeno}} {{  empl.prijmeni  }}</h2>
+    {% if check %}
+    <h3>Nejbližší dovolené</h3>
 
-    {% if me %}
+
         <table class="table table-hover table-sm">
         <thead class="thead-light">
         <tr>
@@ -13,10 +15,6 @@
             <th>Potvrzení</th>
         </tr>
         </thead>
-    {% else %}
-        <p>Neevidujeme žádné záznamy dovolené.</p>
-    {% endif %}
-{% if me %}
     {% for dovolena in me %}
         {% if dovolena.do > date %}
         <tr>
@@ -37,13 +35,13 @@
 
      <h3>Historie dovolené</h3>
 
-    {% if me %}
+    {% if check %}
         <table class="table table-hover table-sm">
         <thead class="thead-light">
         <tr>
             <th>Datum začátku</th>
             <th>Datum konce</th>
-            <th>Potvrzení</th>
+            <th>Celkem</th>
         </tr>
         </thead>
     {% else %}
@@ -55,18 +53,13 @@
         <tr>
             <td>{{ dovolena.od }}</td>
             <td>{{ dovolena.do }}</td>
-            <td>{% if dovolena.potvrzeni == True %}
-            Áno
-            {%  else %}
-            Ne
-            {% endif %}</td>
+            <td>{{ dovolena.celkem }}</td>
         </tr>
         {% endif %}
     {% endfor %}
 
     </table>
 {% endif %}
-    <form method="GET" action="{{ url_for('pridat_ziadost', entity= 'dovolena_zaznam') }}">
-        <input type="submit" value="Přidat">
-    </form>
+     <p><a href="{{ url_for('show_vsetkydovolene',entity='dovolena_zaznam') }}">Spatky</a></p>
+
 {% endblock %}

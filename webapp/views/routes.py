@@ -38,11 +38,10 @@ def pridat_ziadost(entity):
         instance = db.get_obj_by_clsname(db_entity['class'])
         db.update_from_form(instance, add_form)
         if entity == 'dovolena_zaznam':
-            me = db.get_empl_by_attr(email=current_user.email)
-            instance.id_zam = me.id_zam
+            instance.id_zam = current_user.id_zam
             instance.celkem = (instance.do - instance.od).days + 1
             db.add(instance)
-            return redirect(url_for('show_mojedovolena', entity=entity, id=current_user.email))
+            return redirect(url_for('show_mojedovolena', entity=entity, id=current_user.id_zam))
 
     return render_template(db_entity['form_page'], action=db_entity['add_text'], form=add_form)
 
@@ -85,37 +84,56 @@ def show_all(entity):
     all_instances = db.fetch_all_by_cls(db_entity['class'])
     if entity == 'dovolena_zaznam':
         empl= db.fetch_all_by_cls(Zamestnanec)
-        return render_template(db_entity['homepage'], all=all_instances, empl=empl)
-    return render_template(db_entity['homepage'], all=all_instances)
+        return render_template(db_entity['homepage'], all=all_instances, empl=empl, date=datetime.datetime.now().date())
+    return render_template(db_entity['homepage'], all=all_instances, date=datetime.datetime.now().date())
 
 
 @app.route('/auth/<entity>/<id>')
 @login_required(roles=[USER])
 def show_me(entity, id):
     db_entity = db.get_db_entity(entity)
-    me = db.get_empl_by_attr(email=id)
-    instance = db.get_empl_by_attr(email=id)
-    return render_template(db_entity['me_page'], id=me.id_zam, me=instance)
+    instance = db.get_obj_by_id(db_entity['class'], id)
+    return render_template(db_entity['me_page'], id=id, me=instance)
 
 
 @app.route('/auth/<entity>/mojedovolena/<id>')
 @login_required(roles=[USER])
 def show_mojedovolena(entity, id):
     db_entity = db.get_db_entity(entity)
-    me = db.get_empl_by_attr(email=id)
-    instance = db.get_obj_by_id_zam(db_entity['class'], me.id_zam)
-    return render_template(db_entity['me_page'], id=me.id_zam, me=instance)
+    instance = db.get_obj_by_id_zam(db_entity['class'],id)
+    return render_template(db_entity['me_page'], id=id, me=instance, date=datetime.datetime.now().date())
+
+@app.route('/auth/<entity>/historie/all')
+@login_required(roles=[ADMIN,BOSS])
+def show_vsetkydovolene(entity):
+    db_entity = db.get_db_entity(entity)
+    all_instances = db.fetch_all_by_cls(db_entity['class'])
+    if entity == 'dovolena_zaznam':
+        empl= db.fetch_all_by_cls(Zamestnanec)
+        return render_template(db_entity['history_page'], all=all_instances, empl=empl, date=datetime.datetime.now().date())
+    return render_template(db_entity['homepage'], all=all_instances, date=datetime.datetime.now().date())
+
+
+@app.route('/auth/<entity>/detaildovolene/<id>')
+@login_required(roles=[ADMIN,BOSS])
+def show_detaildovolena(entity, id):
+    db_entity = db.get_db_entity(entity)
+    instance = db.get_obj_by_id_zam(db_entity['class'],id)
+    check = db.get_obj_by_id_zam(db_entity['class'],id).first()
+    empl = db.get_empl_by_attr(id_zam=id)
+    return render_template(db_entity['detail_history_page'], id=id, me=instance, date=datetime.datetime.now().date(),\
+                           empl=empl, check=check)
 
 
 @app.route('/auth/<entity>/<id>/me',methods=['GET','POST'])
 @login_required(roles=[USER])
 def upravit_mne(entity, id):
     db_entity = db.get_db_entity(entity)
-    instance = db.get_obj_by_id(db_entity['class'],id)
+    instance = db.get_obj_by_id(db_entity['class'], id)
     edit_form = db.get_obj_by_clsname(db_entity['form_class_me'],initobject=instance)
     if edit_form.validate_on_submit():
         db.update_from_form(instance,edit_form)
-        return redirect(url_for('show_me', entity=entity, id= id))
+        return redirect(url_for('show_me',entity= 'zamestnanci', id= id))
     return render_template(db_entity['form_page'], action= 'upravit_mne', object=instance, form=edit_form)
 
 

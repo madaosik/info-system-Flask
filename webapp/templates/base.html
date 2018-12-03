@@ -20,8 +20,8 @@
             <div class="navbar">
                 <a class="btn btn-primary" href="{{ url_for('logged_in') }}">Nástěnka</a>
                  {% if current_user.role == 'user'%}
-                     <a class="btn btn-primary" href="{{ url_for('show_me',entity= 'zamestnanci', id= current_user.email) }}">Můj profil</a>
-                     <a class="btn btn-primary" href="{{ url_for('show_mojedovolena',entity= 'dovolena_zaznam', id= current_user.email) }}">Plánovaná dovolená</a>
+                     <a class="btn btn-primary" href="{{ url_for('show_me',entity= 'zamestnanci', id= current_user.id_zam) }}">Můj profil</a>
+                     <a class="btn btn-primary" href="{{ url_for('show_mojedovolena',entity= 'dovolena_zaznam', id= current_user.id_zam) }}">Plánovaná dovolená</a>
                      <a class="btn btn-primary" href="{{ url_for('show_user_activities', id=current_user.id) }}">Moje aktivity</a>
                  {% endif %}
                 {% if current_user.role == 'admin' or current_user.role == 'boss' %}
