@@ -4,6 +4,8 @@
 {% block app_content %}
     {% if action == 'Úprava zaměstnance' %}
         <h3>{{ action }}: {{ object.kr_jmeno }} {{ object.prijmeni }}</h3>
+    {% elif action == 'upravit_mne' %}
+        <h3>Úprava údajů</h3>
     {% else %}
         <h3>Přidat zaměstnance</h3>
     {% endif %}

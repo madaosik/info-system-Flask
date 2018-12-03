@@ -4,7 +4,9 @@ from webapp.core.models import *
 from webapp.views.forms import *
 from webapp.core.auth import roles_arr
 #from datetime import datetime
+from sqlalchemy import desc
 import sqlalchemy as sa
+
 
 def get_db_entity(entity_name):
     switcher = {
@@ -155,7 +157,10 @@ def get_obj_by_clsname(classname,**kwargs):
         instance = classname()
     return instance
 
+
 def fetch_all_by_cls(classname):
+    if classname == Zamestnanec:
+        return classname.query.order_by('prijmeni')
     return classname.query.all()
 
 

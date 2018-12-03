@@ -4,7 +4,7 @@
     <h3>Dovolená k schválení</h3>
 
     {%  if all %}
-        <table class="table table-hover table-sm">
+        <table class="centertable table table-hover table-sm center">
             <thead class="thead-light">
             <tr>
                 <th>Křestní jméno</th>
@@ -21,21 +21,21 @@
     {% for dovolena in all %}
         {% if dovolena.potvrzeni == False %}
         <tr>
-            <td>{% for zamestnanec in empl %}
+            {% for zamestnanec in empl %}
                     {% if zamestnanec.id_zam == dovolena.id_zam %}
-                        {{ zamestnanec.kr_jmeno }}
+                        <td>{{ zamestnanec.kr_jmeno }}</td>
                         <td>{{zamestnanec.prijmeni}}</td>
                     {% endif %}
-                {% endfor %}</td>
+                {% endfor %}
             <td>{{dovolena.od}}</td>
             <td>{{dovolena.do}}</td>
             <td>{{dovolena.celkem}}</td>
             <td>
                 <form method="POST" action="{{ url_for('schvalit', entity='dovolena_zaznam', id = dovolena.id_zaznamu) }}">
-                  <input type="submit" value=&#9745; class="approve_button">
+                  <input type="submit" value=&#9745; class="btn approve_button">
                 </form>
                 <form method="POST" action="{{ url_for('smazat', entity='dovolena_zaznam', id = dovolena.id_zaznamu) }}">
-                  <input type="submit" value=&#9746; class="deny_button">
+                  <input type="submit" value=&#9746; class="btn deny_button">
                 </form>
             </td>
         </tr>
@@ -45,8 +45,8 @@
         </table>
     {%  endif %}
 <br><br>
-    <h3>Schválená nastávající dovolená</h3>
-        <table class="table table-hover table-sm">
+    <h3>Schválená nadcházející dovolená</h3>
+        <table class="centertable table table-hover table-sm">
             <thead class="thead-light">
             <tr>
                 <th>Křestní jméno</th>
@@ -72,7 +72,7 @@
             <td>{{dovolena.celkem}}</td>
             <td>
                 <form method="POST" action="{{ url_for('smazat', entity='dovolena_zaznam', id = dovolena.id_zaznamu) }}">
-                  <input type="submit" value=&#9746; class="deny_button">
+                  <input type="submit" value=&#9746; class="btn deny_button">
                 </form>
             </td>
         </tr>
@@ -82,7 +82,7 @@
 
 
     <br><br>
-    <p><a href="{{ url_for('show_vsetkydovolene',entity='dovolena_zaznam') }}">Historie</a></p>
+    <a class="btn btn-secondary" href="{{ url_for('show_vsetkydovolene',entity='dovolena_zaznam') }}">Přejít na historii</a>
 
 
 {% endblock %}
