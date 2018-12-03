@@ -69,12 +69,12 @@
                     {% endif %}
                 {% endif %}
             </div>
-            {% if current_user.role == 'user'%}
                 <div class="navbar second_menu_row">
                     <a class="btn btn-secondary" href="{{ url_for('add_user_activity', id=current_user.id) }}">Přidat aktivitu</a>
-                    <a class="btn btn-secondary" href="{{ url_for('pridat_ziadost', entity= 'dovolena_zaznam') }}">Nová žádost o dovolenou</a>
-                </div>
-            {% endif %}
+                    {% if current_user.role != 'boss' %}
+                        <a class="btn btn-secondary" href="{{ url_for('pridat_ziadost', entity= 'dovolena_zaznam') }}">Nová žádost o dovolenou</a>
+                    {% endif %}
+                    </div>
         </div>
     {% endif %}
 {% endblock %}

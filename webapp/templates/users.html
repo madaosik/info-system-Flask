@@ -7,7 +7,6 @@
                 <thead class="thead-light">
                 <tr>
                     <th>Login</th>
-                    <th>E-mail</th>
                     <th>Počet přihlášení</th>
                     <th>Poslední přihlášení</th>
                     <th>Čas poslední změny</th>
@@ -18,7 +17,6 @@
         {% for user in all %}
             <tr>
                 <td>{{user.login}}</td>
-                <td>{{user.email}}</td>
                 <td>{{user.poc_prihl}}</td>
                 <td>{{user.posl_prihl}}</td>
                 <td>{{user.cas_posl_zmeny}}</td>

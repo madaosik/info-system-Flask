@@ -30,7 +30,6 @@ class Uzivatel(UserMixin, db.Model):
     id = Column(Integer, autoincrement=True, primary_key=True)
     login = Column(String(30), nullable=False)
     password_hash = Column(String(128), nullable=False)
-    email = Column(String(30), nullable=False)
     role = Column(String(10), server_default='user')
     id_zam = Column(Integer, ForeignKey("zamestnanec.id_zam", ondelete='CASCADE'), nullable=False)
     poc_prihl = Column(Integer)
@@ -103,7 +102,8 @@ class Dovolena_zam_hist(db.Model):
 class Vozidlo(db.Model):
     __tablename__ = 'vozidlo'
 
-    spz = Column(String(10),primary_key=True)
+    id_voz = Column(Integer, primary_key=True)
+    spz = Column(String(10))
     znacka = Column(String(20))
     model = Column(String(20))
     rok_vyroby = Column(Integer)

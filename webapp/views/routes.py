@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash, session
 from flask_login import current_user, login_user, logout_user
 
 from webapp import app
@@ -24,7 +24,7 @@ def pridat(entity):
         instance = db.get_obj_by_clsname(db_entity['class'])
         db.update_from_form(instance, add_form)
         db.add(instance)
-        flash("%s proběhla úspěšně!" % db_entity['add_text'])
+        flash("Operace %s proběhla úspěšně!" % db_entity['add_text'])
         return redirect(url_for('show_all', entity=entity))
     return render_template(db_entity['form_page'], action=db_entity['add_text'], form=add_form)
 
@@ -128,6 +128,7 @@ def show_user_activities(id):
 @login_required(roles=[ADMIN,BOSS,USER])
 def add_user_activity(id):
     activity_form = forms.New_activity_form()
+    activity_form.fill_car_selectbox(db.get_cars_tuples())
     return render_template('new_activity.html', form=activity_form)
 
 
@@ -213,6 +214,12 @@ def logged_in():
 def logout():
     logout_user()
     return redirect(url_for('login'))
+
+@app.before_request
+def before_request():
+    session.permanent = True
+    app.permanent_session_lifetime = datetime.timedelta(minutes=10)
+    session.modified = True
 
 # @app.route('/auth/user/uprav/<id>',methods=['GET','POST'])
 # @login_required(roles=[ADMIN])

@@ -107,6 +107,7 @@ class Uzivatel_edit_form(Uzivatel_form):
 
 class New_activity_form(FlaskForm):
 
+    vozidlo = SelectField('Vozidlo')
     misto_z = StringField('Odkud', default="Brno-Tuřany")
     misto_pres = StringField('Přes')
     misto_kam = StringField('Kam', default="Brno-Tuřany")
@@ -115,3 +116,6 @@ class New_activity_form(FlaskForm):
     datum_do = DateTimeLocalField('Datum a čas návratu', default=datetime.datetime.now, format="%Y-%m-%dT%H:%M",
                               validators=[InputRequired(message="Doplňte den konce aktivity!")])
     submit = SubmitField('Zaznamenat a odeslat k potvrzení')
+
+    def fill_car_selectbox(self, cars):
+        self.vozidlo.choices = cars

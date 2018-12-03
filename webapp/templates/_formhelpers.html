@@ -6,7 +6,7 @@
     {% else %}
         <td>{{ field.label }}</td>
         {% if field.type == 'SelectField' %}
-            <td>{{ field(size=3,**kwargs)|safe }}</td>
+            <td>{{ field(size=1,**kwargs)|safe }}</td>
         {% else %}
             <td>{{ field(size=30,**kwargs)|safe }}</td>
         {% endif %}

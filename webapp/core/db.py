@@ -124,9 +124,9 @@ def create_user(form):
     if not isinstance(id_zam,int):
         return id_zam
     try:
-        user = Uzivatel(login=form.login.data, email=form.email.data, role=form.role.data, id_zam=id_zam)
+        user = Uzivatel(login=form.login.data, role=form.role.data, id_zam=id_zam)
     except AttributeError:
-        user = Uzivatel(login=form.login.data, email=form.email.data, id_zam=id_zam)
+        user = Uzivatel(login=form.login.data, id_zam=id_zam)
 
     try:
         user.set_password(form.password.data)
@@ -139,7 +139,6 @@ def create_user(form):
 
 def edit_user(id,form_data_dict):
     user = get_user_by_attr(id=id)
-    user.email = form_data_dict['email']
     user.role = form_data_dict['role']
 
     if form_data_dict['password']:
@@ -178,10 +177,6 @@ def update_from_form(instance,form):
     form.populate_obj(instance)
     db.session.commit()
 
-def add_car(formdata):
-    db.session.add(car)
-    db.session.commit()
-
 
 def log_visit(user=Uzivatel):
     target = Uzivatel.query.get(user.id)
@@ -193,6 +188,14 @@ def log_visit(user=Uzivatel):
     target.poc_prihl = visit_cnt
     target.posl_prihl = sa.func.current_timestamp()
     db.session.commit()
+
+def get_cars_tuples():
+    cars = Vozidlo.query.all()
+    car_tuples_arr = []
+    for car in cars:
+        car_string = "%s: %s %s" % (car.spz, car.znacka, car.model)
+        car_tuples_arr.append((car.id_voz, car_string))
+    return car_tuples_arr
 
 def fetch_all_pending_approvals():
     pass
