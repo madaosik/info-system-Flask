@@ -23,14 +23,27 @@ def pridat(entity):
     if add_form.validate_on_submit():
         instance = db.get_obj_by_clsname(db_entity['class'])
         db.update_from_form(instance, add_form)
-        if entity == 'dovolena_zaznam':
-            instance.id_zam= current_user.id
-            instance.celkem = (instance.do - instance.od).days + 1
-            db.add(instance)
-            return redirect(url_for('show_me', entity=entity, id=current_user.id))
         db.add(instance)
         flash("%s proběhla úspěšně!" % db_entity['add_text'])
         return redirect(url_for('show_all', entity=entity))
+    return render_template(db_entity['form_page'], action=db_entity['add_text'], form=add_form)
+
+
+@app.route('/auth/<entity>/newreq',methods=['GET','POST'])
+@login_required(roles=[ADMIN,BOSS,USER])
+def pridat_ziadost(entity):
+    db_entity = db.get_db_entity(entity)
+    add_form = db_entity['form_class']()
+    if add_form.validate_on_submit():
+        instance = db.get_obj_by_clsname(db_entity['class'])
+        db.update_from_form(instance, add_form)
+        if entity == 'dovolena_zaznam':
+            me = db.get_empl_by_attr(email=current_user.email)
+            instance.id_zam = me.id_zam
+            instance.celkem = (instance.do - instance.od).days + 1
+            db.add(instance)
+            return redirect(url_for('show_mojedovolena', entity=entity, id=current_user.email))
+
     return render_template(db_entity['form_page'], action=db_entity['add_text'], form=add_form)
 
 
@@ -80,11 +93,18 @@ def show_all(entity):
 @login_required(roles=[USER])
 def show_me(entity, id):
     db_entity = db.get_db_entity(entity)
-    if entity == 'dovolena_zaznam':
-        instance = db.get_obj_by_id_zam(db_entity['class'], id)
-    else:
-        instance = db.get_obj_by_id(db_entity['class'], id)
-    return render_template(db_entity['me_page'], id=id, me=instance)
+    me = db.get_empl_by_attr(email=id)
+    instance = db.get_empl_by_attr(email=id)
+    return render_template(db_entity['me_page'], id=me.id_zam, me=instance)
+
+
+@app.route('/auth/<entity>/mojedovolena/<id>')
+@login_required(roles=[USER])
+def show_mojedovolena(entity, id):
+    db_entity = db.get_db_entity(entity)
+    me = db.get_empl_by_attr(email=id)
+    instance = db.get_obj_by_id_zam(db_entity['class'], me.id_zam)
+    return render_template(db_entity['me_page'], id=me.id_zam, me=instance)
 
 
 @app.route('/auth/<entity>/<id>/me',methods=['GET','POST'])
