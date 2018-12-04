@@ -86,5 +86,94 @@
     <br><br>
     <a class="btn btn-secondary" href="{{ url_for('show_vsetkydovolene',entity='dovolena_zaznam') }}">Přejít na historii</a>
 
+    <script type="text/javascript">
+            $(document).ready(function () {
+                var vacations = new Array();
+
+                var vacation1 = {
+                id: "id1",
+                description: "Jan jede na hory.",
+                location: "",
+                subject: "Hory: Jan",
+                calendar: "Pozadano",
+                start: new Date(2018, 11, 5, 0, 0, 0),
+                end: new Date(2018, 11, 17 , 0, 0, 0)
+            }
+
+            var vacation2 = {
+                id: "id2",
+                description: "",
+                location: "",
+                subject: "Petr stavi dum",
+                calendar: "Schvaleno",
+                start: new Date(2018, 11, 8, 0, 0, 0),
+                end: new Date(2018, 11, 24, 0, 0, 0)
+            }
+
+            var vacation3 = {
+                id: "id3",
+                description: "",
+                location: "",
+                subject: "Honza stavi dum",
+                calendar: "Schvaleno",
+                start: new Date(2018, 11, 08, 0, 0, 0),
+                end: new Date(2018, 11, 24, 0, 0, 0)
+            }
+
+            vacations.push(vacation1);
+            vacations.push(vacation2);
+            vacations.push(vacation3);
+
+            // prepare the data
+            var source =
+            {
+                dataType: "array",
+                dataFields: [
+                    { name: 'id', type: 'string' },
+                    { name: 'description', type: 'string' },
+                    { name: 'location', type: 'string' },
+                    { name: 'subject', type: 'string' },
+                    { name: 'calendar', type: 'string' },
+                    { name: 'start', type: 'date' },
+                    { name: 'end', type: 'date' }
+                ],
+                id: 'id',
+                localData: vacations
+            };
+            var adapter = new $.jqx.dataAdapter(source);
+            $("#scheduler").jqxScheduler({
+                date: new $.jqx.date(2018, 11, 4),
+                width: 850,
+                height: 600,
+                source: adapter,
+                view: 'monthView',
+                showLegend: true,
+                ready: function () {
+                    $("#scheduler").jqxScheduler('ensureAppointmentVisible', 'id1');
+                },
+                resources:
+                {
+                    colorScheme: "scheme05",
+                    dataField: "calendar",
+                    source:  new $.jqx.dataAdapter(source)
+                },
+                appointmentDataFields:
+                {
+                    from: "start",
+                    to: "end",
+                    id: "id",
+                    description: "description",
+                    location: "place",
+                    subject: "subject",
+                    resourceId: "calendar"
+                },
+                views:
+                [
+                    { type: 'monthView', showWeekNumbers: true }
+                ]
+            });
+            });
+    </script>
+    <div id="scheduler"></div>
 
 {% endblock %}

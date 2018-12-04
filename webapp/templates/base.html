@@ -6,7 +6,21 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"  crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ url_for('.static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{url_for('.static', filename='jqwidgets/styles/jqx.base.css')}}" type="text/css" />
+    <link rel="stylesheet" href="{{url_for('.static', filename='jqwidgets/styles/jqx.darkblue.css')}}" type="text/css" />
 {% endblock %}
+
+{% block scripts %}
+    {{super()}}
+    <!-- add the jQuery script -->
+    <script type="text/javascript" src="{{url_for('.static', filename='scripts/jquery-1.11.1.min.js')}}"></script>
+    <!-- add the jQWidgets framework -->
+    <script type="text/javascript" src="{{url_for('.static', filename='jqwidgets/jqxcore.js')}}"></script>
+    <!-- add one or more widgets -->
+    <script type="text/javascript" src="{{url_for('.static', filename='jqwidgets/jqxbuttons.js')}}"></script>
+    <!-- add the jQWidgets base styles and one of the theme stylesheets -->
+{% endblock %}
+
 
 {% block title %}IS dopravní společnosti{% endblock %}
 
