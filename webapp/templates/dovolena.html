@@ -1,6 +1,20 @@
 {% extends "base.html" %}
 
+{% block head %}
+    <link rel="stylesheet" href="{{url_for('.static', filename='jqwidgets/styles/jqx.base.css')}}" type="text/css" />
+    <link rel="stylesheet" href="{{url_for('.static', filename='jqwidgets/styles/jqx.darkblue.css')}}" type="text/css" />
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/fontawesome-all.min.css" rel="stylesheet">
+<!-- add the jQuery script -->
+    <script type="text/javascript" src="{{url_for('.static', filename='scripts/jquery-1.12.4.min.js')}}"></script>
+    <!-- add the jQWidgets framework -->
+    <script type="text/javascript" src="{{url_for('.static', filename='jqwidgets/jqxcore.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('.static', filename='jqwidgets/jqx-all.js')}}"></script>
+{% endblock %}
+
 {% block app_content %}
+
+    <!-- add the jQWidgets framework -->
     <h3>Evidence dovolených</h3>
 
     {%  if all %}

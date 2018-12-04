@@ -5,25 +5,16 @@
     <link rel="stylesheet" href="/static/datepicker.css"/>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"  crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{url_for('.static', filename='jqwidgets/styles/jqx.base.css')}}" type="text/css" />
-    <link rel="stylesheet" href="{{url_for('.static', filename='jqwidgets/styles/jqx.darkblue.css')}}" type="text/css" />
     <link rel="stylesheet" href="{{url_for('.static', filename='styles.css')}}">
 
 {% endblock %}
 
 {% block head %}
     {{super()}}
-    <!-- add the jQuery script -->
-    <script type="text/javascript" src="{{url_for('.static', filename='scripts/jquery-1.12.4.min.js')}}"></script>
-    <!-- add the jQWidgets framework -->
-
 
 {% endblock %}
 
 {% block scripts %}
-    <script type="text/javascript" src="{{url_for('.static', filename='jqwidgets/jqxcore.js')}}"></script>
-    <script type="text/javascript" src="{{url_for('.static', filename='jqwidgets/jqx-all.js')}}"></script>
-
 {% endblock %}
 
 
@@ -105,7 +96,7 @@
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for cat, message in messages %}
-                     <div class="alert alert-dismissible alert-success {{ cat }}">
+                     <div class="alert alert-dismissible {{ cat }}">
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
