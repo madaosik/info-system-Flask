@@ -12,7 +12,7 @@
     <div class="container">
         {% if current_user.is_authenticated %}
             <p class="login"><a href="{{ url_for('logout') }}">Odhlásit</a> uživatele <b>{{ current_user.login }}</b></p>
-            <h1>Láníček Transport s.r.o.</h1>
+            <h1>Dopravní společnost</h1>
         {% endif %}
     </div>
     {% if current_user.is_authenticated %}
