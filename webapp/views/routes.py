@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from flask import render_template, request, redirect, url_for, flash, session
+from flask import render_template, request, redirect, url_for, flash, session, jsonify
 from flask_login import current_user, login_user, logout_user
 
 from webapp import app
@@ -38,12 +38,57 @@ def pridat_ziadost(entity):
         instance = db.get_obj_by_clsname(db_entity['class'])
         db.update_from_form(instance, add_form)
         if entity == 'dovolena_zaznam':
-            instance.id_zam = current_user.id_zam
-            instance.celkem = (instance.do - instance.od).days + 1
-            db.add(instance)
+            db.insert_vacation(current_user.id_zam, instance.od, instance.do)
             return redirect(url_for('show_mojedovolena', entity=entity, id=current_user.id_zam))
+    return render_template(db_entity['form_page'], action=db_entity['add_text'], form=add_form, holidays=get_holidays())
 
-    return render_template(db_entity['form_page'], action=db_entity['add_text'], form=add_form)
+
+def get_holidays():
+    user_vacation = db.get_user_vacation(current_user.id_zam)
+    result = []
+    year = datetime.datetime.now().year
+    month = datetime.datetime.now().month
+    holidays = [[1,1], [30,3], [2,4], [1,5], [8,5], [28,9], [28,10], [17,11], [24,12]]
+    for h in holidays[::-1]:
+        y = year if month < h[1] else year + 1
+        day_no = datetime.date(day=h[0], month=h[1],year=y).weekday()
+        if day_no == 1:
+            if h[0] == 1 and h[1] == 1:
+                continue
+            vac_day = datetime.date(day=h[0], month=h[1], year=y) - datetime.timedelta(days=1)
+        elif day_no == 3:
+            if h[0] == 24 and h[1] == 12:
+                continue
+            vac_day = datetime.date(day=h[0], month=h[1], year=y) + datetime.timedelta(days=1)
+        else:
+            continue
+        add = True
+        for vac in user_vacation:
+            if vac_day >= vac.od and vac_day <= vac.do:
+                add = False
+        if add:
+            result.append(vac_day.strftime('%d.%m. %Y'))
+    result.sort(key=lambda x: datetime.datetime.strptime(x, '%d.%m. %Y'))
+    days = {0: 'Pondělí',4:'Pátek'}
+    vac_day = datetime.date(day=27, month=12, year=2018)
+    add = True
+    for vac in user_vacation:
+        if vac_day >= vac.od and vac_day <= vac.do:
+            add = False
+    christmas = None
+    if add:
+        christmas = ['27.12. 2018', '31.12. 2018', 3]
+    holidays = [[x, days[datetime.datetime.strptime(x, '%d.%m. %Y').weekday()]] for x in result]
+
+    return {'holidays': holidays, 'christmas': christmas}
+
+
+@app.route('/auth/dovolena_zaznam/quici_insert', methods=["POST"])
+def quick_insert_vacation():
+    data = request.json
+    db.insert_vacation(current_user.id_zam, data['from'], data['to'])
+    flash('Dovolená úspěšně přidána', "alert-success")
+    return jsonify({})
 
 
 @app.route('/auth/<entity>/uprav/<id>',methods=['GET','POST'])

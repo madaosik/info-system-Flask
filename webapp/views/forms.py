@@ -73,8 +73,8 @@ class Dovo_form(FlaskForm):
 
 
 class Dovo_zaz_form(FlaskForm):
-    od = CzechDateField('Datum začátku', validators=[InputRequired(message="Doplňte datum začátku dovolené!")])
-    do = CzechDateField('Datum konce (včetně)', validators=[InputRequired(message="Doplňte datum konce dovolené!")])
+    od = StringField('Datum začátku', validators=[InputRequired(message="Doplňte datum začátku dovolené!")])
+    do = StringField('Datum konce (včetně)', validators=[InputRequired(message="Doplňte datum konce dovolené!")])
     submit = SubmitField('Uložit')
 
     def validate(self):

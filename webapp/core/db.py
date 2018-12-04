@@ -85,7 +85,7 @@ def get_obj_by_id(classname,id):
 
 
 def get_obj_by_id_zam(classname, id):
-    return classname.query.filter_by(id_zam=id)
+    return classname.query.filter_by(id_zam=id).all()
 
 
 def get_user_by_attr(**kwargs):
@@ -216,3 +216,14 @@ def fetch_all_pending_vacation():
 
 def fetch_notifications():
     pass
+
+
+def insert_vacation(user_id, date_from, date_to):
+    date_from = datetime.datetime.strptime(date_from, '%d.%m. %Y')
+    date_to = datetime.datetime.strptime(date_to, '%d.%m. %Y')
+    stmt = Dovolena_zam_hist(id_zam=user_id, od=date_from, do=date_to, celkem=(date_to - date_from).days + 1)
+    db.session.add(stmt)
+    db.session.commit()
+
+def get_user_vacation(uid):
+    return db.session.query(Dovolena_zam_hist).filter_by(id_zam=uid).all()

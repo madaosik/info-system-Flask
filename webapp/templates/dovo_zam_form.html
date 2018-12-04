@@ -1,16 +1,142 @@
 {% extends "base.html" %}
-{% from "_formhelpers.html" import render_field %}
 
 {% block app_content %}
     <h3>Nová žádost o dovolenou</h3>
+    <span>(Víkendy budou odečteny automaticky)</span>
 
     <form method="POST" action="{{ url_for('pridat_ziadost',entity= 'dovolena_zaznam') }}">
 
         {{ form.csrf_token }}
-        <table class="form_table">
-            {% for field in form %}
-                {{ render_field(field,form) }}
-            {% endfor %}
-        </table>
+        <div class="row">
+            <div class="col-sm-6">
+                <label for="exampleInputEmail1">{{ form.od.label }}</label>
+                {{ form.od(**{'class': 'form-control'}) }}
+            </div>
+            <div class="col-sm-6">
+                <label for="exampleInputEmail1">{{ form.do.label }}</label>
+                {{ form.do(**{'class': 'form-control'}) }}
+                <div class="invalid-feedback">
+                  Neplatná hodnota.
+                </div>
+            </div>
+        </div>
+        <br>
+        <div>
+            {{ form.submit(**{'class':"btn btn-success", 'disabled':'disabled'}) }}
+        </div>
     </form>
+    <br>
+    <br>
+    {% if holidays.christmas %}
+        <h3>Doporučujeme si vzít dovolenou přes vánoce :)</h3>
+        <div>
+        &nbsp;&nbsp;<button onclick="send($(this).parent())" class="btn">Vybrat</button>&nbsp;&nbsp;
+        <span>{{ holidays.christmas[0] }}</span> - <span>{{ holidays.christmas[1] }}</span> ({{ holidays.christmas[2] }} dny)
+        </div><br>
+    {% endif %}
+    {% if holidays.holidays %}
+        <h3>Seznam možných prodloužených víkendů</h3>
+        <span>(Dny, kdy je státní svátek v úterý nebo ve čtvrtek)</span><br>
+        {% for item in holidays.holidays %}
+            <div style="padding-top: 10px">
+                &nbsp;&nbsp;<button class="btn" onclick="send($(this).parent())">Vybrat</button>&nbsp;&nbsp;
+                <span>{{ item[0] }}</span> ({{ item[1] }})
+            </div>
+        {% endfor %}
+    {% endif %}
+    <br>
+
+{% endblock %}
+
+{% block footer %}
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="/static/bootstrap-datepicker.js"></script>
+    <script>
+        var date = new Date(Date.now());
+        date = date.toLocaleDateString();
+        date = (parseInt(date.slice(3,4)) + 1) + '.' + date.slice(0,2) + '. ' + date.slice(5);
+        $('#od').datepicker({
+            format: 'dd.mm. yyyy',
+            startDate: date,
+            weekStart: 1,
+            autoclose: true
+        });
+
+        $('#do').datepicker({
+            format: 'dd.mm. yyyy',
+            weekStart: 1,
+            startDate: $('#od').val() ? $('#od').val() : date,
+            autoclose: true
+        });
+
+        $('#od').datepicker().on('changeDate', function(ev){
+            validate();
+          });
+        $('#do').datepicker().on('changeDate', function(ev){
+            validate();
+          });
+
+        function validate(){
+            var from = $('#od').val();
+            var to = $('#do').val();
+            if (!from || !to)
+                return;
+            console.log(cmp(to, from))
+            if (cmp(to, from)){
+                $('#do').removeClass('is-invalid');
+                $('#submit').attr('disabled', false);
+            }
+            else{
+                $('#do').addClass('is-invalid');
+                $('#submit').attr('disabled', true);
+            }
+        }
+
+        // return true if date1 >= date2
+        function cmp(date1, date2){
+            d1_y = parseInt(date1.slice(7));
+            d2_y = parseInt(date2.slice(7));
+            if(d1_y > d2_y)
+                return true;
+            if(d1_y < d2_y)
+                return false;
+            d1_m = parseInt(date1.slice(3,4));
+            d2_m = parseInt(date2.slice(3,4));
+            if(d1_m > d2_m)
+                return true;
+            if(d1_m < d2_m)
+                return false;
+            d1_d = parseInt(date1.slice(0,2));
+            d2_d = parseInt(date2.slice(0,2));
+            if(d1_d >= d2_d)
+                return true;
+            return false;
+        }
+
+        function send(el){
+            var res = el.find('span');
+            var from, to;
+            if (res.length == 2){
+                from = res[0].innerHTML;
+                to = res[1].innerHTML;
+            }
+            else if (res.length){
+                from = res[0].innerHTML;
+                to = from;
+            }
+            else
+                return;
+            $.ajax({
+                url: '/auth/dovolena_zaznam/quici_insert',
+                method: 'POST',
+                data: JSON.stringify({from: from, to: to}),
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function () {
+                    window.location.reload();
+                }
+            })
+        }
+    </script>
 {% endblock %}
