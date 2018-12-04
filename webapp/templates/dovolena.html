@@ -21,11 +21,8 @@
 
 {% block app_content %}
 
-    <!-- add the jQWidgets framework -->
-    <h3>Evidence dovolených</h3>
-
     {%  if all %}
-
+        <h5>Přehled neschválených žádostí o dovolenou</h5>
         <table class="centertable table table-hover table-sm center">
             <thead class="thead-light">
             <tr>
@@ -70,8 +67,8 @@
         </table>
     {%  endif %}
 <br><br>
-    <!--
-    <h3>Schválená nadcházející dovolená</h3>
+
+    <h5>Schválené žádosti o dovolenou</h5>
         <table class="centertable table table-hover table-sm">
             <thead class="thead-light">
             <tr>
@@ -107,7 +104,7 @@
         </table>
 
 
-    <br><br>
+    <br><br><!--
     <a class="btn btn-secondary" href="{{ url_for('show_vsetkydovolene',entity='dovolena_zaznam') }}">Přejít na historii</a>
     <br><br>-->
     <script type="text/javascript">
