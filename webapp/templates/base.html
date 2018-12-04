@@ -24,7 +24,7 @@
     <div class="container col-sm-12 col-md-12 col-lg-12">
         {% if current_user.is_authenticated %}
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                <a class="navbar-brand" href="#">Dopravní společnost</a>
+                <a class="navbar-brand" href="{{ url_for('logged_in') }}">Dopravní společnost</a>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ml-auto">
