@@ -90,6 +90,11 @@ table th {
     pointer-events: none;
 }
 
+.jqx-layout-group-auto-hide-content-vertical
+{
+    width: 200px;
+}
+
 .approve_button{
     background-color: springgreen;
 }

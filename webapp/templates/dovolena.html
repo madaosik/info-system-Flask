@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 
 {% block app_content %}
-    <h3>Dovolená k schválení</h3>
+    <h3>Evidence dovolených</h3>
 
     {%  if all %}
+        <!--
         <table class="centertable table table-hover table-sm center">
             <thead class="thead-light">
             <tr>
@@ -15,9 +16,11 @@
                 <th colspan="2">Potvrzení</th>
             </tr>
             </thead>
+            -->
     {% else %}
         <p>Neevidujeme žádné žádosti o dovolenou.</p>
     {% endif %}
+    <!--
     {% for dovolena in all %}
         {% if dovolena.potvrzeni == False %}
         <tr>
@@ -85,44 +88,34 @@
 
     <br><br>
     <a class="btn btn-secondary" href="{{ url_for('show_vsetkydovolene',entity='dovolena_zaznam') }}">Přejít na historii</a>
-
+    <br><br>-->
     <script type="text/javascript">
-            $(document).ready(function () {
-                var vacations = new Array();
+        $(document).ready(function () {
+            var vacations = new Array();
 
-                var vacation1 = {
-                id: "id1",
-                description: "Jan jede na hory.",
-                location: "",
-                subject: "Hory: Jan",
-                calendar: "Pozadano",
-                start: new Date(2018, 11, 5, 0, 0, 0),
-                end: new Date(2018, 11, 17 , 0, 0, 0)
-            }
-
-            var vacation2 = {
-                id: "id2",
-                description: "",
-                location: "",
-                subject: "Petr stavi dum",
-                calendar: "Schvaleno",
-                start: new Date(2018, 11, 8, 0, 0, 0),
-                end: new Date(2018, 11, 24, 0, 0, 0)
-            }
-
-            var vacation3 = {
-                id: "id3",
-                description: "",
-                location: "",
-                subject: "Honza stavi dum",
-                calendar: "Schvaleno",
-                start: new Date(2018, 11, 08, 0, 0, 0),
-                end: new Date(2018, 11, 24, 0, 0, 0)
-            }
-
-            vacations.push(vacation1);
-            vacations.push(vacation2);
-            vacations.push(vacation3);
+            {% for dovolena in all %}
+                {% if dovolena.do > date %}
+                    {% for zamestnanec in empl %}
+                        {% if zamestnanec.id_zam == dovolena.id_zam %}
+                            var {{zamestnanec.prijmeni}}{{ dovolena.id_zaznamu }} =
+                            {
+                                id: "{{zamestnanec.prijmeni}}{{ dovolena.id_zaznamu }}",
+                                description: "",
+                                location: "",
+                                subject: "{{ zamestnanec.kr_jmeno }} {{ zamestnanec.prijmeni }}",
+                                {% if dovolena.potvrzeni == true %}
+                                    calendar: "Schváleno",
+                                {% else %}
+                                    calendar: "Čeká na schválení",
+                                {% endif %}
+                                    start: new Date({{ dovolena.od.year }}, {{ dovolena.od.month - 1 }}, {{ dovolena.od.day }}, 0, 0, 0),
+                                    end: new Date({{ dovolena.do.year }}, {{ dovolena.do.month - 1 }}, {{ dovolena.do.day }}, 0, 0, 0)
+                            }
+                            vacations.push({{zamestnanec.prijmeni}}{{ dovolena.id_zaznamu }});
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
 
             // prepare the data
             var source =
@@ -140,20 +133,142 @@
                 id: 'id',
                 localData: vacations
             };
+
             var adapter = new $.jqx.dataAdapter(source);
             $("#scheduler").jqxScheduler({
-                date: new $.jqx.date(2018, 11, 4),
-                width: 850,
+                date: new $.jqx.date({{ date.year }}, {{ date.month }}, {{ date.day }}),
+                width: 800,
                 height: 600,
                 source: adapter,
                 view: 'monthView',
                 showLegend: true,
-                ready: function () {
-                    $("#scheduler").jqxScheduler('ensureAppointmentVisible', 'id1');
+                localization: {
+                    // separator of parts of a date (e.g. '/' in 11/05/1955)
+                    '/': ".",
+                    // separator of parts of a time (e.g. ':' in 05:44 PM)
+                    ':': ":",
+                    // the first day of the week (0 = Sunday, 1 = Monday, etc)
+                    firstDay: 1,
+                    days: {
+                        // full day names
+                        names: ["Neděle", "Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek", "Sobota"],
+                        // abbreviated day names
+                        namesAbbr: ["Ne", "Po", "Út", "St", "Čt", "Pá", "So"],
+                        // shortest day names
+                        namesShort: ["Ne", "Po", "Út", "St", "Čt", "Pá", "So"]
+                    },
+                    months: {
+                        // full month names (13 months for lunar calendards -- 13th month should be "" if not lunar)
+                        names: ["Leden", "Únor", "Březen", "Duben", "Květen", "Červen", "Červenec", "Srpen", "Září", "Říjen", "Listopad", "Prosinec", ""],
+                        // abbreviated month names
+                        namesAbbr: ["Led", "Únor", "Břez", "Dub", "Kvě", "Červ", "Červc", "Srpen", "Září", "Říj", "List", "Pros", ""]
+                    },
+                                        AM: ["AM", "am", "AM"],
+                        PM: ["PM", "pm", "PM"],
+                        eras: [
+                        // eras in reverse chronological order.
+                        // name: the name of the era in this culture (e.g. A.D., C.E.)
+                        // start: when the era starts in ticks (gregorian, gmt), null if it is the earliest supported era.
+                        // offset: offset in years from gregorian calendar
+                        { "name": "A.D.", "start": null, "offset": 0 }
+                        ],
+                        twoDigitYearMax: 2029,
+                        patterns: {
+                            // short date pattern
+                            d: "M/d/yyyy",
+                            // long date pattern
+                            D: "dddd, MMMM dd, yyyy",
+                            // short time pattern
+                            t: "h:mm tt",
+                            // long time pattern
+                            T: "h:mm:ss tt",
+                            // long date, short time pattern
+                            f: "dddd, MMMM dd, yyyy h:mm tt",
+                            // long date, long time pattern
+                            F: "dddd, MMMM dd, yyyy h:mm:ss tt",
+                            // month/day pattern
+                            M: "MMMM dd",
+                            // month/year pattern
+                            Y: "yyyy MMMM",
+                            // S is a sortable format that does not vary by culture
+                            S: "yyyy\u0027-\u0027MM\u0027-\u0027dd\u0027T\u0027HH\u0027:\u0027mm\u0027:\u0027ss",
+                            // formatting of dates in MySQL DataBases
+                            ISO: "yyyy-MM-dd hh:mm:ss",
+                            ISO2: "yyyy-MM-dd HH:mm:ss",
+                            d1: "dd.MM.yyyy",
+                            d2: "dd-MM-yyyy",
+                            d3: "dd-MMMM-yyyy",
+                            d4: "dd-MM-yy",
+                            d5: "H:mm",
+                            d6: "HH:mm",
+                            d7: "HH:mm tt",
+                            d8: "dd/MMMM/yyyy",
+                            d9: "MMMM-dd",
+                            d10: "MM-dd",
+                            d11: "MM-dd-yyyy"
+                        },
+                        backString: "Předchozí",
+                        forwardString: "Další",
+                        toolBarPreviousButtonString: "Předchozí",
+                        toolBarNextButtonString: "Další",
+                        loadString: "Nahrávání...",
+                        clearString: "Smazat",
+                        todayString: "Dnes",
+                        dayViewString: "den",
+                        weekViewString: "týden",
+                        monthViewString: "měsíc",
+                        loadingErrorMessage: "Chyba načítání dat...",
+                        editDialogTitleString: "Detail termínu dovolené",
+                        editDialogCreateTitleString: "Vytvořit novou dovolenou",
+                        contextMenuEditAppointmentString: "Úprava dovolené",
+                        contextMenuCreateAppointmentString: "Vytvořit novou dovolenou",
+
+                        editDialogResourceIdString: "Stav",
+                        editDialogSubjectString: "Jméno",
+                        editDialogLocationString: "Místo",
+                        editDialogFromString: "Od",
+                        editDialogToString: "Do",
+                        editDialogAllDayString: "Celodenní",
+                        editDialogDescriptionString: "Komentář",
+                        editDialogSaveString: "Uložit změny",
+                        editDialogDeleteString: "Smazat",
+                        editDialogCancelString: "Zrušit",
+
                 },
+
+                 editDialogCreate: function (dialog, fields) {
+                     // hide repeat option
+                     fields.repeatContainer.hide();
+                     // hide status option
+                     fields.statusContainer.hide();
+                     // hide timeZone option
+                     fields.timeZoneContainer.hide();
+                     // hide color option
+                     fields.colorContainer.hide();
+                     fields.allDayContainer.hide();
+                     //fields.resourceContainer.hide();
+                     fields.locationContainer.hide();
+                 },
+                editDialogClose: function (dialog, fields, editAppointment) {
+                },
+                editDialogKeyDown: function (dialog, fields, editAppointment, event) {
+                    return true;
+                },
+                editDialogOpen: function (dialog, fields, editAppointment) {
+                    return true;
+                    //if (!editAppointment && printButton) {
+                    //    printButton.jqxButton({ disabled: true });
+                    //}
+                    //else if (editAppointment && printButton) {
+                    //    printButton.jqxButton({ disabled: false });
+                    //}
+                },
+                //ready: function () {
+                //    $("#scheduler").jqxScheduler('ensureAppointmentVisible', 'id1');
+                //},
                 resources:
                 {
-                    colorScheme: "scheme05",
+                    colorScheme: "scheme02",
                     dataField: "calendar",
                     source:  new $.jqx.dataAdapter(source)
                 },
@@ -172,8 +287,28 @@
                     { type: 'monthView', showWeekNumbers: true }
                 ]
             });
+            $("#scheduler").on('appointmentChange', function (event) {
+                    var args = event.args;
+                    var appointment = args.appointment;
+                    // appointment fields
+                    // originalData - the bound data.
+                    // from - jqxDate object which returns when appointment starts.
+                    // to - jqxDate objet which returns when appointment ends.
+                    // status - String which returns the appointment's status("busy", "tentative", "outOfOffice", "free", "").
+                    // resourceId - String which returns the appointment's resouzeId
+                    // hidden - Boolean which returns whether the appointment is visible.
+                    // allDay - Boolean which returns whether the appointment is allDay Appointment.
+                    // resiable - Boolean which returns whether the appointment is resiable Appointment.
+                    // draggable - Boolean which returns whether the appointment is resiable Appointment.
+                    // id - String or Number which returns the appointment's ID.
+                    // subject - String which returns the appointment's subject.
+                    // location - String which returns the appointment's location.
+                    // description - String which returns the appointment's description.
+                    // tooltip - String which returns the appointment's tooltip.
             });
+        });
     </script>
-    <div id="scheduler"></div>
 
+    <div id="scheduler"></div>
+    <div id="log"></div>
 {% endblock %}
