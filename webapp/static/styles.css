@@ -21,8 +21,8 @@ p.pending {
 }
 
 p.pending a {
-    color: red;
-    text-decoration: underline;
+    /*color: red;*/
+    /*text-decoration: underline;*/
 }
 
 p.login {
@@ -50,7 +50,7 @@ p.error, td.form_error {
 }
 
 .second_menu_row a {
-    background-color: red;
+    /*background-color: red;*/
     border: none;
 }
 
@@ -77,8 +77,8 @@ table th {
 }
 
 .btn-primary:hover, .dropdown-item:hover {
-    background-color: red;
-    color: white;
+    /*background-color: red;*/
+    /*color: white;*/
 }
 
 .dropdown:hover>.dropdown-menu {
