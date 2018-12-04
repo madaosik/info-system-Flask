@@ -1,24 +1,28 @@
 {% extends "base.html" %}
 
-{% block head %}
+{% block styles %}
     <link rel="stylesheet" href="{{url_for('.static', filename='jqwidgets/styles/jqx.base.css')}}" type="text/css" />
     <link rel="stylesheet" href="{{url_for('.static', filename='jqwidgets/styles/jqx.darkblue.css')}}" type="text/css" />
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/fontawesome-all.min.css" rel="stylesheet">
+    {{ super() }}
+{% endblock %}
+
+{% block head %}
+    {{ super() }}
 <!-- add the jQuery script -->
     <script type="text/javascript" src="{{url_for('.static', filename='scripts/jquery-1.12.4.min.js')}}"></script>
     <!-- add the jQWidgets framework -->
+{% endblock %}
+
+{% block scripts %}
     <script type="text/javascript" src="{{url_for('.static', filename='jqwidgets/jqxcore.js')}}"></script>
     <script type="text/javascript" src="{{url_for('.static', filename='jqwidgets/jqx-all.js')}}"></script>
 {% endblock %}
 
+
 {% block app_content %}
 
-    <!-- add the jQWidgets framework -->
-    <h3>Evidence dovolených</h3>
-
     {%  if all %}
-        <!--
+        <h5>Přehled neschválených žádostí o dovolenou</h5>
         <table class="centertable table table-hover table-sm center">
             <thead class="thead-light">
             <tr>
@@ -30,11 +34,10 @@
                 <th colspan="2">Potvrzení</th>
             </tr>
             </thead>
-            -->
+
     {% else %}
         <p>Neevidujeme žádné žádosti o dovolenou.</p>
     {% endif %}
-    <!--
     {% for dovolena in all %}
         {% if dovolena.potvrzeni == False %}
         <tr>
@@ -64,7 +67,8 @@
         </table>
     {%  endif %}
 <br><br>
-    <h3>Schválená nadcházející dovolená</h3>
+
+    <h5>Schválené žádosti o dovolenou</h5>
         <table class="centertable table table-hover table-sm">
             <thead class="thead-light">
             <tr>
@@ -100,7 +104,7 @@
         </table>
 
 
-    <br><br>
+    <br><br><!--
     <a class="btn btn-secondary" href="{{ url_for('show_vsetkydovolene',entity='dovolena_zaznam') }}">Přejít na historii</a>
     <br><br>-->
     <script type="text/javascript">
@@ -263,20 +267,6 @@
                      //fields.resourceContainer.hide();
                      fields.locationContainer.hide();
                  },
-                editDialogClose: function (dialog, fields, editAppointment) {
-                },
-                editDialogKeyDown: function (dialog, fields, editAppointment, event) {
-                    return true;
-                },
-                editDialogOpen: function (dialog, fields, editAppointment) {
-                    return true;
-                    //if (!editAppointment && printButton) {
-                    //    printButton.jqxButton({ disabled: true });
-                    //}
-                    //else if (editAppointment && printButton) {
-                    //    printButton.jqxButton({ disabled: false });
-                    //}
-                },
                 //ready: function () {
                 //    $("#scheduler").jqxScheduler('ensureAppointmentVisible', 'id1');
                 //},
