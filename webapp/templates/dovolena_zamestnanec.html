@@ -1,10 +1,11 @@
 {% extends "base.html" %}
 
 {% block app_content %}
-    <h3>Plánovaná dovolená</h3>
+
+            <h3>Plánovaná dovolená</h3>
 
     {% if me %}
-        <table class="centertable table table-hover table-sm">
+        <table class="table table-stripped table-bordered">
         <thead class="thead-light">
         <tr>
             <th>Datum začátku</th>
@@ -68,7 +69,8 @@
 
     </table>
 {% endif %}
+
     <form method="GET" action="{{ url_for('pridat_ziadost', entity= 'dovolena_zaznam') }}">
-        <input type="submit" value="Přidat">
-    </form>
+                <input type="submit" class="btn-primary btn" value="Zadat dovolenou">
+            </form>
 {% endblock %}

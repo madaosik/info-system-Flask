@@ -10,13 +10,13 @@
         <div class="row">
             <div class="col-sm-6">
                 <label for="exampleInputEmail1">{{ form.od.label }}</label>
-                {{ form.od(**{'class': 'form-control'}) }}
+                {{ form.od(**{'class': 'form-control', 'autocomplete':'off'}) }}
             </div>
             <div class="col-sm-6">
                 <label for="exampleInputEmail1">{{ form.do.label }}</label>
-                {{ form.do(**{'class': 'form-control'}) }}
+                {{ form.do(**{'class': 'form-control', 'autocomplete':'off'}) }}
                 <div class="invalid-feedback">
-                  Neplatná hodnota.
+                  Datum konce dovolené musí být větší než datum začátku.
                 </div>
             </div>
         </div>
