@@ -281,7 +281,7 @@ def logout():
 @app.before_request
 def before_request():
     session.permanent = True
-    app.permanent_session_lifetime = datetime.timedelta(minutes=10)
+    app.permanent_session_lifetime = datetime.timedelta(minutes=60)
     session.modified = True
 
 # @app.route('/auth/user/uprav/<id>',methods=['GET','POST'])
