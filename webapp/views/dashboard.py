@@ -1,9 +1,13 @@
 from flask import render_template
 from flask.views import MethodView
 from webapp.core import db
-from webapp.roles import admin, boss, login_required
+from webapp.roles import admin, employee
 
-class EmplDashboard(MethodView)
+class EmplDashboard(MethodView):
+    @employee
+    def get(self):
+        notifications = db.fetch_notifications()
+        return render_template('dashboard.html', title='IS - Zaměstnanec', notif=notifications)
 
 class BossDashboard(MethodView):
     @admin
@@ -17,11 +21,9 @@ class BossDashboard(MethodView):
                                vac=approvals_vacation,
                                notif=notifications)
 
-
-
-
 def configure(app):
     app.add_url_rule('/dashboard_boss', view_func=BossDashboard.as_view('dashboard_boss'))
+    app.add_url_rule('/dashboard_empl', view_func=EmplDashboard.as_view('dashboard_empl'))
 
 
 # @app.route('/auth')

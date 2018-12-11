@@ -1,9 +1,10 @@
 from sqlalchemy import Column, Date, TIMESTAMP, String, Integer, func, ForeignKey, PrimaryKeyConstraint, Boolean
 from flask_login import UserMixin
-from webapp import db, login
 from werkzeug.security import generate_password_hash, check_password_hash
 
-class Zamestnanec(db.Model):
+from webapp.core.db_connector import Base
+
+class Zamestnanec(Base):
     __tablename__ = 'zamestnanec'
 
     id_zam = Column(Integer,primary_key=True)
@@ -24,7 +25,7 @@ class Zamestnanec(db.Model):
     def __repr__(self):
         return "<Zamestanec(id='%d', jmeno='%s', prijmeni='%s')>" % (self.id_zam, self.kr_jmeno, self.prijmeni)
 
-class Uzivatel(UserMixin, db.Model):
+class Uzivatel(UserMixin, Base):
     __tablename__ = 'uzivatel'
 
     id = Column(Integer, autoincrement=True, primary_key=True)
@@ -42,14 +43,19 @@ class Uzivatel(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-    def get_user_role(self):
-        return self.role
+    #def get_user_role(self):
+        #return self.role
+    def is_employee(self):
+        return True if self.role == 'user' else False
 
-@login.user_loader
-def load_user(id):
-    return Uzivatel.query.get(int(id))
+    def is_boss(self):
+        return True if self.role == 'boss' else False
 
-class Skoleni_ridicu(db.Model):
+    def is_admin(self):
+        return True if self.role == 'admin' else False
+
+
+class Skoleni_ridicu(Base):
     __tablename__= 'skoleni_ridicu'
 
     id_skol = Column(Integer, primary_key=True)
@@ -58,7 +64,7 @@ class Skoleni_ridicu(db.Model):
     platnost_do = Column(Date)
     posl_aktual = Column(TIMESTAMP, nullable=False, server_default=func.now(), server_onupdate=func.now())
 
-class Lekarska_prohl(db.Model):
+class Lekarska_prohl(Base):
     __tablename__ = 'lekarska_prohl'
 
     id_prohl = Column(Integer, primary_key=True)
@@ -67,7 +73,7 @@ class Lekarska_prohl(db.Model):
     platnost_do = Column(Date)
     posl_aktual = Column(TIMESTAMP, nullable=False, server_default=func.now(), server_onupdate=func.now())
 
-class Pracovni_sml(db.Model):
+class Pracovni_sml(Base):
     __tablename__ = 'pracovni_sml'
 
     id_sml = Column(Integer, primary_key=True)
@@ -78,7 +84,7 @@ class Pracovni_sml(db.Model):
     platnost_do = Column(Date)
     posl_aktual = Column(TIMESTAMP, nullable=False, server_default=func.now(), server_onupdate=func.now())
 
-class Dovolena_zam(db.Model):
+class Dovolena_zam(Base):
     __tablename__ = 'dovolena_zam'
 
     id_naroku = Column(Integer, primary_key=True)
@@ -88,7 +94,7 @@ class Dovolena_zam(db.Model):
     vycerpano = Column(Integer)
     posl_aktual = Column(TIMESTAMP, nullable=False, server_default=func.now(), server_onupdate=func.now())
 
-class Dovolena_zam_hist(db.Model):
+class Dovolena_zam_hist(Base):
     __tablename__ = 'dovolena_zam_hist'
 
     id_zaznamu = Column(Integer, primary_key=True)
@@ -99,7 +105,7 @@ class Dovolena_zam_hist(db.Model):
     celkem = Column(Integer)
     potvrzeni = Column(Boolean, default=False)
 
-class Vozidlo(db.Model):
+class Vozidlo(Base):
     __tablename__ = 'vozidlo'
 
     id_voz = Column(Integer, primary_key=True)
@@ -115,13 +121,13 @@ class Vozidlo(db.Model):
     posl_aktual_cas = Column(TIMESTAMP, nullable=False, server_default=func.now(), server_onupdate=func.now())
 
 
-class Typ_dokumentu(db.Model):
+class Typ_dokumentu(Base):
     __tablename__ = 'typ_dokumentu'
 
     id_typu = Column(Integer, primary_key=True)
     popis_typu = String(20)
 
-class Dokument(db.Model):
+class Dokument(Base):
     __tablename__ = 'dokument'
 
     id_dokumentu = Column(Integer, primary_key=True)
@@ -133,21 +139,21 @@ class Dokument(db.Model):
     zalozen_cas = Column(TIMESTAMP, nullable=False, server_default=func.now())
     posl_editace = Column(TIMESTAMP, nullable=False, server_default=func.now(), server_onupdate=func.now())
 
-class Sazba(db.Model):
+class Sazba(Base):
     __tablename__ = 'sazba'
 
     id_sazby = Column(Integer,primary_key=True)
     popis_sazby = Column(String(30))
     vyse_sazby = Column(Integer)
 
-class Cinnost(db.Model):
+class Cinnost(Base):
     __tablename__ = 'cinnost'
 
     id_cinnosti = Column(Integer, primary_key=True)
     typ_cinnosti = Column(String(30), nullable=False)
     odmena = Column(Integer,ForeignKey("sazba.id_sazby", ondelete='CASCADE'), nullable=False)
 
-class Denni_evidence(db.Model):
+class Denni_evidence(Base):
     __tablename__ = 'denni_evidence'
     __table_args__ = (PrimaryKeyConstraint('id_cinnosti','id_zam'),)
 

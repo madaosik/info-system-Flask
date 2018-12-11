@@ -153,39 +153,6 @@ def add_user_activity(id):
 # ------------ USER MANAGEMENT VIEW FUNCTIONS-----------------
 
 
-@app.route('/', methods=['GET', 'POST'])
-def login():
-    error = None
-    if current_user.is_authenticated:
-        return redirect(url_for('logged_in'))
-    form = forms.LoginForm()
-    if form.validate_on_submit():
-        user = db.get_user_by_attr(login=form.login.data)
-        if user is None:
-            error = "Neznámé uživatelské jméno!"
-        elif not user.check_password(form.password.data):
-            error = "Neplatné heslo!"
-        else:
-            login_user(user, remember=form.remember_me.data)
-            db.log_visit(user)
-            flash("Přihlášení proběhlo úspěšně!")
-            return redirect(url_for('logged_in'))
-    return render_template('login.html', title='Přihlášení', form=form, error=error)
-
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if current_user.is_authenticated:
-        return redirect(url_for('logged_in'))
-    reg_form = forms.RegistrationForm()
-    if reg_form.validate_on_submit():
-        error = db.create_user(reg_form)
-        if not error:
-            flash('Registrace proběhla úspěšně, přihlašte se, prosím!')
-        else:
-            return render_template('register.html', title='Registrace uživatele', form=reg_form, error=error)
-        return redirect(url_for('login'))
-    return render_template('register.html', title='Registrace uživatele', form=reg_form)
-
 
 @app.route('/auth/uzivatele/new',methods=['GET','POST'])
 @login_required(roles=[ADMIN,BOSS])
@@ -215,36 +182,3 @@ def upravit_uzivatele(id):
         return redirect(url_for('show_all', entity='uzivatele'))
     return render_template(user_entity['form_page'], action=user_entity['edit_text'], object=instance, form=edit_form)
 
-
-@app.route('/auth')
-@login_required(roles=[ANY])
-def logged_in():
-    approvals_activites = db.fetch_all_pending_approvals()
-    approvals_vacation = db.fetch_all_pending_vacation()
-    notifications = db.fetch_notifications()
-    return render_template('auth_index.html',
-                           title='Interní IS dopravní společnosti',
-                           act=approvals_activites,
-                           vac=approvals_vacation,
-                           notif=notifications)
-
-@app.route('/logout')
-def logout():
-    logout_user()
-    return redirect(url_for('login'))
-
-@app.before_request
-def before_request():
-    session.permanent = True
-    app.permanent_session_lifetime = datetime.timedelta(minutes=10)
-    session.modified = True
-
-# @app.route('/auth/user/uprav/<id>',methods=['GET','POST'])
-# @login_required(roles=[ADMIN])
-# def edit_user(id):
-#     db_entity = db.get_db_entity('uzivatele')
-#     user = db.get_obj_by_id(db_entity['class'],id)
-#     us = db.get_obj_by_id(db_entity['class'],id)
-#     edit_form = db.get_obj_by_clsname(db_entity['form_class'],initobject=instance)
-#     user_form = forms.Uzivatel_form(roles_arr)
-#     return render_template('uzivatel_form.html', title='Úprava uživatele', user=user, form=user_form)

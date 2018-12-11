@@ -6,6 +6,8 @@ from wtforms.validators import InputRequired, DataRequired, Email, NumberRange, 
 from wtforms.fields.html5 import DateField, DateTimeField, DateTimeLocalField
 import datetime
 
+from webapp.views.register import RegistrationForm
+
 class CzechDateField(DateField):
     """
     Overrides the process_formdata() method definition in a standard DateField
@@ -19,18 +21,7 @@ class CzechDateField(DateField):
                 self.data = None
                 raise ValueError(self.gettext('Neplatný formát data!'))
 
-class LoginForm(FlaskForm):
-    login = StringField('Uživatelské jméno',validators=[InputRequired(message="Zadejte uživatelské jméno!")])
-    password = PasswordField('Heslo', validators=[InputRequired(message="Zadejte heslo!")])
-    remember_me = BooleanField('Pamatuj si mě')
-    submit = SubmitField('Přihlásit se')
 
-class RegistrationForm(FlaskForm):
-    login = StringField('Uživatelské jméno', validators=[DataRequired(message="Zadejte uživatelské jméno")])
-    email = StringField('E-mail', validators=[DataRequired(),Email(message="Nepovolený tvar e-mailové adresy!")])
-    password = PasswordField('Heslo', validators=[DataRequired(message="Zadejte heslo!")])
-    password2 = PasswordField('Zopakování hesla', validators=[DataRequired(), EqualTo('password',message="Zadaná hesla se neshodují!")])
-    submit = SubmitField('Registrace')
 
 class Zam_form(FlaskForm):
     kr_jmeno = StringField('* Křestní jméno', validators=[InputRequired(message="Doplňte křestní jméno!")])
@@ -51,16 +42,16 @@ class Zam_form_ja(FlaskForm):
     email = StringField('* E-mail', validators=[Email(message="E-mailová adresa nemá správný formát!")])
     submit = SubmitField('Uložit')
 
-class Auto_form(FlaskForm):
-    spz = StringField('* SPZ', validators=[InputRequired("Zadejte SPZ!")])
-    znacka = StringField('* Značka', validators=[InputRequired("Zadejte značku vozidla!")])
-    model = StringField('Model')
-    rok_vyroby = IntegerField('* Rok výroby', validators=[NumberRange(min=1995,max=2018,message="Zadejte platný rok výroby!")])
-    vykon = IntegerField('Výkon(kw)')
-    nosnost = IntegerField('Nosnost')
-    pocet_naprav = IntegerField('* Počet náprav', validators=[NumberRange(min=2,max=10,message="Zadejte počet náprav mezi 2 a 10!")])
-    emisni_trida = StringField('Emisní třída')
-    submit = SubmitField('Uložit')
+# class Auto_form(FlaskForm):
+#     spz = StringField('* SPZ', validators=[InputRequired("Zadejte SPZ!")])
+#     znacka = StringField('* Značka', validators=[InputRequired("Zadejte značku vozidla!")])
+#     model = StringField('Model')
+#     rok_vyroby = IntegerField('* Rok výroby', validators=[NumberRange(min=1995,max=2018,message="Zadejte platný rok výroby!")])
+#     vykon = IntegerField('Výkon(kw)')
+#     nosnost = IntegerField('Nosnost')
+#     pocet_naprav = IntegerField('* Počet náprav', validators=[NumberRange(min=2,max=10,message="Zadejte počet náprav mezi 2 a 10!")])
+#     emisni_trida = StringField('Emisní třída')
+#     submit = SubmitField('Uložit')
 
 
 class User_form(FlaskForm):

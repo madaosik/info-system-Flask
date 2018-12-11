@@ -11,7 +11,7 @@
             {% endwith %}-->
     <h3>Vítej, {{ current_user.login }}!</h3>
     <br>
-    {% if current_user.role == 'admin' or current_user.role == 'boss' %}
+    {% if current_user.is_admin() or current_user.is_boss() %}
         <h4>Aktivity ke schválení:</h4>
         {% if act %}
         {% else %}
@@ -19,7 +19,7 @@
         {% endif %}
         <h4>Dovolená ke schválení:</h4>
         {% if vac %}
-            <p class="pending">Evidujeme nevyřízené <a href="{{ url_for('show_all', entity='dovolena_zaznam') }}">>> žádosti o dovolenou <<</a>!</p>
+            <p class="pending">Evidujeme nevyřízené <a href="{{ url_for('vacations') }}">>> žádosti o dovolenou <<</a>!</p>
         {% else %}
             <p class="uptodate">Nenašli jsme žádné žádosti o dovolenou vyžadující Vaše schválení.</p>
         {% endif %}

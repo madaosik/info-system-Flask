@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+
+{% extends 'base.html' %}
+{% block title %}Stránka nenalezena{% endblock %}
+
+{% block body %}
+    <h1>Error 403</h1>
+    <h2>Buď nejste přihlášení, nebo nemáte dostatečná práva k zobrazení této stránky!</h2>
+{% endblock %}

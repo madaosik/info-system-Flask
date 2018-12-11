@@ -2,19 +2,19 @@
 {% from "_formhelpers.html" import render_field  %}
 
 {% block app_content %}
-    {% if action == 'Úprava vozidla' %}
-        <h3>{{ action }}: {{ object.spz }}</h3>
+    {% if car %}
+        <h3>Úprava vozidla: {{ car.spz }}</h3>
     {% else %}
         <h3>Přidat vozidlo</h3>
     {% endif %}
 
-    <a href="{{ url_for('show_all', entity='vozidla') }}"><< Zpět na přehled vozidel</a>
+    <a href="{{ url_for('cars') }}"><< Zpět na přehled vozidel</a>
     <br><br>
-
-    {% if action=='Přidat vozidlo'%}
-    <form method="POST" action="{{ url_for('pridat',entity='vozidla') }}">
+    {% if car %}
+        <form method="POST" action="{{ url_for('car-mod') }}">
+        <input type="hidden" name="id" value="{{ car.id_voz }}">
     {% else %}
-    <form method="POST" action="{{ url_for('upravit',entity='vozidla', id=object.spz) }}">
+        <form method="POST" action="{{ url_for('car-add') }}">
     {% endif %}
         {{ form.csrf_token }}
         <table class="form_table">

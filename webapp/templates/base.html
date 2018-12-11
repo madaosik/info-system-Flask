@@ -18,11 +18,15 @@
     {% if current_user.is_authenticated %}
         <div class = "container">
             <div class="navbar">
-                <a class="btn btn-primary" href="{{ url_for('logged_in') }}">Nástěnka</a>
+                {% if current_user.role == 'user'%}
+                    <a class="btn btn-primary" href="{{ url_for('dashboard_empl') }}">Nástěnka</a>
+                {% else %}
+                    <a class="btn btn-primary" href="{{ url_for('dashboard_boss') }}">Nástěnka</a>
+                {% endif %}
                  {% if current_user.role == 'user'%}
-                     <a class="btn btn-primary" href="{{ url_for('show_me',entity= 'zamestnanci', id= current_user.id_zam) }}">Můj profil</a>
-                     <a class="btn btn-primary" href="{{ url_for('show_mojedovolena',entity= 'dovolena_zaznam', id= current_user.id_zam) }}">Plánovaná dovolená</a>
-                     <a class="btn btn-primary" href="{{ url_for('show_user_activities', id=current_user.id) }}">Moje aktivity</a>
+                     <a class="btn btn-primary" href="{{ url_for('profile', id=current_user.id_zam) }}">Můj profil</a>
+                     <a class="btn btn-primary" href="{{ url_for('my_vacation', id= current_user.id_zam) }}">Plánovaná dovolená</a>
+                     <a class="btn btn-primary" href="{{ url_for('my_activities', id=current_user.id_zam) }}">Moje aktivity</a>
                  {% endif %}
                 {% if current_user.role == 'admin' or current_user.role == 'boss' %}
                     <div class="dropdown">
@@ -30,7 +34,7 @@
                             Evidence činností
                       </button>
                       <div class="dropdown-menu" aria-labelledby="evidenceCinnostiButton">
-                        <a class="dropdown-item" href="{{ url_for('show_all', entity='aktivity') }}">Přehled aktivit</a>
+                        <a class="dropdown-item" href="{{ url_for('activities') }}">Přehled aktivit</a>
                         <a class="dropdown-item" href="#">Docházka</a>
                       </div>
                     </div>
@@ -39,10 +43,10 @@
                         Zaměstnanci
                       </button>
                           <div class="dropdown-menu" aria-labelledby="zamestnanciButton">
-                            <a class="dropdown-item" href="{{ url_for('show_all', entity='zamestnanci') }}">Přehled zaměstnanců</a>
-                            <a class="dropdown-item" href="{{ url_for('show_all', entity='lekarske_prohlidky') }}">Lékařské prohlídky</a>
+                            <a class="dropdown-item" href="{{ url_for('employees') }}">Přehled zaměstnanců</a>
+                            <a class="dropdown-item" href="{{ url_for('medic_visits') }}">Lékařské prohlídky</a>
                             <a class="dropdown-item" href="#">Pracovní smlouvy</a>
-                            <a class="dropdown-item" href="{{ url_for('show_all', entity='dovolena_zaznam') }}">Dovolená</a>
+                            <a class="dropdown-item" href="{{ url_for('vacations') }}">Dovolená</a>
                             <a class="dropdown-item" href="#">Úložiště dokumentů</a>
                           </div>
                     </div>
@@ -52,7 +56,7 @@
                         Vozový park
                       </button>
                       <div class="dropdown-menu" aria-labelledby="nastenkaButton">
-                        <a class="dropdown-item" href="{{ url_for('show_all', entity='vozidla') }}">Přehled vozidel</a>
+                        <a class="dropdown-item" href="{{ url_for('cars') }}">Přehled vozidel</a>
                         <a class="dropdown-item" href="#">Technické kontroly</a>
                         <a class="dropdown-item" href="#">Plánované servisní práce</a>
                         <a class="dropdown-item" href="#">Úložiště dokumentů</a>
@@ -61,7 +65,7 @@
                     {% if current_user.role == 'admin'%}
                         <div class="dropdown">
                             <div class="btn-group">
-                                <a class="btn btn-primary" href="{{ url_for('show_all', entity='uzivatele') }}">
+                                <a class="btn btn-primary" href="{{ url_for('users') }}">
                                     Správa uživatelů
                                 </a>
                             </div>
@@ -70,9 +74,9 @@
                 {% endif %}
             </div>
                 <div class="navbar second_menu_row">
-                    <a class="btn btn-secondary" href="{{ url_for('add_user_activity', id=current_user.id) }}">Přidat aktivitu</a>
+                    <a class="btn btn-secondary" href="#">Přidat aktivitu</a>
                     {% if current_user.role != 'boss' %}
-                        <a class="btn btn-secondary" href="{{ url_for('pridat_ziadost', entity= 'dovolena_zaznam') }}">Nová žádost o dovolenou</a>
+                        <a class="btn btn-secondary" href="#">Nová žádost o dovolenou</a>
                     {% endif %}
                     </div>
         </div>

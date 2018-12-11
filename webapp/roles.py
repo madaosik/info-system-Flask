@@ -27,7 +27,7 @@ def boss(func):
     @wraps(func)
     @login_required
     def _employee(*args, **kwargs):
-        if current_user.is_employee():
+        if current_user.is_boss():
             return func(*args, **kwargs)
         return abort(403)
     return _employee
@@ -35,7 +35,7 @@ def boss(func):
 
 def login_required(func):
     def decorated_view(*args, **kwargs):
-        if not current_user.is_authenticated():
+        if not current_user.is_authenticated:
             return redirect(url_for('login'))
         return func(*args, **kwargs)
     return decorated_view

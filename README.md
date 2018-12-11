@@ -6,7 +6,25 @@
     - modul SQLAlchemy na vytváření databázových modelů
     - modul FlaskWTForms na jednoduché vytváření formulářů
     - a další
-    
+
+## Architektura aplikace
+
+#### Princip
+
+- zcela opouštíme soubor routes.py. Zatím jsem tam původní funkce nechal pro překopírování jejich částí, ale používat je nebudeme. Modul se nakonec smaže.
+- každý modul systému (zaměstnanci, vozidla, dovolená, moje dovolená....) <b>má svůj vlastní view soubor</b>
+- ve <i>webapp/views/--init--.py</i> je funkce configure_views(), která tyto views "registruje" do aplikace
+    - tedy přidáme-li nové view, je potřeba ho přidat do těla této funkce a o více se netřeba starat
+    - samotná funkce configure_views() je volaná při inicializaci aplikace - funkce create_app() (viz webapp/--init--.py)
+
+#### View moduly a jejich struktura
+
+- view modul obsahuje vždy všechno, co se týká dané entity (související formuláře a potřebné třídy - viz dále)
+- každá akce (přidat, smazat, upravit....) související s modulem má vlastní třídu (viz webapp/views/cars.py), přičemž <b>všechny tyto "view" třídy jsou potomkem třídy MethodView</b>
+    - v každé takové třídě máme dostupné metody <i>get</i> a <i>post</i>, které stačí naimplementovat - s úplně stejnou logikou jako např <i>@app.route('/auth/<entity>/new',methods=['GET','POST'])</i> v routes.py 
+- chceme-li metodu zpřístupnit jen uživateli s určitou rolí, stačí aplikovat dekorátor <i>@boss</i> nebo <i>@employee</i>. Role budeme mít jen tyto dvě, zatím je tam i admin, ale toho odstraníme, abychom si to nekomplikovali zbytečně.
+- součástí každého takto vytvořeného view je funkce configure(app), která po zavolání z hlavního registrátoru views toto view pojmenovává a nastavuje příslušné adresy
+
 ## Funkcionality & popis částí systému
 
 - **Nástěnka**

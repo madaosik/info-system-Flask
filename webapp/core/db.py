@@ -2,10 +2,11 @@
 
 from webapp.core.models import *
 from webapp.views.forms import *
-from webapp.core.auth import roles_arr
+#from webapp.core.auth import roles_arr
 #from datetime import datetime
 from sqlalchemy import desc
 import sqlalchemy as sa
+from webapp.core.db_connector import session
 
 
 def get_db_entity(entity_name):
@@ -16,17 +17,17 @@ def get_db_entity(entity_name):
             'form_class_me': Zam_form_ja,
             'add_text': "Přidat zaměstnance",
             'edit_text': "Úprava zaměstnance",
-            'homepage': "zamestnanci.html",
+            'homepage': "employees.html",
             'form_page': "zam_form.html",
-            'me_page': "show_me.html",
+            'me_page': "profile.html",
         },
         'vozidla': {
             'class': Vozidlo,
             'form_class': Auto_form,
             'add_text': "Přidat vozidlo",
             'edit_text': "Úprava vozidla",
-            'homepage': "vozidla.html",
-            'form_page': "auto_form.html",
+            'homepage': "cars.html",
+            'form_page': "car_form.html",
         },
         'lekarske_prohlidky': {
             'class': Lekarska_prohl,
@@ -48,21 +49,21 @@ def get_db_entity(entity_name):
         },
         'aktivity': {
             'class': Denni_evidence,
-            'homepage': "aktivity.html",
+            'homepage': "activities.html",
         },
         'dovolena': {
             'class': Dovolena_zam,
             'form_class': Dovo_form,
-            'homepage': 'dovolena.html',
+            'homepage': 'vacations.html',
 
         },
         'dovolena_zaznam': {
             'class': Dovolena_zam_hist,
             'form_class': Dovo_zaz_form,
             'add_text': "Přidat dovolenou",
-            'homepage': 'dovolena.html',
+            'homepage': 'vacations.html',
             'form_page': "dovo_zam_form.html",
-            'me_page': 'dovolena_zamestnanec.html',
+            'me_page': 'my_vacation.html',
             'history_page': 'dovolena_historie.html',
             'detail_history_page': 'dovolena_historie_detail.html',
         }
@@ -137,8 +138,8 @@ def create_user(form):
     except AttributeError:
         pass
 
-    db.session.add(user)
-    db.session.commit()
+    session.add(user)
+    session.commit()
 
 
 def edit_user(id,form_data_dict):
@@ -147,7 +148,7 @@ def edit_user(id,form_data_dict):
 
     if form_data_dict['password']:
         user.set_password(form_data_dict['password'])
-    db.session.commit()
+    session.commit()
 
 
 def get_obj_by_clsname(classname,**kwargs):
@@ -167,24 +168,28 @@ def fetch_all_by_cls(classname):
 
 
 def add(object):
-    db.session.add(object)
-    db.session.commit()
+    session.add(object)
+    session.commit()
 
 
 def delete(object):
-    db.session.delete(object)
-    db.session.commit()
+    session.delete(object)
+    session.commit()
+
+def delete_car(id):
+    session.query(Vozidlo).filter_by(id_voz=id).delete()
+    session.commit()
 
 
 def approve(classname, id):
     q = classname.query.get(id)
     q.potvrzeni = True
-    db.session.commit()
+    session.commit()
 
 
 def update_from_form(instance,form):
     form.populate_obj(instance)
-    db.session.commit()
+    session.commit()
 
 
 def log_visit(user=Uzivatel):
@@ -196,7 +201,7 @@ def log_visit(user=Uzivatel):
 
     target.poc_prihl = visit_cnt
     target.posl_prihl = sa.func.current_timestamp()
-    db.session.commit()
+    session.commit()
 
 def get_cars_tuples():
     cars = Vozidlo.query.all()
@@ -216,3 +221,10 @@ def fetch_all_pending_vacation():
 
 def fetch_notifications():
     pass
+
+def fetch_car(id):
+    return Vozidlo.query.filter_by(id_voz=id).first()
+
+
+def fetch_all_cars():
+    return Vozidlo.query.all()

@@ -3,7 +3,7 @@
 {% block app_content %}
     <h3>Vozidla v evidenci</h3>
 
-    {%  if all %}
+    {%  if cars %}
         <table class="table table-hover table-sm">
             <thead class="thead-light">
             <tr>
@@ -18,7 +18,7 @@
     {% else %}
         <p>Neevidujeme žádná vozidla.</p>
     {% endif %}
-    {% for car in all %}
+    {% for car in cars %}
         <tr>
             <td>{{car.spz}}</td>
             <td>{{car.znacka}}</td>
@@ -26,12 +26,14 @@
             <td></td>
             <td></td>
             <td>
-                <form method="GET" action="{{ url_for('upravit', entity='vozidla', id = car.spz) }}">
-                  <input type="submit" value="Detail">
+                <form method="GET" action="{{ url_for('car-mod') }}">
+                    <input type="hidden" name="id" value="{{ car.id_voz }}">
+                    <input type="submit" value="Detail">
                 </form>
             </td>
             <td>
-                <form method="GET" action="{{ url_for('smazat', entity='vozidla', id = car.spz) }}">
+                <form method="GET" action="{{ url_for('car-del') }}">
+                  <input type="hidden" name="id" value="{{ car.id_voz }}">
                   <input type="submit" value="Smazat">
                 </form>
             </td>
@@ -40,5 +42,5 @@
     {% if cars %}
         </table>
     {%  endif %}
-    <p><a href="{{ url_for('pridat', entity='vozidla') }}">Přidat vozidlo</a></p>
+    <p><a href="{{ url_for('car-add') }}">Přidat vozidlo</a></p>
 {% endblock %}
