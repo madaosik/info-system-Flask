@@ -68,13 +68,13 @@ def smazat(entity, id):
     return redirect(url_for('show_all', entity=entity))
 
 
-@app.route('/auth/<entity>/schvalit/<id>',methods=['GET','POST'])
-@login_required(roles=[ADMIN,BOSS])
-def schvalit(entity, id):
-    db_entity = db.get_db_entity(entity)
-    instance = db.get_obj_by_id(db_entity['class'], id)
-    db.approve(db_entity['class'], id)
-    return redirect(url_for('show_all', entity=entity))
+#@app.route('/auth/<entity>/schvalit/<id>',methods=['GET','POST'])
+#@login_required(roles=[ADMIN,BOSS])
+#def schvalit(entity, id):
+#    db_entity = db.get_db_entity(entity)
+#    instance = db.get_obj_by_id(db_entity['class'], id)
+#    db.approve(db_entity['class'], id)
+#    return redirect(url_for('show_all', entity=entity))
 
 
 @app.route('/auth/<entity>')
@@ -96,33 +96,33 @@ def show_me(entity, id):
     return render_template(db_entity['me_page'], id=id, me=instance)
 
 
-@app.route('/auth/<entity>/mojedovolena/<id>')
-@login_required(roles=[USER])
-def show_mojedovolena(entity, id):
-    db_entity = db.get_db_entity(entity)
-    instance = db.get_obj_by_id_zam(db_entity['class'],id)
-    return render_template(db_entity['me_page'], id=id, me=instance, date=datetime.datetime.now().date())
+#@app.route('/auth/<entity>/mojedovolena/<id>')
+#@login_required(roles=[USER])
+#def show_mojedovolena(entity, id):
+#    db_entity = db.get_db_entity(entity)
+#    instance = db.get_obj_by_id_zam(db_entity['class'],id)
+#    return render_template(db_entity['me_page'], id=id, me=instance, date=datetime.datetime.now().date())
 
-@app.route('/auth/<entity>/historie/all')
-@login_required(roles=[ADMIN,BOSS])
-def show_vsetkydovolene(entity):
-    db_entity = db.get_db_entity(entity)
-    all_instances = db.fetch_all_by_cls(db_entity['class'])
-    if entity == 'dovolena_zaznam':
-        empl= db.fetch_all_by_cls(Zamestnanec)
-        return render_template(db_entity['history_page'], all=all_instances, empl=empl, date=datetime.datetime.now().date())
-    return render_template(db_entity['homepage'], all=all_instances, date=datetime.datetime.now().date())
+#@app.route('/auth/<entity>/historie/all')
+#@login_required(roles=[ADMIN,BOSS])
+#def show_vsetkydovolene(entity):
+#    db_entity = db.get_db_entity(entity)
+#    all_instances = db.fetch_all_by_cls(db_entity['class'])
+#    if entity == 'dovolena_zaznam':
+#        empl= db.fetch_all_by_cls(Zamestnanec)
+#        return render_template(db_entity['history_page'], all=all_instances, empl=empl, date=datetime.datetime.now().date())
+#    return render_template(db_entity['homepage'], all=all_instances, date=datetime.datetime.now().date())
 
 
 @app.route('/auth/<entity>/detaildovolene/<id>')
 @login_required(roles=[ADMIN,BOSS])
-def show_detaildovolena(entity, id):
-    db_entity = db.get_db_entity(entity)
-    instance = db.get_obj_by_id_zam(db_entity['class'],id)
-    check = db.get_obj_by_id_zam(db_entity['class'],id).first()
-    empl = db.get_empl_by_attr(id_zam=id)
-    return render_template(db_entity['detail_history_page'], id=id, me=instance, date=datetime.datetime.now().date(),\
-                           empl=empl, check=check)
+#def show_detaildovolena(entity, id): vacHistOne
+#    db_entity = db.get_db_entity(entity)
+#    instance = db.get_obj_by_id_zam(db_entity['class'],id)
+#    check = db.get_obj_by_id_zam(db_entity['class'],id).first()
+#    empl = db.get_empl_by_attr(id_zam=id)
+#    return render_template(db_entity['detail_history_page'], id=id, me=instance, date=datetime.datetime.now().date(),\
+#                           empl=empl, check=check)
 
 
 @app.route('/auth/<entity>/<id>/me',methods=['GET','POST'])

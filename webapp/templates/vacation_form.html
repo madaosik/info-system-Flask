@@ -4,7 +4,7 @@
 {% block app_content %}
     <h3>Nová žádost o dovolenou</h3>
 
-    <form method="POST" action="{{ url_for('pridat_ziadost',entity= 'dovolena_zaznam') }}">
+    <form method="POST" action="{{ url_for('vacation-add')}}">
 
         {{ form.csrf_token }}
         <table class="form_table">

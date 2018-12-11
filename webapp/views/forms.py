@@ -58,24 +58,24 @@ class User_form(FlaskForm):
     login = StringField('* Uživatelské jméno', validators=[InputRequired(message="Doplňte uživatelské jméno!")])
 
 
-class Dovo_form(FlaskForm):
-    dat_od = CzechDateField('Datum začátku', validators=[InputRequired(message="Doplňte datum začátku dovolené!")])
-    dat_do = CzechDateField('Datum konce', validators=[InputRequired(message="Doplňte datum konce dovolené!")])
+#class Dovo_form(FlaskForm):
+#    dat_od = CzechDateField('Datum začátku', validators=[InputRequired(message="Doplňte datum začátku dovolené!")])
+ #   dat_do = CzechDateField('Datum konce', validators=[InputRequired(message="Doplňte datum konce dovolené!")])
 
 
-class Dovo_zaz_form(FlaskForm):
-    od = CzechDateField('Datum začátku', validators=[InputRequired(message="Doplňte datum začátku dovolené!")])
-    do = CzechDateField('Datum konce (včetně)', validators=[InputRequired(message="Doplňte datum konce dovolené!")])
-    submit = SubmitField('Uložit')
+#class Dovo_zaz_form(FlaskForm):
+   # od = CzechDateField('Datum začátku', validators=[InputRequired(message="Doplňte datum začátku dovolené!")])
+   # do = CzechDateField('Datum konce (včetně)', validators=[InputRequired(message="Doplňte datum konce dovolené!")])
+   # submit = SubmitField('Uložit')
 
-    def validate(self):
-        if not FlaskForm.validate(self):
-            return False
-        result = True
-        if self.od.data > self.do.data:
-            self.od.errors.append('Začátek dovolené musí mít dřívejší datum než její konec!')
-            result = False
-        return result
+#    def validate(self):
+#        if not FlaskForm.validate(self):
+#            return False
+#        result = True
+#       if self.od.data > self.do.data:
+#            self.od.errors.append('Začátek dovolené musí mít dřívejší datum než její konec!')
+  #          result = False
+  #      return result
 
 
 class Lekar_form(FlaskForm):

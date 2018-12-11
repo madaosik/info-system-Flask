@@ -25,7 +25,7 @@
                 {% endif %}
                  {% if current_user.role == 'user'%}
                      <a class="btn btn-primary" href="{{ url_for('profile', id=current_user.id_zam) }}">Můj profil</a>
-                     <a class="btn btn-primary" href="{{ url_for('my_vacation', id= current_user.id_zam) }}">Plánovaná dovolená</a>
+                     <a class="btn btn-primary" href="{{ url_for('my_vacation', id=current_user.id_zam) }}">Plánovaná dovolená</a>
                      <a class="btn btn-primary" href="{{ url_for('my_activities', id=current_user.id_zam) }}">Moje aktivity</a>
                  {% endif %}
                 {% if current_user.role == 'admin' or current_user.role == 'boss' %}

@@ -19,7 +19,8 @@
             <td>{{empls.kr_jmeno}}</td>
             <td>{{empls.prijmeni}}</td>
             <td class="centertable">
-                <form method="get" action="{{ url_for('show_detaildovolena', entity='dovolena_zaznam', id=empls.id_zam) }}">
+                <form method="get" action="{{ url_for('vacations_hist_one')}}">
+                     <input type="hidden" name="id" value="{{ empls.id_zam}}">
                   <input type="submit" value="Detail" >
                 </form>
             </td>
@@ -28,6 +29,6 @@
     {% if all %}
         </table>
     {%  endif %}
-    <p><a class="btn btn-secondary" href="{{ url_for('show_all', entity='dovolena_zaznam')  }}">Zpět</a></p>
+    <p><a class="btn btn-secondary" href="{{ url_for('vacations') }}">Zpět</a></p>
 
 {% endblock %}

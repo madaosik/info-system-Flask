@@ -1,9 +1,11 @@
 {% extends "base.html" %}
-
+<!--input: empl, me, check, date -->
 {% block app_content %}
-    <h3>Plánovaná dovolená</h3>
+    <h2>{{ empl.kr_jmeno}} {{  empl.prijmeni  }}</h2>
+    {% if check %}
+    <h3>Nejbližší dovolené</h3>
 
-    {% if me %}
+
         <table class="centertable table table-hover table-sm">
         <thead class="thead-light">
         <tr>
@@ -13,10 +15,6 @@
             <th>Potvrzení</th>
         </tr>
         </thead>
-    {% else %}
-        <p>Neevidujeme žádné záznamy dovolené.</p>
-    {% endif %}
-{% if me %}
     {% for dovolena in me %}
         {% if dovolena.do > date %}
         <tr>
@@ -37,14 +35,13 @@
 
      <h3>Historie dovolené</h3>
 
-    {% if me %}
+    {% if check %}
         <table class="centertable table table-hover table-sm">
         <thead class="thead-light">
         <tr>
             <th>Datum začátku</th>
             <th>Datum konce</th>
-            <th>Celkem dní</th>
-            <th>Potvrzení</th>
+            <th>Celkem</th>
         </tr>
         </thead>
     {% else %}
@@ -52,23 +49,17 @@
     {% endif %}
 {% if me %}
     {% for dovolena in me %}
-        {% if dovolena.do < date%}
+        {% if dovolena.do < date and dovolena.potvrzeni == True %}
         <tr>
             <td>{{ dovolena.od }}</td>
             <td>{{ dovolena.do }}</td>
             <td>{{ dovolena.celkem }}</td>
-            <td>{% if dovolena.potvrzeni == True %}
-            Áno
-            {%  else %}
-            Ne
-            {% endif %}</td>
         </tr>
         {% endif %}
     {% endfor %}
 
     </table>
 {% endif %}
-    <form method="GET" action="{{ url_for('pridat_ziadost', entity= 'dovolena_zaznam') }}">
-        <input type="submit" value="Přidat">
-    </form>
+     <p><a class="btn btn-secondary" href="{{ url_for('vacations_hist') }}">Zpět</a></p>
+
 {% endblock %}

@@ -31,12 +31,12 @@
             <td>{{dovolena.do}}</td>
             <td>{{dovolena.celkem}}</td>
             <td>
-                <form method="POST" action="{{ url_for('schvalit', entity='dovolena_zaznam', id = dovolena.id_zaznamu) }}">
+                <form method="POST" action="{{ url_for('vac_approve', id = dovolena.id_zaznamu) }}">
                   <input type="submit" value=&#9745; class="btn approve_button">
                 </form>
             </td>
             <td>
-                <form method="POST" action="{{ url_for('smazat', entity='dovolena_zaznam', id = dovolena.id_zaznamu) }}">
+                <form method="POST" action="{{ url_for('vac_decline', id = dovolena.id_zaznamu) }}">
                   <input type="submit" value=&#9746; class="btn deny_button">
                 </form>
             </td>
@@ -73,7 +73,7 @@
             <td>{{dovolena.do}}</td>
             <td>{{dovolena.celkem}}</td>
             <td>
-                <form method="POST" action="{{ url_for('smazat', entity='dovolena_zaznam', id = dovolena.id_zaznamu) }}">
+                <form method="POST" action="{{ url_for('vac_decline', id = dovolena.id_zaznamu) }}">
                   <input type="submit" value=&#9746; class="btn deny_button">
                 </form>
             </td>
@@ -84,7 +84,7 @@
 
 
     <br><br>
-    <a class="btn btn-secondary" href="{{ url_for('show_vsetkydovolene',entity='dovolena_zaznam') }}">Přejít na historii</a>
+    <a class="btn btn-secondary" href="{{ url_for('vacations_hist') }}">Přejít na historii</a>
 
 
 {% endblock %}

@@ -59,13 +59,13 @@ def get_db_entity(entity_name):
         },
         'dovolena_zaznam': {
             'class': Dovolena_zam_hist,
-            'form_class': Dovo_zaz_form,
+            'form_class': DovoZazForm,
             'add_text': "Přidat dovolenou",
             'homepage': 'vacations.html',
-            'form_page': "dovo_zam_form.html",
-            'me_page': 'my_vacation.html',
-            'history_page': 'dovolena_historie.html',
-            'detail_history_page': 'dovolena_historie_detail.html',
+            'form_page': "vacation_form.html",
+            'me_page': 'vacation_my.html',
+            'history_page': 'vacation_hist.html',
+            'detail_history_page': 'vacation_hist_detail.html',
         }
 
     }
@@ -228,3 +228,15 @@ def fetch_car(id):
 
 def fetch_all_cars():
     return Vozidlo.query.all()
+
+
+#Vacation functions
+
+def fetch_all_vacations():
+    return Dovolena_zam_hist.query.all()
+
+
+def fetch_vacation_by_id(id):
+    return Dovolena_zam_hist.query.filter_by(id_zam=id)
+
+
