@@ -23,17 +23,17 @@ class CzechDateField(DateField):
 
 
 
-class Zam_form(FlaskForm):
-    kr_jmeno = StringField('* Křestní jméno', validators=[InputRequired(message="Doplňte křestní jméno!")])
-    prijmeni = StringField('* Příjmení', validators=[InputRequired(message="Doplňte příjmení!")])
-    dat_nar = CzechDateField('Datum narození')
-    trv_bydliste = StringField('Trvalé bydliště')
-    prech_bydliste = StringField('Přechodné bydliště')
-    telefon = StringField('Telefon')
-    email = StringField('* E-mail', validators=[Email(message="E-mailová adresa nemá správný formát!")])
-    prac_sml = StringField('Číslo pracovní sml.')
-    aktivni = BooleanField('Aktivní', default='checked')
-    submit = SubmitField('Uložit')
+# class Zam_form(FlaskForm):
+#     kr_jmeno = StringField('* Křestní jméno', validators=[InputRequired(message="Doplňte křestní jméno!")])
+#     prijmeni = StringField('* Příjmení', validators=[InputRequired(message="Doplňte příjmení!")])
+#     dat_nar = CzechDateField('Datum narození')
+#     trv_bydliste = StringField('Trvalé bydliště')
+#     prech_bydliste = StringField('Přechodné bydliště')
+#     telefon = StringField('Telefon')
+#     email = StringField('* E-mail', validators=[Email(message="E-mailová adresa nemá správný formát!")])
+#     prac_sml = StringField('Číslo pracovní sml.')
+#     aktivni = BooleanField('Aktivní', default='checked')
+#     submit = SubmitField('Uložit')
 
 class Zam_form_ja(FlaskForm):
     trv_bydliste = StringField('Trvalé bydliště')

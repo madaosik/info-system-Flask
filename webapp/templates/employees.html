@@ -2,8 +2,8 @@
 
 {% block app_content %}
     <h3>Aktivní zaměstnanci</h3>
-    <p><a href="{{ url_for('pridat',entity='zamestnanci') }}">Přidat zaměstnance</a></p>
-    {%  if all %}
+    <p><a href="{{ url_for('employee-add') }}">Přidat zaměstnance</a></p>
+    {%  if empls %}
         <table class="centertable table table-hover table-sm">
             <thead class="thead-light">
             <tr>
@@ -17,25 +17,27 @@
     {% else %}
         <p>Neevidujeme žádné zaměstnance.</p>
     {% endif %}
-    {% for empl in all %}
+    {% for employee in empls %}
         <tr>
-            <td>{{empl.kr_jmeno}}</td>
-            <td>{{empl.prijmeni}}</td>
+            <td>{{employee.kr_jmeno}}</td>
+            <td>{{employee.prijmeni}}</td>
             <td></td>
             <td></td>
             <td>
-                <form method="GET" action="{{ url_for('upravit', entity='zamestnanci', id = empl.id_zam) }}">
+                <form method="GET" action="{{ url_for('employee-mod') }}">
+                    <input type="hidden" name="id" value="{{ employee.id_zam }}">
                   <input type="submit" value="Detail">
                 </form>
             </td>
             <td>
-                <form method="GET" action="{{ url_for('smazat',entity='zamestnanci', id = empl.id_zam) }}">
-                  <input type="submit" value="Smazat">
+                <form method="GET" action="{{ url_for('employee-del') }}">
+                  <input type="hidden" name="id" value="{{ employee.id_zam }}">
+                    <input type="submit" value="Smazat">
                 </form>
             </td>
         </tr>
     {% endfor %}
-    {% if employees %}
+    {% if empls %}
         </table>
     {%  endif %}
 {% endblock %}

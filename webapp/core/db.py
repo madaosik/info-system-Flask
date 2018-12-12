@@ -9,67 +9,67 @@ import sqlalchemy as sa
 from webapp.core.db_connector import session
 
 
-def get_db_entity(entity_name):
-    switcher = {
-        'zamestnanci': {
-            'class': Zamestnanec,
-            'form_class': Zam_form,
-            'form_class_me': Zam_form_ja,
-            'add_text': "Přidat zaměstnance",
-            'edit_text': "Úprava zaměstnance",
-            'homepage': "employees.html",
-            'form_page': "zam_form.html",
-            'me_page': "profile.html",
-        },
-        'vozidla': {
-            'class': Vozidlo,
-            'form_class': Auto_form,
-            'add_text': "Přidat vozidlo",
-            'edit_text': "Úprava vozidla",
-            'homepage': "cars.html",
-            'form_page': "car_form.html",
-        },
-        'lekarske_prohlidky': {
-            'class': Lekarska_prohl,
-            'form_class': Lekar_form,
-            'add_text': "Přidat lékařskou prohlídku",
-            'edit_text': "Úprava lékařské prohlídky",
-            'homepage': "lek_prohlidky.html",
-            'form_page': "prohl_form.html",
-        },
-        'uzivatele': {
-            'class': Uzivatel,
-            'form_class': Uzivatel_form,
-            'edit_form_class': Uzivatel_edit_form,
-            'form_init': roles_arr,
-            'add_text': "Přidat uživatele",
-            'edit_text': "Úprava uživatele",
-            'homepage': "users.html",
-            'form_page': "uzivatel_form.html",
-        },
-        'aktivity': {
-            'class': Denni_evidence,
-            'homepage': "activities.html",
-        },
-        'dovolena': {
-            'class': Dovolena_zam,
-            'form_class': Dovo_form,
-            'homepage': 'vacations.html',
-
-        },
-        'dovolena_zaznam': {
-            'class': Dovolena_zam_hist,
-            'form_class': DovoZazForm,
-            'add_text': "Přidat dovolenou",
-            'homepage': 'vacations.html',
-            'form_page': "vacation_form.html",
-            'me_page': 'vacation_my.html',
-            'history_page': 'vacation_hist.html',
-            'detail_history_page': 'vacation_hist_detail.html',
-        }
-
-    }
-    return switcher.get(entity_name, "Neznámá entita")
+# def get_db_entity(entity_name):
+#     switcher = {
+#         'zamestnanci': {
+#             'class': Zamestnanec,
+#             'form_class': Zam_form,
+#             'form_class_me': Zam_form_ja,
+#             'add_text': "Přidat zaměstnance",
+#             'edit_text': "Úprava zaměstnance",
+#             'homepage': "employees.html",
+#             'form_page': "employee_form.html",
+#             'me_page': "profile.html",
+#         },
+#         'vozidla': {
+#             'class': Vozidlo,
+#             'form_class': Auto_form,
+#             'add_text': "Přidat vozidlo",
+#             'edit_text': "Úprava vozidla",
+#             'homepage': "cars.html",
+#             'form_page': "car_form.html",
+#         },
+#         'lekarske_prohlidky': {
+#             'class': Lekarska_prohl,
+#             'form_class': Lekar_form,
+#             'add_text': "Přidat lékařskou prohlídku",
+#             'edit_text': "Úprava lékařské prohlídky",
+#             'homepage': "lek_prohlidky.html",
+#             'form_page': "prohl_form.html",
+#         },
+#         'uzivatele': {
+#             'class': Uzivatel,
+#             'form_class': Uzivatel_form,
+#             'edit_form_class': Uzivatel_edit_form,
+#             'form_init': roles_arr,
+#             'add_text': "Přidat uživatele",
+#             'edit_text': "Úprava uživatele",
+#             'homepage': "users.html",
+#             'form_page': "uzivatel_form.html",
+#         },
+#         'aktivity': {
+#             'class': Denni_evidence,
+#             'homepage': "activities.html",
+#         },
+#         'dovolena': {
+#             'class': Dovolena_zam,
+#             'form_class': Dovo_form,
+#             'homepage': 'vacations.html',
+#
+#         },
+#         'dovolena_zaznam': {
+#             'class': Dovolena_zam_hist,
+#             'form_class': DovoZazForm,
+#             'add_text': "Přidat dovolenou",
+#             'homepage': 'vacations.html',
+#             'form_page': "vacation_form.html",
+#             'me_page': 'vacation_my.html',
+#             'history_page': 'vacation_hist.html',
+#             'detail_history_page': 'vacation_hist_detail.html',
+#         }
+#
+#     }
+#     return switcher.get(entity_name, "Neznámá entita")
 
 # def convert_to_date(formdata):
 #     try:
@@ -211,6 +211,7 @@ def get_cars_tuples():
         car_tuples_arr.append((car.id_voz, car_string))
     return car_tuples_arr
 
+
 def fetch_all_pending_approvals():
     pass
 
@@ -239,4 +240,11 @@ def fetch_all_vacations():
 def fetch_vacation_by_id(id):
     return Dovolena_zam_hist.query.filter_by(id_zam=id)
 
+# Employee functions
 
+def delete_employee(id):
+    session.query(Zamestnanec).filter_by(id_zam=id).delete()
+    session.commit()
+
+def fetch_employee_by_id(id):
+    return Zamestnanec.query.filter_by(id_zam=id).first()
