@@ -167,7 +167,7 @@ def pridat_uzivatele():
         else:
             flash("Operace %s proběhla úspěšně!" % user_entity['add_text'])
         return redirect(url_for('show_all', action=user_entity['add_text'], entity='uzivatele', error=error))
-    return render_template('uzivatel_form.html', action=user_entity['add_text'], form=add_form)
+    return render_template('user_form.html', action=user_entity['add_text'], form=add_form)
 
 @app.route('/auth/uzivatele/<id>/uprav', methods=['GET', 'POST'])
 @login_required(roles=[ADMIN,BOSS])

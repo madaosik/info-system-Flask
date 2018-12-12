@@ -23,7 +23,7 @@ class Zamestnanec(Base):
     posl_aktual_cas = Column(TIMESTAMP, nullable=False, server_default=func.now(), server_onupdate=func.now())
 
     def __repr__(self):
-        return "<Zamestanec(id='%d', jmeno='%s', prijmeni='%s')>" % (self.id_zam, self.kr_jmeno, self.prijmeni)
+        return "<Zamestnanec(id='%d', jmeno='%s', prijmeni='%s')>" % (self.id_zam, self.kr_jmeno, self.prijmeni)
 
 class Uzivatel(UserMixin, Base):
     __tablename__ = 'uzivatel'

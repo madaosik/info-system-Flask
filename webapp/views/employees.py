@@ -5,7 +5,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, BooleanField
 from wtforms.validators import InputRequired, Email
 
-from webapp.core.models import Zamestnanec
+from webapp.core.models import Zamestnanec, Uzivatel
 from webapp.roles import admin
 from webapp.views.forms import CzechDateField
 
@@ -41,8 +41,16 @@ class EmployeeAdd(MethodView):
             return render_template('employee_form.html', form=employeeform, error=error)
         employee = Zamestnanec()
         employeeform.populate_obj(employee)
-        db.add(employee)
-        flash("Zaměstnanec se jménem %s %s úspěšně přidán!" % (employee.kr_jmeno, employee.prijmeni))
+        id = db.add_employee(employee)
+        login = db.user_create(id,employee.prijmeni)
+        if id:
+            flash("Zaměstnanec %s %s úspěšně přidán!" % (employee.kr_jmeno, employee.prijmeni))
+        else:
+            flash("Zaměstnanec se jménem %s %s se nepodařilo přidat!" % (employee.kr_jmeno, employee.prijmeni), 'alert-error')
+        if login:
+            flash("Uživatel s loginem %s úspěšně přidán!" % login)
+        else:
+            flash("Nepodařilo se vytvořit uživatele!", 'alert-error')
         return redirect('employees')
 
 

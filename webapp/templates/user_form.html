@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% from "_formhelpers.html" import render_field  %}
+
+{% block app_content %}
+    {% if user %}
+        <h3>Úprava uživatele: <strong>{{ user.login }}</strong></h3>
+    {% else %}
+        <h3>Nový uživatel</h3>
+    {% endif %}
+    <a href="{{ url_for('users') }}"><< Zpět na přehled uživatelů</a>
+    <br><br>
+
+    {% if user %}
+        <form method="POST" action=" {{ url_for('user-mod') }}">
+            <input type="hidden" name="id" value="{{ user.id }}">
+    {% else %}
+        <form method="POST" action="{{ url_for('user-add') }}">
+    {% endif %}
+    {{ form.csrf_token }}
+    <table class="form_table">
+        {% for field in form %}
+                    {{ render_field(field,form) }}
+            {% endfor %}
+            </table>
+        </form>
+{% endblock %}

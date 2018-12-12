@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from webapp.core.models import *
-from webapp.views.forms import *
-#from webapp.core.auth import roles_arr
-#from datetime import datetime
-from sqlalchemy import desc
+from webapp.roles import roles
 import sqlalchemy as sa
 from webapp.core.db_connector import session
 
@@ -34,7 +31,7 @@ from webapp.core.db_connector import session
 #             'form_class': Lekar_form,
 #             'add_text': "Přidat lékařskou prohlídku",
 #             'edit_text': "Úprava lékařské prohlídky",
-#             'homepage': "lek_prohlidky.html",
+#             'homepage': "medic_visits.html",
 #             'form_page': "prohl_form.html",
 #         },
 #         'uzivatele': {
@@ -45,7 +42,7 @@ from webapp.core.db_connector import session
 #             'add_text': "Přidat uživatele",
 #             'edit_text': "Úprava uživatele",
 #             'homepage': "users.html",
-#             'form_page': "uzivatel_form.html",
+#             'form_page': "user_form.html",
 #         },
 #         'aktivity': {
 #             'class': Denni_evidence,
@@ -105,23 +102,20 @@ def get_empl_by_attr(**kwargs):
     return user
 
 
-def check_login_and_email(login,email):
-    error = None
-    if get_user_by_attr(login=login) is not None:
-        error = "Použijte, prosím, jiné uživatelské jméno. %s již existuje!" % login
-        return error
+def is_login_valid(login):
+    return False if get_user_by_attr(login=login) is not None else True
 
-    empl = get_empl_by_attr(email=email)
-    if empl:
-        if Uzivatel.query.filter_by(id_zam=empl.id_zam).first() is not None:
-            error = "Uživatelský účet spojený s e-mailem %s již existuje. Kontaktujte správce!" % email
-    else:
-        error = "Zaměstnanec s e-mailem %s není veden v databázi. Kontaktujte správce!" % email
-
-    if error:
-        return error
-    else:
-        return empl.id_zam
+    # empl = get_empl_by_attr(email=email)
+    # if empl:
+    #     if Uzivatel.query.filter_by(id_zam=empl.id_zam).first() is not None:
+    #         error = "Uživatelský účet spojený s e-mailem %s již existuje. Kontaktujte správce!" % email
+    # else:
+    #     error = "Zaměstnanec s e-mailem %s není veden v databázi. Kontaktujte správce!" % email
+    #
+    # if error:
+    #     return error
+    # else:
+    #     return empl.id_zam
 
 
 def create_user(form):
@@ -150,6 +144,20 @@ def edit_user(id,form_data_dict):
         user.set_password(form_data_dict['password'])
     session.commit()
 
+def user_create(employee_id,surname):
+    login = "x" + surname[0:3]
+    if not is_login_valid(login):
+        for i in range(1,99):
+            login = login + str(i)
+            if is_login_valid(login):
+                break
+
+    user = Uzivatel(login=login,id_zam=employee_id)
+    user.set_password("1234")
+    session.add(user)
+    session.commit()
+    return login
+
 
 def get_obj_by_clsname(classname,**kwargs):
     if 'initobject' in kwargs:
@@ -171,6 +179,10 @@ def add(object):
     session.add(object)
     session.commit()
 
+def add_employee(employee):
+    session.add(employee)
+    session.commit()
+    return employee.id_zam
 
 def delete(object):
     session.delete(object)
@@ -248,3 +260,29 @@ def delete_employee(id):
 
 def fetch_employee_by_id(id):
     return Zamestnanec.query.filter_by(id_zam=id).first()
+
+# User functions
+
+def fetch_user_tuples():
+    return (session.query(Uzivatel, Zamestnanec).filter(Uzivatel.id_zam == Zamestnanec.id_zam).all())
+
+
+def get_employee_tuples():
+    employees = Zamestnanec.query.all()
+    empl_tuples_arr = []
+    for employee in employees:
+        employee_string = "%s %s" % (employee.kr_jmeno, employee.prijmeni)
+        empl_tuples_arr.append((employee.id_zam, employee_string))
+    return empl_tuples_arr
+
+def get_role_tuples():
+    roles_tuples_arr = []
+    for role in roles:
+        if role == 'admin':
+            role_string = "Administrátor"
+        elif role == 'user':
+            role_string = "Zaměstnanec"
+        elif role == 'boss':
+            role_string = "Vedoucí"
+        roles_tuples_arr.append((role,role_string))
+    return roles_tuples_arr

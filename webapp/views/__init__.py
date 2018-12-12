@@ -1,6 +1,5 @@
 from webapp.views import base
 from webapp.views import home
-from webapp.views import register
 from webapp.views import dashboard
 from webapp.views import activities
 from webapp.views import my_activities
@@ -15,7 +14,6 @@ from webapp.views import profile
 def configure_views(app):
     home.configure(app)
     base.configure(app)
-    register.configure(app)
     dashboard.configure(app)
     activities.configure(app)
     my_activities.configure(app)

@@ -81,21 +81,21 @@ class User_form(FlaskForm):
 class Lekar_form(FlaskForm):
     pass
 
-class Uzivatel_form(RegistrationForm):
-    role = SelectField('Role')
-    submit = SubmitField('Uložit')
-
-    def fill_role_selectbox(self, roles):
-        self.role.choices = roles
-
-class Uzivatel_edit_form(Uzivatel_form):
-    # Heslo při editaci nechceme jako povinné pole a login nejde měnit.....
-    email = None
-    login = None
-    password = PasswordField('Heslo')
-    password2 = PasswordField('Zopakování hesla',validators=[EqualTo('password', message="Zadaná hesla se neshodují!")])
-    role = SelectField('Role')
-    submit = SubmitField('Uložit')
+# class Uzivatel_form(RegistrationForm):
+#     role = SelectField('Role')
+#     submit = SubmitField('Uložit')
+#
+#     def fill_role_selectbox(self, roles):
+#         self.role.choices = roles
+#
+# class Uzivatel_edit_form(Uzivatel_form):
+#     # Heslo při editaci nechceme jako povinné pole a login nejde měnit.....
+#     email = None
+#     login = None
+#     password = PasswordField('Heslo')
+#     password2 = PasswordField('Zopakování hesla',validators=[EqualTo('password', message="Zadaná hesla se neshodují!")])
+#     role = SelectField('Role')
+#     submit = SubmitField('Uložit')
 
 class New_activity_form(FlaskForm):
 

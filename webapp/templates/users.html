@@ -2,11 +2,12 @@
 
 {% block app_content %}
     <h3>Registrovaní uživatelé</h3>
-        <p><a href="{{ url_for('pridat_uzivatele') }}">Přidat uživatele</a></p>
+        <p><a href="{{ url_for('user-add') }}">Přidat uživatele</a></p>
         <table class="table table-hover table-sm">
                 <thead class="thead-light">
                 <tr>
                     <th>Login</th>
+                    <th>Zaměstnanec</th>
                     <th>Počet přihlášení</th>
                     <th>Poslední přihlášení</th>
                     <th>Čas poslední změny</th>
@@ -14,20 +15,31 @@
                     <th colspan="2">Akce</th>
                 </tr>
                 </thead>
-        {% for user in all %}
+        {% for user in users %}
             <tr>
-                <td>{{user.login}}</td>
-                <td>{{user.poc_prihl}}</td>
-                <td>{{user.posl_prihl}}</td>
-                <td>{{user.cas_posl_zmeny}}</td>
-                <td>{{user.role}}</td>
+                <td>{{user[0].login}}</td>
+                <td>{{user[1].kr_jmeno}} {{user[1].prijmeni}}</td>
+                {% if user[0].poc_prihl %}
+                    <td>{{user[0].poc_prihl}}</td>
+                {% else %}
+                    <td>0</td>
+                {% endif %}
+                {% if user[0].posl_prihl %}
+                    <td>{{user[0].posl_prihl}}</td>
+                {% else %}
+                    <td>dosud nepřihlášen</td>
+                {% endif %}
+                <td>{{user[0].cas_posl_zmeny}}</td>
+                <td>{{user[0].role}}</td>
                 <td>
-                    <form method="GET" action="{{ url_for('upravit_uzivatele', id = user.id) }}">
+                    <form method="GET" action="{{ url_for('user-mod') }}">
+                        <input type="hidden" name="id" value="{{ user[0].id }}">
                       <input type="submit" value="Upravit">
                     </form>
                 </td>
                 <td>
-                    <form method="GET" action="{{ url_for('smazat', entity='uzivatele', id = user.id) }}">
+                    <form method="GET" action="{{ url_for('user-del') }}">
+                        <input type="hidden" name="id" value="{{ user[0].id }}">
                       <input type="submit" value="Smazat">
                     </form>
                 </td>
