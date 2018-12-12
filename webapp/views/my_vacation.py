@@ -97,7 +97,7 @@ class VacationAdd(MethodView):
 def holiday_check(holidays, instance):
     holidays.pop(0)  # because new year has a duplicity there
     for day in holidays:  # check for holidays
-        if instance.do > day > instance.od:
+        if instance.do > day > instance.od and day.isoweekday() < 6:
             instance.celkem -= 1
         if day == instance.od:
             error = "Dovolena se nesmi zacinat pres svatek!"  # prelozit
@@ -106,7 +106,6 @@ def holiday_check(holidays, instance):
             error = "Dovolena se nesmi koncit pres svatek!"  # prelozit
             return error
     return 0
-
 
 
 def configure(app):
