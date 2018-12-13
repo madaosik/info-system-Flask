@@ -1,0 +1,12 @@
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for cat, message in messages %}
+         <div class="alert alert-dismissible {{ cat }}">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ message | safe  }}
+         </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}

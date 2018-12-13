@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from flask import Flask, redirect, url_for, session
-from flask_bootstrap import Bootstrap
 from flask_login import LoginManager
-from flask_sqlalchemy import SQLAlchemy
 from webapp.settings import config
 import datetime
 from webapp.core.auth import configure_login
@@ -15,9 +13,7 @@ def create_app():
 
     app = Flask(__name__, static_url_path='/static', static_folder='./static')
     app.secret_key = "$tajny_klic#"
-    #app.config_from_object(config)
 
-    Bootstrap(app)
     configure_views(app)
     login_manager = LoginManager(app)
     configure_login(app)
@@ -37,12 +33,3 @@ def create_app():
         session.modified = True
 
     return app
-
-
-# db = SQLAlchemy(app)
-# db.init_app(app)
-#
-#
-# login.login_view = 'login'
-#
-# from webapp.views import routes
