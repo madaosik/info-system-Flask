@@ -30,7 +30,7 @@ class Employees(MethodView):
 class EmployeeAdd(MethodView):
     @admin
     def get(self):
-        return render_template('employee_form.html', form=EmployeeForm())
+        return render_template('employee_edit_form.html', form=EmployeeForm())
 
     @admin
     def post(self):
@@ -38,7 +38,7 @@ class EmployeeAdd(MethodView):
         if not employeeform.validate_on_submit():
             #flash('Zadali jste neplatné údaje', 'alert-danger')
             error = "Zadali jste neplatné údaje"
-            return render_template('employee_form.html', form=employeeform, error=error)
+            return render_template('employee_edit_form.html', form=employeeform, error=error)
         employee = Zamestnanec()
         employeeform.populate_obj(employee)
         id = db.add_employee(employee)
@@ -67,7 +67,7 @@ class EmployeeModify(MethodView):
     def get(self):
         employee = db.fetch_employee_by_id(request.args.get('id'))
         emplform = EmployeeForm(obj=employee)
-        return render_template('employee_form.html', employee=employee, form=emplform)
+        return render_template('employee_edit_form.html', employee=employee, form=emplform)
 
     @admin
     def post(self):
@@ -75,7 +75,7 @@ class EmployeeModify(MethodView):
         if not emplform.validate_on_submit():
             #flash('Zadali jste neplatné údaje', 'alert-danger')
             error = "Zadali jste neplatné údaje"
-            return render_template('employee_form.html', form=emplform, error=error)
+            return render_template('employee_edit_form.html', form=emplform, error=error)
         employee = db.fetch_employee_by_id(request.form.get('id'))
         db.update_from_form(employee, emplform)
         flash("Úprava zaměstnance %s %s byla úspěšná!" % (employee.kr_jmeno, employee.prijmeni))

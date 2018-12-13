@@ -104,7 +104,7 @@ class Dovolena_zam_hist(Base):
     do = Column(Date)
     celkem = Column(Integer)
     potvrzeni = Column(Boolean, default=False)
-    seen = Column(Boolean, default=False)
+    #seen = Column(Boolean, default=False)
 
 class Vozidlo(Base):
     __tablename__ = 'vozidlo'

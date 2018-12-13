@@ -52,7 +52,7 @@ class UserAdd(MethodView):
         userform = UserForm(db.get_role_tuples(),db.get_employee_tuples())
         if not userform.validate_on_submit():
             flash('Zadali jste neplatné údaje', 'alert-danger')
-            return render_template('employee_form.html', form=userform)
+            return render_template('employee_edit_form.html', form=userform)
         user = Uzivatel()
         userform.populate_obj(user)
         # TODO: Zkontrolovat, jestli vybrany zamestnanec nema uz prirazeneho uzivatele
@@ -82,7 +82,7 @@ class UserModify(MethodView):
         if not emplform.validate_on_submit():
             #flash('Zadali jste neplatné údaje', 'alert-danger')
             error = "Zadali jste neplatné údaje"
-            return render_template('employee_form.html', form=emplform, error=error)
+            return render_template('employee_edit_form.html', form=emplform, error=error)
         employee = db.fetch_employee_by_id(request.form.get('id'))
         db.update_from_form(employee, emplform)
         flash("Úprava zaměstnance %s %s byla úspěšná!" % (employee.kr_jmeno, employee.prijmeni))

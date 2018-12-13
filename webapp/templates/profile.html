@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+<!-- input: me -->
 {% block app_content %}
     <h3>Můj profil</h3>
     <table>
@@ -13,7 +13,8 @@
     <tr><td>Číslo pracovní sml. : </td><td>{{ me.prac_sml }}</td></tr>
     </table>
     <br>
-    <form method="GET" action="{{ url_for('upravit_mne', entity='zamestnanci', id = current_user.id_zam) }}">
+    <form method="GET" action="{{ url_for('edit_me') }}">
+    <input type="hidden" name="id_zam" value="{{ current_user.id_zam}}">
                   <input type="submit" value="Upravit">
                 </form>
 {% endblock %}

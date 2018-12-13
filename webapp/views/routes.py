@@ -88,12 +88,12 @@ def show_all(entity):
     return render_template(db_entity['homepage'], all=all_instances, date=datetime.datetime.now().date())
 
 
-@app.route('/auth/<entity>/<id>')
-@login_required(roles=[USER])
-def show_me(entity, id):
-    db_entity = db.get_db_entity(entity)
-    instance = db.get_obj_by_id(db_entity['class'], id)
-    return render_template(db_entity['me_page'], id=id, me=instance)
+#@app.route('/auth/<entity>/<id>')
+#@login_required(roles=[USER])
+#def show_me(entity, id):
+#    db_entity = db.get_db_entity(entity)
+#    instance = db.get_obj_by_id(db_entity['class'], id)
+#    return render_template(db_entity['me_page'], id=id, me=instance)
 
 
 #@app.route('/auth/<entity>/mojedovolena/<id>')
@@ -125,16 +125,16 @@ def show_me(entity, id):
 #                           empl=empl, check=check)
 
 
-@app.route('/auth/<entity>/<id>/me',methods=['GET','POST'])
-@login_required(roles=[USER])
-def upravit_mne(entity, id):
-    db_entity = db.get_db_entity(entity)
-    instance = db.get_obj_by_id(db_entity['class'], id)
-    edit_form = db.get_obj_by_clsname(db_entity['form_class_me'],initobject=instance)
-    if edit_form.validate_on_submit():
-        db.update_from_form(instance,edit_form)
-        return redirect(url_for('show_me',entity= 'zamestnanci', id= id))
-    return render_template(db_entity['form_page'], action= 'upravit_mne', object=instance, form=edit_form)
+#@app.route('/auth/<entity>/<id>/me',methods=['GET','POST'])
+#@login_required(roles=[USER])
+#def upravit_mne(entity, id):
+#    db_entity = db.get_db_entity(entity)
+#    instance = db.get_obj_by_id(db_entity['class'], id)
+#    edit_form = db.get_obj_by_clsname(db_entity['form_class_me'],initobject=instance)
+#    if edit_form.validate_on_submit():
+#        db.update_from_form(instance,edit_form)
+#        return redirect(url_for('show_me',entity= 'zamestnanci', id= id))
+#    return render_template(db_entity['form_page'], action= 'upravit_mne', object=instance, form=edit_form)
 
 
 @app.route('/auth/<id>/my_activities',methods=['GET','POST'])

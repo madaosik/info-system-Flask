@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 {% from "_formhelpers.html" import render_field %}
-
+<!-- input: employee, form, action -->
 {% block app_content %}
+{% if action != 'edit_me' %}
     {% if employee %}
         <h3>Úprava zaměstnance: {{ employee.kr_jmeno }} {{ employee.prijmeni }}</h3>
     {% else %}
@@ -10,12 +11,20 @@
 
     <a href="{{ url_for('employees') }}"><< Zpět na přehled zaměstnanců</a>
 
+
     <br><br>
     {% if employee %}
         <form method="POST" action="{{ url_for('employee-mod') }}">
             <input type="hidden" name="id" value="{{ employee.id_zam }}">
     {% else %}
         <form method="POST" action="{{ url_for('employee-add') }}">
+    {% endif %}
+
+{% else%}
+    <h3>Upravit profil</h3>
+    <form method="POST" action="{{ url_for('edit_me',id_zam=current_user.id_zam) }}">
+    <input type="hidden" name="id_zam" value="{{ employee.id_zam}}">
+
     {% endif %}
 
     {{ form.csrf_token }}
