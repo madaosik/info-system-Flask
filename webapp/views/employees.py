@@ -36,20 +36,20 @@ class EmployeeAdd(MethodView):
     def post(self):
         employeeform = EmployeeForm()
         if not employeeform.validate_on_submit():
-            flash('Zadali jste neplatné údaje', 'alert-error')
+            flash('Zadali jste neplatné údaje', 'alert alert-danger')
             return render_template('employee_form.html', form=employeeform)
         employee = Zamestnanec()
         employeeform.populate_obj(employee)
         id = db.add_employee(employee)
         login = db.user_create(employee_id=id)
         if id:
-            flash("Zaměstnanec %s %s úspěšně přidán!" % (employee.kr_jmeno, employee.prijmeni), 'alert-success')
+            flash("Zaměstnanec %s %s úspěšně přidán!" % (employee.kr_jmeno, employee.prijmeni), 'alert alert-success')
         else:
-            flash("Zaměstnanec se jménem %s %s se nepodařilo přidat!" % (employee.kr_jmeno, employee.prijmeni), 'alert-error')
+            flash("Zaměstnanec se jménem %s %s se nepodařilo přidat!" % (employee.kr_jmeno, employee.prijmeni), 'alert alert-danger')
         if login:
-            flash("Uživatel s loginem %s úspěšně přidán!" % login, 'alert-success')
+            flash("Uživatel s loginem %s úspěšně přidán!" % login, 'alert alert-success')
         else:
-            flash("Nepodařilo se vytvořit uživatele!", 'alert-error')
+            flash("Nepodařilo se vytvořit uživatele!", 'alert alert-danger')
         return redirect('employees')
 
 
@@ -57,7 +57,7 @@ class EmployeeDelete(MethodView):
     @admin
     def get(self):
         db.delete_employee(request.args.get('id'))
-        flash("Zaměstnanec úspěšně smazán!")
+        flash("Zaměstnanec úspěšně smazán!",'alert alert-success')
         return redirect('employees')
 
 
@@ -75,7 +75,7 @@ class EmployeeModify(MethodView):
             return render_template('employee_form.html', form=emplform)
         employee = db.fetch_employee_by_id(request.form.get('id'))
         db.update_from_form(employee, emplform)
-        flash("Úprava zaměstnance %s %s byla úspěšná!" % (employee.kr_jmeno, employee.prijmeni))
+        flash("Úprava zaměstnance %s %s byla úspěšná!" % (employee.kr_jmeno, employee.prijmeni),'alert alert-success')
         return redirect('employees')
 
 

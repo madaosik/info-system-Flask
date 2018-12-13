@@ -1,7 +1,7 @@
-{% extends "base.html" %}
-{% from "_formhelpers.html" import render_field  %}
+{% extends 'base/base.html' %}
+{% from "base/_formhelpers.html" import render_field  %}
 
-{% block app_content %}
+{% block body %}
     {% if user %}
         <h3>Úprava uživatele: <strong>{{ user.login }}</strong></h3>
     {% else %}

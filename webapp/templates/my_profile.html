@@ -1,6 +1,6 @@
-{% extends "base.html" %}
+{% extends 'base/base.html' %}
 <!-- input: me -->
-{% block app_content %}
+{% block body %}
     <h3>Můj profil</h3>
     <table>
     <tr><td>Křestní jméno: </td><td>{{ me.kr_jmeno }}</td></tr>
@@ -15,6 +15,6 @@
     <br>
     <form method="GET" action="{{ url_for('profile-mod') }}">
     <input type="hidden" name="id_zam" value="{{ current_user.id_zam}}">
-                  <input type="submit" value="Upravit">
-                </form>
+                  <input type="submit" value="Upravit profil a přístupové údaje">
+    </form>
 {% endblock %}

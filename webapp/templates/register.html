@@ -1,7 +1,7 @@
-{% extends "base.html" %}
-{% from "_formhelpers.html" import render_field  %}
+{% extends 'base/base.html' %}
+{% from "base/_formhelpers.html" import render_field  %}
 
-{% block app_content %}
+{% block body %}
     <h1>Registrace nového uživatele</h1>
     <a href="{{ url_for('login') }}"><< Zpět na přihlášení</a>
     <br>

@@ -1,7 +1,7 @@
-{% extends "base.html" %}
-{% from "_formhelpers.html" import render_field %}
+{% extends 'base/base.html' %}
+{% from "base/_formhelpers.html" import render_field %}
 
-{% block app_content %}
+{% block body %}
     <h3>Nová žádost o dovolenou</h3>
 
     <form method="POST" action="{{ url_for('vacation-add', id_zam=current_user.id_zam)}}">

@@ -1,7 +1,7 @@
-{% extends "base.html" %}
-{% from "_formhelpers.html" import render_field  %}
+{% extends 'base/base.html' %}
+{% from "base/_formhelpers.html" import render_field  %}
 
-{% block app_content %}
+{% block body %}
     {% if car %}
         <h3>Úprava vozidla: {{ car.spz }}</h3>
     {% else %}
