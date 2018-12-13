@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% from "_formhelpers.html" import render_field %}
+
+{% block app_content %}
+    <h3>Nová žádost o aktivitu</h3>
+{{ form }}
+
+    <table class="form_table">
+            {% for field in form %}
+                {{ render_field(field,form) }}
+            {% endfor %}
+        </table>
+{% endblock %}
