@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% from "_formhelpers.html" import render_field %}
+<!-- input: employee, form-->
+{% block app_content %}
+
+{% if employee %}
+    <h3>Úprava zaměstnance: {{ employee.kr_jmeno }} {{ employee.prijmeni }}</h3>
+{% else %}
+    <h3>Přidat zaměstnance</h3>
+{% endif %}
+
+<a href="{{ url_for('employees') }}"><< Zpět na přehled zaměstnanců</a>
+
+
+<br><br>
+{% if employee %}
+    <form method="POST" action="{{ url_for('employee-mod') }}">
+        <input type="hidden" name="id" value="{{ employee.id_zam }}">
+{% else %}
+    <form method="POST" action="{{ url_for('employee-add') }}">
+{% endif %}
+    {{ form.csrf_token }}
+            <table class="form_table">
+                {% for field in form %}
+                    {{ render_field(field,form) }}
+                {% endfor %}
+            </table>
+        </form>
+{% endblock %}

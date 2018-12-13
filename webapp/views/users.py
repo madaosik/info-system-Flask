@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, flash
+from flask import render_template, request, redirect, flash, url_for
 from flask.views import MethodView
 from webapp.core import db
 from flask_wtf import FlaskForm
@@ -6,20 +6,15 @@ from wtforms import SubmitField, SelectField, PasswordField, StringField
 from wtforms.validators import EqualTo, DataRequired
 
 from webapp.core.models import Uzivatel
-from webapp.roles import admin
+from webapp.roles import admin, get_role_tuples, get_role_dict
 
 class UserForm(FlaskForm):
+    employee = SelectField('Přiřazený zaměstnanec', coerce=int)
+    role = SelectField('Role')
     login = StringField('Uživatelské jméno', validators=[DataRequired(message="Zadejte uživatelské jméno")])
     password = PasswordField('Heslo', validators=[DataRequired(message="Zadejte heslo!")])
     password2 = PasswordField('Zopakování hesla', validators=[DataRequired(), EqualTo('password',message="Zadaná hesla se neshodují!")])
-    employee = SelectField('Zaměstnanec')
-    role = SelectField('Role')
     submit = SubmitField('Uložit')
-
-    def __init__(self,roles,employees, *args, **kwargs):
-        super(UserForm,self).__init__(*args, **kwargs)
-        self.fill_role_selectbox(roles)
-        self.fill_employee_selectbox(employees)
 
     def fill_role_selectbox(self, roles):
         self.role.choices = roles
@@ -29,8 +24,7 @@ class UserForm(FlaskForm):
 
 class UserEditForm(UserForm):
     # Heslo při editaci nechceme jako povinné pole a login nejde měnit.....
-    login = None
-    role = SelectField('Role')
+    employee = None
     password = PasswordField('Heslo')
     password2 = PasswordField('Zopakování hesla',validators=[EqualTo('password', message="Zadaná hesla se neshodují!")])
     submit = SubmitField('Uložit')
@@ -39,54 +33,66 @@ class Users(MethodView):
     @admin
     def get(self):
         users_empls = db.fetch_user_tuples()
-        return render_template('users.html', users=users_empls)
+        return render_template('users.html', users=users_empls, role_dict=get_role_dict())
 
 
 class UserAdd(MethodView):
     @admin
     def get(self):
-        return render_template('user_form.html', form=UserForm(db.get_role_tuples(),db.get_employee_tuples()))
+        userform = UserForm()
+        userform.fill_role_selectbox(get_role_tuples())
+        userform.fill_employee_selectbox(db.get_employee_tuples())
+        if not userform.employee.choices:
+            flash('Všichni zaměstnanci mají aktuálně přiřazeného uživatele, operaci tudíž nelze provést!', 'alert alert-danger')
+            return redirect(url_for('users'))
+        return render_template('user_form.html', form=userform)
 
     @admin
     def post(self):
-        userform = UserForm(db.get_role_tuples(),db.get_employee_tuples())
+        userform = UserForm(request.form)
+        userform.fill_role_selectbox(get_role_tuples())
+        userform.fill_employee_selectbox(db.get_employee_tuples())
         if not userform.validate_on_submit():
-            flash('Zadali jste neplatné údaje', 'alert-danger')
-            return render_template('employee_edit_form.html', form=userform)
+            return render_template('user_form.html', form=userform)
         user = Uzivatel()
         userform.populate_obj(user)
-        # TODO: Zkontrolovat, jestli vybrany zamestnanec nema uz prirazeneho uzivatele
-        db.add(employee)
-        flash("Zaměstnanec se jménem %s %s úspěšně přidán!" % (employee.kr_jmeno, employee.prijmeni), 'alert-success')
-        return redirect('employees')
+        if db.is_login_valid(user.login):
+            login = db.create_user(login=user.login, password=user.password, employee_id=userform.employee.data)
+            flash("Uživatel '%s' byl úspěšně přidán!" % login, 'alert alert-success')
+            return redirect('users')
+        else:
+            flash("Uživatel se jménem '%s' již existuje!" % user.login, 'alert alert-danger')
+            return render_template('user_form.html', form=userform)
 
 
 class UserDelete(MethodView):
     @admin
     def get(self):
-        db.delete_employee(request.args.get('id'))
-        flash("Zaměstnanec úspěšně smazán!")
-        return redirect('employees')
+        db.delete_user(request.args.get('id'))
+        flash("Uživatel úspěšně smazán!", 'alert alert-success')
+        return redirect('users')
 
 
 class UserModify(MethodView):
     @admin
     def get(self):
         user = db.get_user_by_attr(id=request.args.get('id'))
-        userform = UserEditForm(db.get_role_tuples(),db.get_employee_tuples(),obj=user)
-        return render_template('user_form.html', user=user, form=userform)
+        employee = db.fetch_employee_by_id(user.id_zam)
+        userform = UserEditForm(obj=user)
+        userform.fill_role_selectbox(get_role_tuples())
+        return render_template('user_form.html', user=user, employee=employee, form=userform)
 
     @admin
     def post(self):
-        emplform = UserEditForm(request.form)
-        if not emplform.validate_on_submit():
-            #flash('Zadali jste neplatné údaje', 'alert-danger')
-            error = "Zadali jste neplatné údaje"
-            return render_template('employee_edit_form.html', form=emplform, error=error)
-        employee = db.fetch_employee_by_id(request.form.get('id'))
-        db.update_from_form(employee, emplform)
-        flash("Úprava zaměstnance %s %s byla úspěšná!" % (employee.kr_jmeno, employee.prijmeni))
-        return redirect('employees')
+        userform = UserEditForm(request.form)
+        userform.fill_role_selectbox(get_role_tuples())
+        if not userform.validate_on_submit():
+            flash('Zadali jste neplatné údaje', 'alert alert-danger')
+            return render_template('user_form.html', form=userform)
+        user = db.get_user_by_attr(id=request.form.get('id'))
+        db.edit_user_from_form(user.id, userform.data)
+        flash("Úprava uživatele '%s' byla úspěšná!" % user.login, 'alert alert-success')
+        return redirect('users')
 
 
 def configure(app):

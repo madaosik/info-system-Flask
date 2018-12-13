@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from webapp.core.models import *
-from webapp.roles import roles
 import sqlalchemy as sa
 from webapp.core.db_connector import session
 
@@ -33,47 +32,38 @@ def get_empl_by_attr(**kwargs):
 def is_login_valid(login):
     return False if get_user_by_attr(login=login) is not None else True
 
-def create_user(form):
-    id_zam = check_login_and_email(login=form.login.data, email=form.email.data)
-    if not isinstance(id_zam,int):
-        return id_zam
-    try:
-        user = Uzivatel(login=form.login.data, role=form.role.data, id_zam=id_zam)
-    except AttributeError:
-        user = Uzivatel(login=form.login.data, id_zam=id_zam)
 
-    try:
-        user.set_password(form.password.data)
-    except AttributeError:
-        pass
-
-    session.add(user)
-    session.commit()
-
-
-def edit_user_from_form(id,form_data_dict):
+def edit_user_from_form(id,form_data):
     user = get_user_by_attr(id=id)
 
     try:
-        user.role = form_data_dict['role']
+        user.role = form_data['role']
     except KeyError:
         pass
-    if form_data_dict['password']:
-        user.set_password(form_data_dict['password'])
-    if form_data_dict['login']:
-        user.login = form_data_dict['login']
+
+    if len(form_data['password']) > 0:
+        user.set_password(form_data['password'])
+    user.login = form_data['login']
     session.commit()
 
-def user_create(employee_id):
-    login = "xuser"
-    if not is_login_valid(login):
-        for i in range(1,99):
-            login = login + str(i)
-            if is_login_valid(login):
-                break
+def create_user(**kwargs):
+    if 'login' in kwargs:
+        login = kwargs['login']
+    else:
+        login = "xuser"
+        if not is_login_valid(login):
+            for i in range(1, 99):
+                login = login + str(i)
+                if is_login_valid(login):
+                    break
 
-    user = Uzivatel(login=login,id_zam=employee_id)
-    user.set_password("1234")
+    user = Uzivatel(login=login,id_zam=kwargs['employee_id'])
+
+    if 'password' in kwargs:
+        user.set_password(kwargs['password'])
+    else:
+        user.set_password("1234")
+
     session.add(user)
     session.commit()
     return login
@@ -183,7 +173,15 @@ def delete_employee(id):
 def fetch_employee_by_id(id):
     return Zamestnanec.query.filter_by(id_zam=id).first()
 
+def get_empl_from_user(user_id):
+    user = session.query(Uzivatel).filter_by(id=user_id).first()
+    return session.query(Zamestnanec).filter_by(id_zam=user.id_zam).first()
+
 # User functions
+
+def delete_user(id):
+    session.query(Uzivatel).filter_by(id=id).delete()
+    session.commit()
 
 def fetch_user_tuples():
     return (session.query(Uzivatel, Zamestnanec).filter(Uzivatel.id_zam == Zamestnanec.id_zam).all())
@@ -193,18 +191,9 @@ def get_employee_tuples():
     employees = Zamestnanec.query.all()
     empl_tuples_arr = []
     for employee in employees:
-        employee_string = "%s %s" % (employee.kr_jmeno, employee.prijmeni)
-        empl_tuples_arr.append((employee.id_zam, employee_string))
+        if Uzivatel.query.filter_by(id_zam=employee.id_zam).first() is None:
+            employee_string = "%s %s" % (employee.kr_jmeno, employee.prijmeni)
+            empl_tuples_arr.append((employee.id_zam, employee_string))
     return empl_tuples_arr
 
-def get_role_tuples():
-    roles_tuples_arr = []
-    for role in roles:
-        if role == 'admin':
-            role_string = "Administrátor"
-        elif role == 'user':
-            role_string = "Zaměstnanec"
-        elif role == 'boss':
-            role_string = "Vedoucí"
-        roles_tuples_arr.append((role,role_string))
-    return roles_tuples_arr
+

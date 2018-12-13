@@ -30,25 +30,24 @@ class Employees(MethodView):
 class EmployeeAdd(MethodView):
     @admin
     def get(self):
-        return render_template('employee_edit_form.html', form=EmployeeForm())
+        return render_template('employee_form.html', form=EmployeeForm())
 
     @admin
     def post(self):
         employeeform = EmployeeForm()
         if not employeeform.validate_on_submit():
-            #flash('Zadali jste neplatné údaje', 'alert-danger')
-            error = "Zadali jste neplatné údaje"
-            return render_template('employee_edit_form.html', form=employeeform, error=error)
+            flash('Zadali jste neplatné údaje', 'alert-error')
+            return render_template('employee_form.html', form=employeeform)
         employee = Zamestnanec()
         employeeform.populate_obj(employee)
         id = db.add_employee(employee)
-        login = db.user_create(id)
+        login = db.user_create(employee_id=id)
         if id:
-            flash("Zaměstnanec %s %s úspěšně přidán!" % (employee.kr_jmeno, employee.prijmeni))
+            flash("Zaměstnanec %s %s úspěšně přidán!" % (employee.kr_jmeno, employee.prijmeni), 'alert-success')
         else:
             flash("Zaměstnanec se jménem %s %s se nepodařilo přidat!" % (employee.kr_jmeno, employee.prijmeni), 'alert-error')
         if login:
-            flash("Uživatel s loginem %s úspěšně přidán!" % login)
+            flash("Uživatel s loginem %s úspěšně přidán!" % login, 'alert-success')
         else:
             flash("Nepodařilo se vytvořit uživatele!", 'alert-error')
         return redirect('employees')
@@ -67,15 +66,13 @@ class EmployeeModify(MethodView):
     def get(self):
         employee = db.fetch_employee_by_id(request.args.get('id'))
         emplform = EmployeeForm(obj=employee)
-        return render_template('employee_edit_form.html', employee=employee, form=emplform)
+        return render_template('employee_form.html', employee=employee, form=emplform)
 
     @admin
     def post(self):
         emplform = EmployeeForm(request.form)
         if not emplform.validate_on_submit():
-            #flash('Zadali jste neplatné údaje', 'alert-danger')
-            error = "Zadali jste neplatné údaje"
-            return render_template('employee_edit_form.html', form=emplform, error=error)
+            return render_template('employee_form.html', form=emplform)
         employee = db.fetch_employee_by_id(request.form.get('id'))
         db.update_from_form(employee, emplform)
         flash("Úprava zaměstnance %s %s byla úspěšná!" % (employee.kr_jmeno, employee.prijmeni))

@@ -29,16 +29,6 @@ p.login {
     float: right;
 }
 
-p.alert-success {
-    color: green;
-    text-align: center;
-}
-
-p.alert-error {
-    color: red;
-    text-align: center;
-}
-
 table.form_table {
     border-spacing: 7px;
     border-collapse: separate;

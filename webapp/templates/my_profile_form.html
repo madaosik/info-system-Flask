@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% from "_formhelpers.html" import render_field %}
+{% block app_content %}
+
+    <h3>Úprava mého profilu</h3>
+    <a href="{{ url_for('profile') }}"><< Zpět na můj profil</a>
+    <br><br>
+    <form method="POST" action="{{ url_for('profile-mod',id_zam=current_user.id_zam) }}">
+        <input type="hidden" name="id_zam" value="{{ employee.id_zam}}">
+
+    {{ form.csrf_token }}
+            <table class="form_table">
+                {% for field in form %}
+                    {{ render_field(field,form) }}
+                {% endfor %}
+            </table>
+        </form>
+{% endblock %}

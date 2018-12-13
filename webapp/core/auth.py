@@ -35,12 +35,12 @@ class FirstLogin(MethodView):
         user = db.get_user_by_attr(id=user_id)
         if form.validate_on_submit():
             if not db.is_login_valid(form.data['login']):
-                flash("Zvolte jiné uživatelské jméno, '%s' je již používáno!" % form.data['login'], 'alert-error')
+                flash("Zvolte jiné uživatelské jméno, '%s' je již používáno!" % form.data['login'], 'alert alert-danger')
                 return redirect(url_for('first-login', user_id=user.id))
             db.edit_user_from_form(user_id, form.data)
             login_user(user)
             db.log_visit(user)
-            flash("Uživatelské jméno a heslo úspěšně změněno!", 'alert-success')
+            flash("Uživatelské jméno a heslo úspěšně změněno!", 'alert alert-success')
             return redirect(url_for('dashboard_empl')) if user.is_employee() else redirect(url_for('dashboard_boss'))
         return render_template('first_login.html', form=form, user_id=user_id)
 
@@ -71,16 +71,16 @@ def configure_login(app):
             user = db.get_user_by_attr(login=form.login.data)
             if user is None:
                 error = "Neznámé uživatelské jméno!"
-            elif not user.check_password(form.password.data):
-                error = "Neplatné heslo!"
+            #elif not user.check_password(form.password.data):
+             #   error = "Neplatné heslo!"
             else:
                 #TODO: Jestli se uzivatel prihlasuje poprve, musi si zmenit heslo
                 if is_first_login(user):
-                    flash("Toto je Vaše první přihlášení - změňte si uživatelské jméno a heslo!", 'alert-success')
+                    flash("Toto je Vaše první přihlášení - změňte si uživatelské jméno a heslo!", 'alert alert-success')
                     return redirect(url_for('first-login', user_id=user.id))
                 login_user(user, remember=form.remember_me.data)
                 db.log_visit(user)
-                flash("Přihlášení proběhlo úspěšně!", 'alert-success')
+                flash("Přihlášení proběhlo úspěšně!", 'alert alert-success')
                 if user.is_employee():
                     return redirect(url_for('dashboard_empl'))
                 else:

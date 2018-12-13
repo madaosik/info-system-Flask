@@ -4,6 +4,29 @@ from flask import abort, redirect, url_for
 
 roles = ['admin', 'user']
 
+def get_role_tuples():
+    roles_tuples_arr = []
+    for role in roles:
+        if role == 'admin':
+            role_string = "Administrátor"
+        elif role == 'user':
+            role_string = "Zaměstnanec"
+        elif role == 'boss':
+            role_string = "Vedoucí"
+        roles_tuples_arr.append((role,role_string))
+    return roles_tuples_arr
+
+def get_role_dict():
+    roles_dict = {}
+    for role in roles:
+        if role == 'admin':
+            roles_dict[role] = "Administrátor"
+        elif role == 'user':
+            roles_dict[role] = "Zaměstnanec"
+        elif role == 'boss':
+            roles_dict[role] = "Vedoucí"
+    return roles_dict
+
 # role decorators
 def admin(func):
     @wraps(func)

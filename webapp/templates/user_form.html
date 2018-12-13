@@ -18,6 +18,12 @@
     {% endif %}
     {{ form.csrf_token }}
     <table class="form_table">
+        {% if user %}
+            <tr>
+                <td>Přiřazený zaměstnanec:</td><td><strong>{{ employee.kr_jmeno }} {{ employee.prijmeni }}</strong></td>
+            </tr>
+            <tr><td>&nbsp;</td></tr>
+        {% endif %}
         {% for field in form %}
                     {{ render_field(field,form) }}
             {% endfor %}

@@ -30,7 +30,7 @@
                     <td>dosud nepřihlášen</td>
                 {% endif %}
                 <td>{{user[0].cas_posl_zmeny}}</td>
-                <td>{{user[0].role}}</td>
+                <td>{{ role_dict[user[0].role]}}</td>
                 <td>
                     <form method="GET" action="{{ url_for('user-mod') }}">
                         <input type="hidden" name="id" value="{{ user[0].id }}">
