@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 
 from functools import wraps
-from flask import redirect, url_for, render_template, flash
+from flask import redirect, url_for, render_template, flash, request
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import InputRequired
 from flask_login import current_user, login_user, logout_user
+from flask.views import MethodView
 
 from webapp.core import db
+from webapp.views.users import UserForm
 
 class LoginForm(FlaskForm):
     login = StringField('Uživatelské jméno',validators=[InputRequired(message="Zadejte uživatelské jméno!")])
@@ -15,26 +17,42 @@ class LoginForm(FlaskForm):
     remember_me = BooleanField('Pamatuj si mě')
     submit = SubmitField('Přihlásit se')
 
+class FirstLoginForm(UserForm):
+    employee = None
+    role = None
 
-# def login_required(roles=["ANY"]):
-#     def wrapper(fn):
-#         @wraps(fn)
-#         def decorated_view(*args, **kwargs):
-#             if not current_user.is_authenticated:
-#                 return login_manager.unauthorized()
-#             access_granted = False
-#             if roles[0] != "ANY":
-#                 for checked_role in roles:
-#                     if current_user.role == checked_role:
-#                         access_granted = True
-#                         break
-#                 if not access_granted:
-#                     return login_manager.unauthorized()
-#             return fn(*args, **kwargs)
-#         return decorated_view
-#     return wrapper
+    def __init__(self,*args, **kwargs):
+        super(FlaskForm,self).__init__(*args, **kwargs)
+
+
+class FirstLogin(MethodView):
+    def get(self,user_id):
+        user = db.get_user_by_attr(id=user_id)
+        return render_template('first_login.html', form=FirstLoginForm(obj=user), user_id=user.id)
+
+    def post(self,user_id):
+        form = FirstLoginForm(request.form)
+        user = db.get_user_by_attr(id=user_id)
+        if form.validate_on_submit():
+            if not db.is_login_valid(form.data['login']):
+                flash("Zvolte jiné uživatelské jméno, '%s' je již používáno!" % form.data['login'], 'alert-error')
+                return redirect(url_for('first-login', user_id=user.id))
+            db.edit_user_from_form(user_id, form.data)
+            login_user(user)
+            db.log_visit(user)
+            flash("Uživatelské jméno a heslo úspěšně změněno!", 'alert-success')
+            return redirect(url_for('dashboard_empl')) if user.is_employee() else redirect(url_for('dashboard_boss'))
+        return render_template('first_login.html', form=form, user_id=user_id)
+
+
+def is_first_login(user):
+    return True if user.poc_prihl is None else False
+
 
 def configure_login(app):
+
+    app.add_url_rule('/first_login/<int:user_id>', view_func=FirstLogin.as_view('first-login'))
+
     @app.route('/logout')
     def logout():
         logout_user()
@@ -57,13 +75,14 @@ def configure_login(app):
                 error = "Neplatné heslo!"
             else:
                 #TODO: Jestli se uzivatel prihlasuje poprve, musi si zmenit heslo
+                if is_first_login(user):
+                    flash("Toto je Vaše první přihlášení - změňte si uživatelské jméno a heslo!", 'alert-success')
+                    return redirect(url_for('first-login', user_id=user.id))
                 login_user(user, remember=form.remember_me.data)
                 db.log_visit(user)
                 flash("Přihlášení proběhlo úspěšně!", 'alert-success')
                 if user.is_employee():
-                    print("cus")
                     return redirect(url_for('dashboard_empl'))
                 else:
-                    print("zdar")
                     return redirect(url_for('dashboard_boss'))
         return render_template('login.html', title='Přihlášení', form=form, error=error)

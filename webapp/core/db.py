@@ -6,78 +6,6 @@ import sqlalchemy as sa
 from webapp.core.db_connector import session
 
 
-# def get_db_entity(entity_name):
-#     switcher = {
-#         'zamestnanci': {
-#             'class': Zamestnanec,
-#             'form_class': Zam_form,
-#             'form_class_me': Zam_form_ja,
-#             'add_text': "Přidat zaměstnance",
-#             'edit_text': "Úprava zaměstnance",
-#             'homepage': "employees.html",
-#             'form_page': "employee_form.html",
-#             'me_page': "profile.html",
-#         },
-#         'vozidla': {
-#             'class': Vozidlo,
-#             'form_class': Auto_form,
-#             'add_text': "Přidat vozidlo",
-#             'edit_text': "Úprava vozidla",
-#             'homepage': "cars.html",
-#             'form_page': "car_form.html",
-#         },
-#         'lekarske_prohlidky': {
-#             'class': Lekarska_prohl,
-#             'form_class': Lekar_form,
-#             'add_text': "Přidat lékařskou prohlídku",
-#             'edit_text': "Úprava lékařské prohlídky",
-#             'homepage': "medic_visits.html",
-#             'form_page': "prohl_form.html",
-#         },
-#         'uzivatele': {
-#             'class': Uzivatel,
-#             'form_class': Uzivatel_form,
-#             'edit_form_class': Uzivatel_edit_form,
-#             'form_init': roles_arr,
-#             'add_text': "Přidat uživatele",
-#             'edit_text': "Úprava uživatele",
-#             'homepage': "users.html",
-#             'form_page': "user_form.html",
-#         },
-#         'aktivity': {
-#             'class': Denni_evidence,
-#             'homepage': "activities.html",
-#         },
-#         'dovolena': {
-#             'class': Dovolena_zam,
-#             'form_class': Dovo_form,
-#             'homepage': 'vacations.html',
-#
-#         },
-#         'dovolena_zaznam': {
-#             'class': Dovolena_zam_hist,
-#             'form_class': DovoZazForm,
-#             'add_text': "Přidat dovolenou",
-#             'homepage': 'vacations.html',
-#             'form_page': "vacation_form.html",
-#             'me_page': 'vacation_my.html',
-#             'history_page': 'vacation_hist.html',
-#             'detail_history_page': 'vacation_hist_detail.html',
-#         }
-#
-#     }
-#     return switcher.get(entity_name, "Neznámá entita")
-
-# def convert_to_date(formdata):
-#     try:
-#         dat_nar = datetime.strptime(formdata.get("dat_nar"), '%d.%m.%Y')
-#         dat_nar_string = dat_nar.strftime('%Y-%m-%d')
-#     except:
-#         dat_nar_string = None
-#
-#     return dat_nar_string
-
-
 def get_obj_by_id(classname,id):
     return classname.query.get(id)
 
@@ -105,19 +33,6 @@ def get_empl_by_attr(**kwargs):
 def is_login_valid(login):
     return False if get_user_by_attr(login=login) is not None else True
 
-    # empl = get_empl_by_attr(email=email)
-    # if empl:
-    #     if Uzivatel.query.filter_by(id_zam=empl.id_zam).first() is not None:
-    #         error = "Uživatelský účet spojený s e-mailem %s již existuje. Kontaktujte správce!" % email
-    # else:
-    #     error = "Zaměstnanec s e-mailem %s není veden v databázi. Kontaktujte správce!" % email
-    #
-    # if error:
-    #     return error
-    # else:
-    #     return empl.id_zam
-
-
 def create_user(form):
     id_zam = check_login_and_email(login=form.login.data, email=form.email.data)
     if not isinstance(id_zam,int):
@@ -136,16 +51,21 @@ def create_user(form):
     session.commit()
 
 
-def edit_user(id,form_data_dict):
+def edit_user_from_form(id,form_data_dict):
     user = get_user_by_attr(id=id)
-    user.role = form_data_dict['role']
 
+    try:
+        user.role = form_data_dict['role']
+    except KeyError:
+        pass
     if form_data_dict['password']:
         user.set_password(form_data_dict['password'])
+    if form_data_dict['login']:
+        user.login = form_data_dict['login']
     session.commit()
 
-def user_create(employee_id,surname):
-    login = "x" + surname[0:3]
+def user_create(employee_id):
+    login = "xuser"
     if not is_login_valid(login):
         for i in range(1,99):
             login = login + str(i)
@@ -158,6 +78,8 @@ def user_create(employee_id,surname):
     session.commit()
     return login
 
+def first_login_edit(id,form_data_dict):
+    user
 
 def get_obj_by_clsname(classname,**kwargs):
     if 'initobject' in kwargs:

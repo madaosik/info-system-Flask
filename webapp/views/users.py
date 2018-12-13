@@ -15,7 +15,6 @@ class UserForm(FlaskForm):
     employee = SelectField('Zaměstnanec')
     role = SelectField('Role')
     submit = SubmitField('Uložit')
-    submit = SubmitField('Uložit')
 
     def __init__(self,roles,employees, *args, **kwargs):
         super(UserForm,self).__init__(*args, **kwargs)
@@ -58,7 +57,7 @@ class UserAdd(MethodView):
         userform.populate_obj(user)
         # TODO: Zkontrolovat, jestli vybrany zamestnanec nema uz prirazeneho uzivatele
         db.add(employee)
-        flash("Zaměstnanec se jménem %s %s úspěšně přidán!" % (employee.kr_jmeno, employee.prijmeni))
+        flash("Zaměstnanec se jménem %s %s úspěšně přidán!" % (employee.kr_jmeno, employee.prijmeni), 'alert-success')
         return redirect('employees')
 
 
@@ -79,7 +78,7 @@ class UserModify(MethodView):
 
     @admin
     def post(self):
-        emplform = EmployeeForm(request.form)
+        emplform = UserEditForm(request.form)
         if not emplform.validate_on_submit():
             #flash('Zadali jste neplatné údaje', 'alert-danger')
             error = "Zadali jste neplatné údaje"

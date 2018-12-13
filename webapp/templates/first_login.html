@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% from "_formhelpers.html" import render_field  %}
+
+{% block title %}IS - Změna přihlašovacích údajů{% endblock %}
+{% block app_content %}
+        <h1>První přihlášení do systému</h1>
+        <br><br>
+        <!--<p>Jedná se o Vaše první přihlášení do systému. Změňte si, prosím, uživatelské jméno a heslo vygenerované systémem.</p>-->
+        <form action={{ url_for('first-login', user_id=user_id) }} method="post">
+            <input type="hidden" name="id" value="{{ user_id }}">
+            {{ form.csrf_token }}
+            <table class="form_table">
+                {% for field in form %}
+                {{ render_field(field,form) }}
+            {% endfor %}
+            </table>
+        </form>
+{% endblock %}
