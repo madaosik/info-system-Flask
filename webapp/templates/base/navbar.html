@@ -1,70 +1,98 @@
-<div class="container col-sm-12 col-md-12 col-lg-12">
-    {% if current_user.is_authenticated %}
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<div class="container">
+        {% if current_user.is_authenticated %}
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <a class="navbar-brand text-large text-light mr-5">Láníček Transport s.r.o.</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarColor01">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
 
-
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item active">
-
-                        {% if current_user.role == 'user'%}
-                <a class="nav-link" href="{{ url_for('dashboard_empl') }}">Nástěnka</a>
-            {% else %}
-                <a class="nav-link" href="{{ url_for('dashboard_boss') }}">Nástěnka</a>
-            {% endif %}
-                    </li>
-                  {% if current_user.role == 'user'%}
-                  <li class="nav-item active">
-                 <a class="nav-link" href="{{ url_for('profile', id_zam=current_user.id_zam) }}">Můj profil</a> </li>
-                 <li class="nav-item active">
-                 <a class="nav-link" href="{{ url_for('my_vacation', id=current_user.id_zam) }}">Plánovaná dovolená</a></li>
-                 <li class="nav-item active">
-                 <a class="nav-link" href="{{ url_for('my_activities', id=current_user.id_zam) }}">Moje aktivity</a>
-             </li>
-             {% endif %}
-
-                    {% if current_user.role == 'boss' or current_user.role == 'admin' %}
-                        <li class="nav-item active dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                               data-toggle="dropdown"
-                               aria-haspopup="true" aria-expanded="false">
-                                Admin
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <div class="dropdown-header">Evidence činností</div>
-                                <a class="dropdown-item" href="{{ url_for('activities')  }}">Přehled aktivit</a>
-                                <a class="dropdown-item" href="#">Docházka</a>
-                                <div class="dropdown-divider"></div>
-                                <div class="dropdown-header">Zaměstnanci</div>
-                                 <a class="dropdown-item" href="{{ url_for('employees') }}">Přehled zaměstnanců</a>
-                                <a class="dropdown-item" href="{{ url_for('medic_visits')  }}">Lékařské prohlídky</a>
-                                <a class="dropdown-item" href="#">Pracovní smlouvy</a>
-                                <a class="dropdown-item"
-                                   href="{{ url_for('vacations')  }}">Dovolená</a>
-                                <a class="dropdown-item" href="#">Úložiště dokumentů</a>
-                                <div class="dropdown-divider"></div>
-                                <div class="dropdown-header">Vozový park</div>
-                                <a class="dropdown-item" href="{{  url_for('cars')  }}">Přehled vozidel</a>
-                                <a class="dropdown-item" href="#">Technické kontroly</a>
-                                <a class="dropdown-item" href="#">Plánované servisní práce</a>
-                                <a class="dropdown-item" href="#">Úložiště dokumentů</a>
-                                <div class="dropdown-divider"></div>
-                                  {% if current_user.role == 'admin'%}
-                                <a class="dropdown-item" href="{{ url_for('users')
-                                 }}">Správa uživatelů</a>
-                                {%endif%}
-                                <a class="dropdown-item" href="#">Přidat aktivitu</a>
-                                {% if current_user.role != 'boss' %}
-                                    <a class="dropdown-item" href="{{url_for('vacation-add', id=current_user.id_zam) }}">Nová žádost o dovolenou</a>
-                                {% endif %}
-                            </div>
+                            {% if current_user.role == 'user'%}
+                                    <a class="nav-link" href="{{ url_for('dashboard_empl') }}"><i class="icon-home icon-white"></i> Nástěnka</a>
+                                {% else %}
+                                    <a class="nav-link" href="{{ url_for('dashboard_boss') }}"><i class="icon-home icon-white"></i> Nástěnka</a>
+                            {% endif %}
                         </li>
-                    {% endif %}
-                    <li class="nav-item active">
-                        <a class="nav-link" href="{{ url_for('logout') }}">Odhlásit</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    {% endif %}
-</div>
+
+                      {% if current_user.role == 'user'%}
+                            <li class="nav-item active">
+                                    <a class="nav-link" href="{{ url_for('profile', id_zam=current_user.id_zam) }}">Můj profil</a> </li>
+                                 <li class="nav-item active">
+                                    <a class="nav-link" href="{{ url_for('my_vacation', id=current_user.id_zam) }}">Plánovaná dovolená</a></li>
+                                 <li class="nav-item active">
+                                    <a class="nav-link" href="#">Moje aktivity</a>
+                            </li>
+                        {% endif %}
+                     {% if current_user.role == 'boss' or current_user.role == 'admin' %}
+                            <li class="nav-item active dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                  data-toggle="dropdown"
+                                  aria-haspopup="true" aria-expanded="false">
+                                    Zaměstnanci
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <!--<div class="dropdown-header">Zaměstnanci</div>-->
+                                     <a class="dropdown-item" href="{{ url_for('employees') }}">Přehled zaměstnanců</a>
+                                    <a class="dropdown-item" href="{{ url_for('medic_visits')  }}">Lékařské prohlídky</a>
+                                    <a class="dropdown-item" href="#">Pracovní smlouvy</a>
+                                    <a class="dropdown-item"
+                                      href="{{ url_for('vacations')  }}">Dovolená</a>
+                                    <a class="dropdown-item" href="#">Úložiště dokumentů</a>
+
+                                </div>
+                            </li>
+
+                            <li class="nav-item active dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                  data-toggle="dropdown"
+                                  aria-haspopup="true" aria-expanded="false">
+                                    Evidence činností
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <!--<div class="dropdown-header">Evidence činností</div>-->
+                                    <a class="dropdown-item" href="{{ url_for('activities')  }}">Přehled aktivit</a>
+                                    <a class="dropdown-item" href="#">Docházka</a>
+
+                                </div>
+                            </li>
+
+                        {% endif %}
+                     {% if current_user.role == 'boss' or current_user.role == 'admin' %}
+                            <li class="nav-item active dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                  data-toggle="dropdown"
+                                  aria-haspopup="true" aria-expanded="false">
+                                    Vozový park
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <!--<div class="dropdown-header">Vozový park</div>-->
+                                    <a class="dropdown-item" href="{{  url_for('cars')  }}">Přehled vozidel</a>
+                                    <a class="dropdown-item" href="#">Technické kontroly</a>
+                                    <a class="dropdown-item" href="#">Plánované servisní práce</a>
+                                    <a class="dropdown-item" href="#">Úložiště dokumentů</a>
+                                </div>
+                            </li>
+                        {% endif %}
+                        {% if current_user.role == 'boss' or current_user.role == 'admin' %}
+                            <li class="nav-item active dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                  data-toggle="dropdown"
+                                  aria-haspopup="true" aria-expanded="false">
+                                    Admin
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    {% if current_user.role == 'admin'%}
+                                        <a class="dropdown-item" href="{{ url_for('users') }}">Správa uživatelů</a>
+                                    {%endif%}
+                                </div>
+                            </li>
+                        {% endif %}
+                    </ul>
+                    <form class="form-inline my-2 my-lg-0" action="{{ url_for('logout') }}">
+                      <button class="btn btn-primary my-0 my-sm-0" type="submit">Odhlásit: {{ current_user.login }}</button>
+                    </form>
+            </nav>
+        {% endif %}
+    </div>

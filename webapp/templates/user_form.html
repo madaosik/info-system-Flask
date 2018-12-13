@@ -1,6 +1,7 @@
 {% extends 'base/base.html' %}
 {% from "base/_formhelpers.html" import render_field  %}
 
+{% block title %}Uživatelé{% endblock %}
 {% block body %}
     {% if user %}
         <h3>Úprava uživatele: <strong>{{ user.login }}</strong></h3>

@@ -6,7 +6,6 @@ from wtforms.validators import InputRequired, DataRequired, Email, NumberRange, 
 from wtforms.fields.html5 import DateField, DateTimeField, DateTimeLocalField
 import datetime
 
-from webapp.views.register import RegistrationForm
 
 class CzechDateField(DateField):
     """

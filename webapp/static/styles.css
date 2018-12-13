@@ -60,6 +60,14 @@ p.error, td.form_error {
     background-color: #007bff;
 }
 
+h3.companyname {
+    color: white;
+}
+
+.currentuser {
+    float: right;
+}
+
 table th {
     text-align: center;
 }
@@ -90,4 +98,9 @@ table th {
 }
 .deny_button{
     background-color: lightsalmon;
+}
+
+.navbar .navbar-brand {
+  font-weight: bold;
+  font-size: 1.5rem;
 }
