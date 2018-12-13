@@ -12,14 +12,16 @@ from wtforms.fields.html5 import DateField, DateTimeField, DateTimeLocalField
 
 class NewActivityForm(FlaskForm):
     type = StringField('Typ', default="Transport")
-    
+    vozidlo = SelectField('Vozidlo', coerce=int)
     from_place = StringField('Odkud', default="Brno-Tuřany")
     via_place = StringField('Přes')
     to_place = StringField('Kam', default="Brno-Tuřany")
-    submit = SubmitField('Zaznamenat a odeslat k potvrzení')
 
-    def fill_car_selectbox(self, cars):
-        self.vozidlo.choices = cars
+    begin = DateTimeLocalField('Datum a čas odjezdu', default=datetime.datetime.now, format="%Y-%m-%dT%H:%M",
+                              validators=[InputRequired(message="Doplňte den začátku aktivity!")])
+    end = DateTimeLocalField('Datum a čas návratu', default=datetime.datetime.now, format="%Y-%m-%dT%H:%M",
+                              validators=[InputRequired(message="Doplňte den konce aktivity!")])
+    submit = SubmitField('Zaznamenat a odeslat k potvrzení')
 
 
 class Activities(MethodView):
@@ -35,16 +37,30 @@ class ActivityAdd(MethodView):
     def get(self):
         print(NewActivityForm())
         f = NewActivityForm()
+        f.vozidlo.choices = db. get_cars_tuples()
         return render_template('new_activity.html', form=f)
 
     @employee
     def post(self):
         actform = NewActivityForm()
+        cars = db.get_cars_tuples()
+        print(cars)
+        actform.vozidlo.choices = cars
         instance = db.get_obj_by_clsname(Activity)
+        print(instance)
+        print(actform.begin.data)
+        #actform.vozidlo=
         if not actform.validate_on_submit():
-            return render_template('vacation_form.html', form=actform)
-        db.update_from_form(instance, actform)
+            return render_template('new_activity.html', form=actform)
         instance.id_zam = current_user.id_zam
+        instance.type = actform.type.data
+        instance.id_voz = actform.vozidlo.data
+        instance.from_place = actform.from_place.data.encode('utf-8')
+        instance.via_place = actform.via_place.data.encode('utf-8')
+        instance.to_place = actform.to_place.data.encode('utf-8')
+        instance.begin = datetime.datetime.now()
+        instance.end = datetime.datetime.now()
+        print(instance)
         db.add(instance)
         return redirect(url_for('activities'))
 
