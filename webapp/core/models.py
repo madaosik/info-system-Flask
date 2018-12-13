@@ -104,7 +104,7 @@ class Dovolena_zam_hist(Base):
     do = Column(Date)
     celkem = Column(Integer)
     potvrzeni = Column(Boolean, default=False)
-    #seen = Column(Boolean, default=False)
+    seen = Column(Boolean, default=False)
 
 class Vozidlo(Base):
     __tablename__ = 'vozidlo'
@@ -147,6 +147,23 @@ class Sazba(Base):
     popis_sazby = Column(String(30))
     vyse_sazby = Column(Integer)
 
+
+class Activity(Base):
+    __tablename__ = 'activity'
+
+    id_activity = Column(Integer, primary_key=True)
+    id_zam = Column(Integer, ForeignKey("zamestnanec.id_zam", ondelete='CASCADE'), nullable=False)
+    type = Column(String(30), nullable=False)
+    payoff = Column(Integer,ForeignKey("sazba.id_sazby", ondelete='CASCADE'), nullable=False)
+    id_voz = Column(Integer, nullable=False)
+    from_place = Column(String(30), nullable=False)
+    via_place = Column(String(30), nullable=False)
+    to_place = Column(String(30), nullable=False)
+    begin = Column(DateTime)
+    end = Column(DateTime)
+    approved = Column(Boolean, default=False)
+    seen = Column(Boolean, default=False)
+
 class Cinnost(Base):
     __tablename__ = 'cinnost'
 
@@ -165,19 +182,4 @@ class Denni_evidence(Base):
     cas_zmeny = Column(TIMESTAMP, nullable=False, server_default=func.now(), server_onupdate=func.now())
 
 
-class Activity(Base):
-    __tablename__ = 'activity'
-
-    id_activity = Column(Integer, primary_key=True)
-    id_zam = Column(Integer, ForeignKey("zamestnanec.id_zam", ondelete='CASCADE'), nullable=False)
-    type = Column(String(30), nullable=False)
-    payoff = Column(Integer)
-    id_voz = Column(Integer, ForeignKey("vozidlo.id_voz"), nullable=False)
-    from_place = Column(String(30), nullable=False)
-    via_place = Column(String(30), nullable=False)
-    to_place = Column(String(30), nullable=False)
-    begin = Column(DateTime)
-    end = Column(DateTime)
-    approved = Column(Boolean, default=False)
-    seen = Column(Boolean, default=False)
 
