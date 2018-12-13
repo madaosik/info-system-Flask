@@ -6,6 +6,8 @@ from wtforms import StringField, SubmitField, BooleanField, IntegerField, Passwo
 from wtforms.validators import InputRequired, DataRequired
 from wtforms.fields.html5 import DateField
 from webapp.roles import admin,current_user,employee
+from czech_holidays import Holidays
+
 
 from webapp.core.models import *
 from webapp.views.forms import *
@@ -60,12 +62,51 @@ class VacationAdd(MethodView):
         instance = db.get_obj_by_clsname(Dovolena_zam_hist)
         if not vacform.validate_on_submit():
             return render_template('vacation_form.html', form=vacform)
-
+        id_zam = request.args.get('id_zam')
+        requests = db.fetch_vacation_by_id(id_zam)
         db.update_from_form(instance, vacform)
         instance.id_zam = current_user.id_zam
         instance.celkem = (instance.do - instance.od).days + 1
+        for one in requests:
+            if (one.od <= instance.od <= one.do) or (one.od <= instance.do <= one.do) or (one.od > instance.od and one.do < instance.do ):
+                error = "Zadost o dovolene v danem case od " + one.od.isoformat() + " do " + one.do.isoformat() + " uz existuje!"  #prelozit
+                return render_template('vacation_form.html', form=vacform, error=error)
+        if 6 <= instance.od.isoweekday():
+            error = "Dovolena se nesmi zacit pres vikend!"  # prelozit
+            return render_template('vacation_form.html', form=vacform, error=error)
+        if 6 <= instance.do.isoweekday():
+            error = "Dovolena se nesmi koncit pres vikend!"  # prelozit
+            return render_template('vacation_form.html', form=vacform, error=error)
+        if instance.od.year != instance.do.year:
+            holidays_to = Holidays(instance.do.year)
+            err = holiday_check(holidays_to, instance)
+            if err != 0:
+                return render_template('vacation_form.html', form=vacform, error=err)
+            
+        holidays = Holidays(instance.od.year)
+        err = holiday_check(holidays, instance)
+        if err != 0:
+            return render_template('vacation_form.html', form=vacform, error=err)
+
+        if instance.od.isoweekday() > instance.do.isoweekday():
+            instance.celkem -= 2
         db.add(instance)
         return redirect(url_for('my_vacation', id=current_user.id_zam))
+
+
+def holiday_check(holidays, instance):
+    holidays.pop(0)  # because new year has a duplicity there
+    for day in holidays:  # check for holidays
+        if instance.do > day > instance.od:
+            instance.celkem -= 1
+        if day == instance.od:
+            error = "Dovolena se nesmi zacinat pres svatek!"  # prelozit
+            return error
+        elif day == instance.do:
+            error = "Dovolena se nesmi koncit pres svatek!"  # prelozit
+            return error
+    return 0
+
 
 
 def configure(app):
