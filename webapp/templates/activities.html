@@ -1,5 +1,62 @@
+
 {% extends "base/base.html" %}
 
 {% block body %}
         <h3>Přehled aktivit</h3>
+
+{% extends "base.html" %}
+<!-- input: empl, all, cars, date-->
+{% block app_content %}
+    <h3>Aktivity k schválení</h3>
+
+    {%  if all %}
+        <table class="centertable table table-hover table-sm center">
+            <thead class="thead-light">
+            <tr>
+                <th>Křestní jméno</th>
+                <th>Příjmení</th>
+                <th>Datum začátku</th>
+                <th>Datum konce</th>
+                <th>Typ</th>
+                <th>Vozidlo</th>
+                <th colspan="2">Potvrzení</th>
+            </tr>
+            </thead>
+    {% else %}
+        <p>Neevidujeme žádné žádosti o aktivity.</p>
+    {% endif %}
+    {% for one in all %}
+        {% if one.approved == False %}
+        <tr>
+            {% for zamestnanec in empl %}
+                    {% if zamestnanec.id_zam == dovolena.id_zam %}
+                        <td>{{ zamestnanec.kr_jmeno }}</td>
+                        <td>{{zamestnanec.prijmeni}}</td>
+                    {% endif %}
+                {% endfor %}
+            <td>{{one.begin}}</td>
+            <td>{{one.do}}</td>
+            <td>{{one.type}}</td>
+            <td>{% for car in cars %}
+                    {% if car.id_voz == one.id_voz %}
+                        {{ car.znacka }} {{ car.model }}
+                    {% endif %}
+                {% endfor %}</td>
+            <td>
+                <form method="POST" action="{{ url_for('act_approve', id = one.id_activity) }}">
+                  <input type="submit" value=&#9745; class="btn approve_button">
+                </form>
+            </td>
+            <td>
+                <form method="POST" action="{{ url_for('act_decline', id = one.id_activity) }}">
+                  <input type="submit" value=&#9746; class="btn deny_button">
+                </form>
+            </td>
+        </tr>
+        {% endif %}
+    {% endfor %}
+    {% if all %}
+        </table>
+    {%  endif %}
+
 {% endblock %}

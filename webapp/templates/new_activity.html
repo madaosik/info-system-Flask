@@ -3,7 +3,7 @@
 
 {% block body %}
     <h3>Přidat novou aktivitu</h3>
-    <form method="POST" action="{{ url_for('show_user_activities', id=current_user.id) }}">
+    <form method="POST" action="{{ url_for('activity-add', id=current_user.id) }}">
     {{ form.csrf_token }}
             <table class="form_table">
                 {% for field in form %}
