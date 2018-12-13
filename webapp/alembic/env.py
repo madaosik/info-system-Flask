@@ -15,12 +15,12 @@ fileConfig(config.config_file_name)
 # for 'autogenerate' support
 
 import sys, os
-sys.path.append(os.getcwd())
+sys.path.append(os.path.join(os.getcwd(),'..'))
 
 # target_metadata = mymodel.Base.metadata
 from webapp.core import models
 
-target_metadata = models.db.Model.metadata
+target_metadata = models.Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

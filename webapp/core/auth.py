@@ -56,6 +56,7 @@ def configure_login(app):
             elif not user.check_password(form.password.data):
                 error = "Neplatné heslo!"
             else:
+                #TODO: Jestli se uzivatel prihlasuje poprve, musi si zmenit heslo
                 login_user(user, remember=form.remember_me.data)
                 db.log_visit(user)
                 flash("Přihlášení proběhlo úspěšně!", 'alert-success')
