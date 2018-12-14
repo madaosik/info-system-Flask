@@ -1,9 +1,6 @@
 {% extends "base/base.html" %}
 <!-- input: empl, all, cars, date-->
 {% block body %}
-
-  <h1>COM TU !</h1>
-
     <h3>Aktivity k schválení</h3>
 
     {%  if all %}
@@ -26,13 +23,13 @@
         {% if one.approved == False %}
         <tr>
             {% for zamestnanec in empl %}
-                    {% if zamestnanec.id_zam == dovolena.id_zam %}
+                    {% if zamestnanec.id_zam == one.id_zam %}
                         <td>{{ zamestnanec.kr_jmeno }}</td>
                         <td>{{zamestnanec.prijmeni}}</td>
                     {% endif %}
                 {% endfor %}
             <td>{{one.begin}}</td>
-            <td>{{one.do}}</td>
+            <td>{{one.end}}</td>
             <td>{{one.type}}</td>
             <td>{% for car in cars %}
                     {% if car.id_voz == one.id_voz %}
@@ -40,12 +37,12 @@
                     {% endif %}
                 {% endfor %}</td>
             <td>
-                <form method="POST" action="{{ url_for('act_approve', id = one.id_activity) }}">
+                <form method="POST" action="{{ url_for('activity-approve', id=one.id_activity)}}">
                   <input type="submit" value=&#9745; class="btn approve_button">
                 </form>
             </td>
             <td>
-                <form method="POST" action="{{ url_for('act_decline', id = one.id_activity) }}">
+                <form method="POST" action="{{ url_for('activity-decline', id=one.id_activity)}}">
                   <input type="submit" value=&#9746; class="btn deny_button">
                 </form>
             </td>

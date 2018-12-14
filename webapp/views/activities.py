@@ -44,27 +44,46 @@ class ActivityAdd(MethodView):
     def post(self):
         actform = NewActivityForm()
         cars = db.get_cars_tuples()
-        print(cars)
         actform.vozidlo.choices = cars
         instance = db.get_obj_by_clsname(Activity)
-        print(instance)
-        print(actform.begin.data)
-        #actform.vozidlo=
         if not actform.validate_on_submit():
             return render_template('new_activity.html', form=actform)
         instance.id_zam = current_user.id_zam
         instance.type = actform.type.data
         instance.id_voz = actform.vozidlo.data
-        instance.from_place = actform.from_place.data.encode('utf-8')
-        instance.via_place = actform.via_place.data.encode('utf-8')
-        instance.to_place = actform.to_place.data.encode('utf-8')
-        instance.begin = datetime.datetime.now()
-        instance.end = datetime.datetime.now()
-        print(instance)
+        instance.from_place = actform.from_place.data.encode()
+        instance.via_place = actform.via_place.data.encode()
+        instance.to_place = actform.to_place.data.encode()
+        instance.begin = actform.begin.data
+        instance.end = actform.end.data
         db.add(instance)
+        return redirect(url_for('activities'))
+
+
+class ActivityApprove(MethodView):
+    @admin
+    def post(self):
+        db.approve_act(request.args.get('id'))
+        return redirect(url_for('activities'))
+
+
+class ActivityDecline(MethodView):
+    @admin  # doplnit
+    def post(self):
+        db.decline_act(request.args.get('id'))
+        return redirect(url_for('activities'))
+
+
+class ActivityDelete(MethodView):
+    @admin  # doplnit
+    def post(self):
+        db.delete_act(request.args.get('id'))
         return redirect(url_for('activities'))
 
 
 def configure(app):
     app.add_url_rule('/activities', view_func=Activities.as_view('activities'))
     app.add_url_rule('/activity_add', view_func=ActivityAdd.as_view('activity-add'))
+    app.add_url_rule('/activity_approve', view_func=ActivityApprove.as_view('activity-approve'))
+    app.add_url_rule('/activity_decline', view_func=ActivityDecline.as_view('activity-decline'))
+    app.add_url_rule('/activity_delete', view_func=ActivityDelete.as_view('activity-delete'))

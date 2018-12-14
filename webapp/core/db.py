@@ -137,7 +137,8 @@ def get_cars_tuples():
 
 
 def fetch_all_pending_approvals():
-    pass
+    return Activity.query.filter_by(approved=False).first()
+
 
 
 def fetch_all_pending_vacation():
@@ -163,6 +164,27 @@ def fetch_all_vacations():
 
 def fetch_vacation_by_id(id):
     return Dovolena_zam_hist.query.filter_by(id_zam=id)
+
+
+#Activity functions
+
+def approve_act(id):
+    q = Activity.query.get(id)
+    q.approved = True
+    q.seen = True
+    session.commit()
+
+
+def decline_act(id):
+    q = Activity.query.get(id)
+    q.approved = False
+    q.seen = True
+    session.commit()
+
+
+def delete_act(id):
+    session.query(Activity).filter_by(id_activity=id).delete()
+    session.commit()
 
 # Employee functions
 
