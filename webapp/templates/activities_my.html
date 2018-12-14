@@ -1,0 +1,18 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Moje aktivity{% endblock %}
+{% block body %}
+        <h3>Moje aktivity</h3>
+        {% if current_user.role == 'admin' %}
+            <form class="form-inline my-2 my-lg-0 pb-4 pt-3" action="{{ url_for('dashboard-boss') }}">
+              <button class="btn btn-primary my-0 my-sm-0" type="submit">Zpět na nástěnku</button>
+            </form>
+        {% else %}
+            <form class="form-inline my-2 my-lg-0 pb-4 pt-3" action="{{ url_for('dashboard-empl') }}">
+              <button class="btn btn-primary my-0 my-sm-0" type="submit">Zpět na nástěnku</button>
+            </form>
+        {% endif %}
+                    <form class="form-inline my-2 my-lg-0" action="{{ url_for('activity-add') }}">
+                      <button class="btn btn-secondary my-0 my-sm-0" type="submit">Přidat aktivitu</button>
+                    </form>
+{% endblock %}

@@ -1,21 +1,13 @@
-from flask import render_template, redirect, url_for, request
+from flask import render_template, redirect, url_for, request, flash
 from flask.views import MethodView
-from webapp.core import db
-from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, BooleanField, IntegerField, PasswordField, SelectField
-from wtforms.validators import InputRequired, DataRequired
-from wtforms.fields.html5 import DateField
-from webapp.roles import admin,current_user,employee,boss
-
-from webapp.core.models import *
-from webapp.views.forms import *
-
-from webapp.core import db
-
 import datetime
 
+from webapp.roles import admin, management
+from webapp.core.models import *
+from webapp.core import db
 
 class Vacations(MethodView):
+    @management
     def get(self):
         all_instances = db.fetch_all_by_cls(Dovolena_zam_hist)
         empl = db.fetch_all_by_cls(Zamestnanec)
@@ -23,6 +15,7 @@ class Vacations(MethodView):
 
 
 class VacationsHist(MethodView):
+    @management
     def get(self):
         all_instances = db.fetch_all_by_cls(Dovolena_zam_hist)
         empl = db.fetch_all_by_cls(Zamestnanec)
@@ -30,6 +23,7 @@ class VacationsHist(MethodView):
 
 
 class VacationsHistOne(MethodView):
+    @management
     def get(self):
         id_zam = request.args.get('id')
         instance = db.fetch_vacation_by_id(id_zam)
@@ -39,17 +33,19 @@ class VacationsHistOne(MethodView):
 
 
 class VacationApprove(MethodView):
-    @admin
+    @management
     def post(self):
         db.approve(Dovolena_zam_hist, request.args.get('id'))  #instance = db.get_obj_by_id(Dovolena_zam_hist, id)
+        flash("Žádost o dovolenou byla úspěšně SCHVÁLENA!", 'alert alert-success')
         return redirect(url_for('vacations'))
 
 
 class VacationDecline(MethodView):
-    @admin  # doplnit
+    @management  # doplnit
     def post(self):
         instance = db.get_obj_by_id(Dovolena_zam_hist, request.args.get('id'))
         db.delete(instance)
+        flash("Žádost o dovolenou byla úspěšně ZAMÍTNUTA!", 'alert alert-success')
         return redirect(url_for('vacations'))
 
 

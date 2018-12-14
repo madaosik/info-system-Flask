@@ -1,34 +1,18 @@
-from flask import render_template, redirect, url_for, request
+from flask import render_template, redirect, url_for, request, flash
+from flask_login import current_user
 from flask.views import MethodView
-from webapp.core import db
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, BooleanField, IntegerField, PasswordField, SelectField
-from wtforms.validators import InputRequired, DataRequired
-from wtforms.fields.html5 import DateField
-from webapp.roles import admin,current_user,employee
+from wtforms import SubmitField
+from wtforms.validators import InputRequired
+from webapp.roles import admin, employee, norestrict
 from czech_holidays import Holidays
 
-
 from webapp.core.models import *
-from webapp.views.forms import *
+from webapp.views.forms import CzechDateField
 
 from webapp.core import db
 
 import datetime
-
-class CzechDateField(DateField):
-    """
-    Overrides the process_formdata() method definition in a standard DateField
-    """
-    def process_formdata(self, valuelist):
-        if valuelist:
-            date_str = ' '.join(valuelist)
-            try:
-                self.data = datetime.datetime.strptime(date_str, self.format).date()
-            except ValueError:
-                self.data = None
-                raise ValueError(self.gettext('Neplatný formát data!'))
-
 
 class VacationForm(FlaskForm):
     od = CzechDateField('Datum začátku', validators=[InputRequired(message="Doplňte datum začátku dovolené!")])
@@ -46,6 +30,7 @@ class VacationForm(FlaskForm):
 
 
 class MyVacation(MethodView):
+    @norestrict
     def get(self):
         id_zam=request.args.get('id')
         instance = db.fetch_vacation_by_id(id_zam)
@@ -53,7 +38,7 @@ class MyVacation(MethodView):
 
 
 class VacationAdd(MethodView):
-    @employee
+    @norestrict
     def get(self):
         return render_template('vacation_form.html', form=VacationForm())
 
@@ -69,28 +54,33 @@ class VacationAdd(MethodView):
         instance.celkem = (instance.do - instance.od).days + 1
         for one in requests:
             if (one.od <= instance.od <= one.do) or (one.od <= instance.do <= one.do) or (one.od > instance.od and one.do < instance.do ):
-                error = "Zadost o dovolene v danem case od " + one.od.isoformat() + " do " + one.do.isoformat() + " uz existuje!"  #prelozit
-                return render_template('vacation_form.html', form=vacform, error=error)
+                flash("Evidujeme již Vaši žádost o dovolenou od %s do %s!" % (one.od.isoformat(), one.do.isoformat()), 'alert alert-danger')
+                return render_template('vacation_form.html', form=vacform)
         if 6 <= instance.od.isoweekday():
-            error = "Dovolena se nesmi zacit pres vikend!"  # prelozit
-            return render_template('vacation_form.html', form=vacform, error=error)
+            flash("Dovolená nesmí začínat během víkendových dní!",'alert alert-danger')
+            return render_template('vacation_form.html', form=vacform)
         if 6 <= instance.do.isoweekday():
-            error = "Dovolena se nesmi koncit pres vikend!"  # prelozit
-            return render_template('vacation_form.html', form=vacform, error=error)
+            flash("Dovolená nesmí končit během víkendových dní!", 'alert alert-danger')
+            return render_template('vacation_form.html', form=vacform)
         if instance.od.year != instance.do.year:
             holidays_to = Holidays(instance.do.year)
             err = holiday_check(holidays_to, instance)
             if err != 0:
-                return render_template('vacation_form.html', form=vacform, error=err)
+                return render_template('vacation_form.html', form=vacform)
             
         holidays = Holidays(instance.od.year)
         err = holiday_check(holidays, instance)
-        if err != 0:
-            return render_template('vacation_form.html', form=vacform, error=err)
+        if err == 'stateholidaystart':
+            flash("Dovolená nesmí začínat v den státního svátku!!", 'alert alert-danger')
+        elif err == 'stateholidayend':
+            flash("Dovolená nesmí končit v den státního svátku!", 'alert alert-danger')
+        if err:
+            return render_template('vacation_form.html', form=vacform)
 
         if instance.od.isoweekday() > instance.do.isoweekday():
             instance.celkem -= 2
         db.add(instance)
+        flash("Žádost o dovolenou byla úspěšně vytvořena a odeslána ke schválení!", 'alert alert-success')
         return redirect(url_for('my_vacation', id=current_user.id_zam))
 
 
@@ -100,12 +90,13 @@ def holiday_check(holidays, instance):
         if instance.do > day > instance.od and day.isoweekday() < 6:
             instance.celkem -= 1
         if day == instance.od:
-            error = "Dovolena se nesmi zacinat pres svatek!"  # prelozit
+            return 'stateholidaystart'
+            error = "Dovolená nesmí začínat v den státního svátku!"
             return error
         elif day == instance.do:
-            error = "Dovolena se nesmi koncit pres svatek!"  # prelozit
-            return error
-    return 0
+            error = "Dovolená nesmí končit v den státního svátku!"
+            return 'stateholidayend'
+    return None
 
 
 def configure(app):

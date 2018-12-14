@@ -22,7 +22,7 @@
 - view modul obsahuje vždy všechno, co se týká dané entity (související formuláře a potřebné třídy - viz dále)
 - každá akce (přidat, smazat, upravit....) související s modulem má vlastní třídu (viz webapp/views/cars.py), přičemž <b>všechny tyto "view" třídy jsou potomkem třídy MethodView</b>
     - v každé takové třídě máme dostupné metody <i>get</i> a <i>post</i>, které stačí naimplementovat - s úplně stejnou logikou jako např <i>@app.route('/auth/<entity>/new',methods=['GET','POST'])</i> v routes.py 
-- chceme-li metodu zpřístupnit jen uživateli s určitou rolí, stačí aplikovat dekorátor <i>@boss</i> nebo <i>@employee</i>. Role budeme mít jen tyto dvě, zatím je tam i admin, ale toho odstraníme, abychom si to nekomplikovali zbytečně.
+- chceme-li metodu zpřístupnit jen uživateli s určitou rolí, stačí aplikovat dekorátor <i>@management</i> nebo <i>@employee</i>. Role budeme mít jen tyto dvě, zatím je tam i admin, ale toho odstraníme, abychom si to nekomplikovali zbytečně.
 - součástí každého takto vytvořeného view je funkce configure(app), která po zavolání z hlavního registrátoru views toto view pojmenovává a nastavuje příslušné adresy
 
 ## Funkcionality & popis částí systému

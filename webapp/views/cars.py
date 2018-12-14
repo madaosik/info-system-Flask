@@ -6,7 +6,7 @@ from wtforms import StringField, IntegerField, SubmitField
 from wtforms.validators import InputRequired, NumberRange
 
 from webapp.core.models import Vozidlo
-from webapp.roles import admin
+from webapp.roles import admin, management
 
 class CarForm(FlaskForm):
     spz = StringField('* SPZ', validators=[InputRequired("Zadejte SPZ!")])
@@ -20,53 +20,50 @@ class CarForm(FlaskForm):
     submit = SubmitField('Uložit')
 
 class Cars(MethodView):
-    @admin
+    @management
     def get(self):
         return render_template('cars.html', cars=db.fetch_all_cars())
 
 
 class CarsAdd(MethodView):
-    @admin
+    @management
     def get(self):
         return render_template('car_form.html', form=CarForm())
 
-    @admin
+    @management
     def post(self):
         carform = CarForm()
         if not carform.validate_on_submit():
-            #flash('Zadali jste neplatné údaje', 'alert-danger')
-            error = "Zadali jste neplatné údaje"
-            return render_template('car_form.html', form=carform, error=error)
+            return render_template('car_form.html', form=carform)
         car = Vozidlo()
         carform.populate_obj(car)
         db.add(car)
-        flash("Vozidlo úspěšně přidáno!")
+        flash("Vozidlo '%s' úspěšně přidáno!" % car.spz, 'alert alert-success')
         return redirect('cars')
 
 
 class CarsDelete(MethodView):
-    @admin
+    @management
     def get(self):
         db.delete_car(request.args.get('id'))
         return redirect('cars')
 
 
 class CarsModify(MethodView):
-    @admin
+    @management
     def get(self):
         car = db.fetch_car(request.args.get('id'))
         carform = CarForm(obj=car)
         return render_template('car_form.html', car=car, form=carform)
 
-    @admin
+    @management
     def post(self):
         carform = CarForm(request.form)
         if not carform.validate_on_submit():
-            #flash('Zadali jste neplatné údaje', 'alert-danger')
-            error = "Zadali jste neplatné údaje"
-            return render_template('car_form.html', form=carform, error=error)
+            return render_template('car_form.html', form=carform)
         car = db.fetch_car(request.form.get('id'))
         db.update_from_form(car, carform)
+        flash("Vozidlo '%s' úspěšně upraveno!" % car.spz, 'alert alert-success')
         return redirect('cars')
 
 

@@ -40,7 +40,7 @@ class FirstLogin(MethodView):
             login_user(user)
             db.log_visit(user)
             flash("Uživatelské jméno a heslo úspěšně změněno!", 'alert alert-success')
-            return redirect(url_for('dashboard_empl')) if user.is_employee() else redirect(url_for('dashboard_boss'))
+            return redirect(url_for('dashboard-empl')) if user.is_employee() else redirect(url_for('dashboard-boss'))
         return render_template('login_first.html', form=form, user_id=user_id)
 
 
@@ -62,9 +62,9 @@ def configure_login(app):
         error = None
         if current_user.is_authenticated:
             if current_user.is_employee():
-                return redirect(url_for('dashboard_empl'))
+                return redirect(url_for('dashboard-empl'))
             else:
-                return redirect(url_for('dashboard_boss'))
+                return redirect(url_for('dashboard-boss'))
         form = LoginForm()
         if form.validate_on_submit():
             user = db.get_user_by_attr(login=form.login.data)
@@ -81,7 +81,7 @@ def configure_login(app):
                 db.log_visit(user)
                 flash("Přihlášení proběhlo úspěšně!", 'alert alert-success')
                 if user.is_employee():
-                    return redirect(url_for('dashboard_empl'))
+                    return redirect(url_for('dashboard-empl'))
                 else:
-                    return redirect(url_for('dashboard_boss'))
+                    return redirect(url_for('dashboard-boss'))
         return render_template('login.html', title='Přihlášení', form=form, error=error)

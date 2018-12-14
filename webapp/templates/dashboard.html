@@ -6,22 +6,20 @@
     <h3>Vítej, {{ current_user.login }}!</h3>
     <br>
     {% if current_user.is_admin() or current_user.is_boss() %}
-        <h4>Aktivity ke schválení:</h4>
-        {% if act %}
-             <p class="pending">Evidujeme nevyřízené <a href="{{ url_for('activities') }}">>> žádosti o aktivitu <<</a>!</p>
-        {% else %}
-            <p class="uptodate">Nenašli jsme žádné aktivity vyžadující Vaše schválení.</p>
+        {% if act or vac %}
+            <h4>Co se stalo během Vaší nepřítomnosti:</h4>
         {% endif %}
-        <h4>Dovolená ke schválení:</h4>
-        {% if vac %}
-            <p class="pending">Evidujeme nevyřízené <a href="{{ url_for('vacations') }}">>> žádosti o dovolenou <<</a>!</p>
-        {% else %}
-            <p class="uptodate">Nenašli jsme žádné žádosti o dovolenou vyžadující Vaše schválení.</p>
-        {% endif %}
-    {% endif %}
-    <h4>Upozornění:</h4>
-    {% if notif %}
-    {% else %}
-        <p class="uptodate">Žádné důležité novinky.</p>
+        <div class="btn-group">
+            {% if act %}
+                 <form class="form-inline my-2 my-lg-0 pb-1 pt-3 pr-3" action="{{ url_for('activities') }}">
+                    <button class="btn btn-primary my-0 my-sm-0" type="submit">Aktivity ke schválení</button>
+                </form>
+            {% endif %}
+            {% if vac %}
+                <form class="form-inline my-2 my-lg-0 pb-1 pt-3" action="{{ url_for('vacations') }}">
+                    <button class="btn btn-primary my-0 my-sm-0" type="submit">Dovolená ke schválení</button>
+                </form>
+            {% endif %}
+        </div>
     {% endif %}
 {% endblock %}

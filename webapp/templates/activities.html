@@ -2,9 +2,12 @@
 {% extends "base/base.html" %}
 
 <!-- input: empl, all, cars, date-->
+{% block title %}Aktivity{% endblock %}
 {% block body %}
     <h3>Aktivity k schválení</h3>
-
+        <form class="form-inline my-2 my-lg-0 pb-4 pt-3" action="{{ url_for('dashboard-boss') }}">
+          <button class="btn btn-primary my-0 my-sm-0" type="submit">Zpět na nástěnku</button>
+        </form>
     {%  if all %}
         <table class="centertable table table-hover table-sm center">
             <thead class="thead-light">

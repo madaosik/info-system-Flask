@@ -8,8 +8,10 @@
     {% else %}
         <h3>Nový uživatel</h3>
     {% endif %}
-    <a href="{{ url_for('users') }}"><< Zpět na přehled uživatelů</a>
-    <br><br>
+
+    <form class="form-inline my-2 my-lg-0 pb-4 pt-3" action="{{ url_for('users') }}">
+      <button class="btn btn-primary my-0 my-sm-0" type="submit">Zpět na přehled uživatelů</button>
+    </form>
 
     {% if user %}
         <form method="POST" action=" {{ url_for('user-mod') }}">

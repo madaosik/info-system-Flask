@@ -2,8 +2,10 @@
 
 {% block title %}Dovolená{% endblock %}
 {% block body %}
+    <form class="form-inline my-2 my-lg-0 pb-3 pt-0" action="{{ url_for('dashboard-boss') }}">
+      <button class="btn btn-primary my-0 my-sm-0" type="submit">Zpět na nástěnku</button>
+    </form>
     <h3>Dovolená k schválení</h3>
-
     {%  if all %}
         <table class="centertable table table-hover table-sm center">
             <thead class="thead-light">
@@ -47,7 +49,7 @@
     {% if all %}
         </table>
     {%  endif %}
-<br><br>
+    <a class="btn btn-secondary mb-3 mt-3" href="{{ url_for('vacations_hist') }}">Přejít na historii</a>
     <h3>Schválená nadcházející dovolená</h3>
         <table class="centertable table table-hover table-sm">
             <thead class="thead-light">
@@ -82,10 +84,4 @@
         {% endif %}
     {% endfor %}
         </table>
-
-
-    <br><br>
-    <a class="btn btn-secondary" href="{{ url_for('vacations_hist') }}">Přejít na historii</a>
-
-
 {% endblock %}

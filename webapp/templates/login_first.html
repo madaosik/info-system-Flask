@@ -4,7 +4,7 @@
 {% block title %}IS - Změna přihlašovacích údajů{% endblock %}
 {% block body %}
         <h3>První přihlášení do systému:</h3>
-        <a href="{{ url_for('login') }}"><< Zpět na přehled zaměstnanců</a>
+        <a href="{{ url_for('login') }}">Zpět na přehled zaměstnanců</a>
         <br><br>
         <!--<p>Jedná se o Vaše první přihlášení do systému. Změňte si, prosím, uživatelské jméno a heslo vygenerované systémem.</p>-->
         <form action={{ url_for('first-login', user_id=user_id) }} method="post">

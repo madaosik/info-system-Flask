@@ -3,16 +3,18 @@
 {% block title %}Uživatelé{% endblock %}
 {% block body %}
     <h3>Registrovaní uživatelé</h3>
-        <p><a href="{{ url_for('user-add') }}">Přidat uživatele</a></p>
+        <form class="form-inline my-2 my-lg-0 pb-4 pt-3" action="{{ url_for('user-add') }}">
+            <button class="btn btn-primary my-0 my-sm-0" type="submit">Přidat uživatele</button>
+        </form>
         <table class="table table-hover table-sm">
                 <thead class="thead-light">
                 <tr>
                     <th>Login</th>
                     <th>Zaměstnanec</th>
+                    <th>Role</th>
                     <th>Počet přihlášení</th>
                     <th>Poslední přihlášení</th>
                     <th>Čas poslední změny</th>
-                    <th>Role</th>
                     <th colspan="2">Akce</th>
                 </tr>
                 </thead>
@@ -20,6 +22,7 @@
             <tr>
                 <td>{{user[0].login}}</td>
                 <td>{{user[1].kr_jmeno}} {{user[1].prijmeni}}</td>
+                <td>{{ role_dict[user[0].role]}}</td>
                 {% if user[0].poc_prihl %}
                     <td>{{user[0].poc_prihl}}</td>
                 {% else %}
@@ -31,7 +34,6 @@
                     <td>dosud nepřihlášen</td>
                 {% endif %}
                 <td>{{user[0].cas_posl_zmeny}}</td>
-                <td>{{ role_dict[user[0].role]}}</td>
                 <td>
                     <form method="GET" action="{{ url_for('user-mod') }}">
                         <input type="hidden" name="id" value="{{ user[0].id }}">

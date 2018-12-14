@@ -1,11 +1,12 @@
-from flask import render_template,request,redirect,url_for
+from flask import render_template,request,redirect,url_for,flash
+from flask_login import current_user
 from flask.views import MethodView
 from webapp.core import db
 from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField, SubmitField
 from wtforms.validators import InputRequired
 import datetime
-from webapp.roles import employee, admin, boss,current_user
+from webapp.roles import employee, admin, management, norestrict
 from webapp.core.models import *
 from wtforms.fields.html5 import DateField, DateTimeField, DateTimeLocalField
 
@@ -25,6 +26,7 @@ class NewActivityForm(FlaskForm):
 
 
 class Activities(MethodView):
+    @management
     def get(self):
         all_instances = db.fetch_all_by_cls(Activity)
         empl = db.fetch_all_by_cls(Zamestnanec)
@@ -33,14 +35,14 @@ class Activities(MethodView):
 
 
 class ActivityAdd(MethodView):
-    @employee
+    @norestrict
     def get(self):
         print(NewActivityForm())
         f = NewActivityForm()
-        f.vozidlo.choices = db. get_cars_tuples()
+        f.vozidlo.choices = db.get_cars_tuples()
         return render_template('new_activity.html', form=f)
 
-    @employee
+    @norestrict
     def post(self):
         actform = NewActivityForm()
         cars = db.get_cars_tuples()
@@ -57,27 +59,31 @@ class ActivityAdd(MethodView):
         instance.begin = actform.begin.data
         instance.end = actform.end.data
         db.add(instance)
-        return redirect(url_for('activities'))
+        flash("Aktivita byla úspěšně odeslána ke schválení!", 'alert alert-success')
+        return redirect(url_for('activities-my'))
 
 
 class ActivityApprove(MethodView):
-    @admin
+    @management
     def post(self):
         db.approve_act(request.args.get('id'))
+        flash("Aktivita byla úspěšně SCHVÁLENA!", 'alert alert-success')
         return redirect(url_for('activities'))
 
 
 class ActivityDecline(MethodView):
-    @admin  # doplnit
+    @management  # doplnit
     def post(self):
         db.decline_act(request.args.get('id'))
+        flash("Aktivita byla úspěšně ZAMÍTNUTA!", 'alert alert-success')
         return redirect(url_for('activities'))
 
 
 class ActivityDelete(MethodView):
-    @admin  # doplnit
+    @management  # doplnit
     def post(self):
         db.delete_act(request.args.get('id'))
+        flash("Aktivita byla úspěšně ODSTRANĚNA!", 'alert alert-success')
         return redirect(url_for('activities'))
 
 

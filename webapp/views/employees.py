@@ -5,8 +5,8 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, BooleanField
 from wtforms.validators import InputRequired, Email
 
-from webapp.core.models import Zamestnanec, Uzivatel
-from webapp.roles import admin
+from webapp.core.models import Zamestnanec
+from webapp.roles import management
 from webapp.views.forms import CzechDateField
 
 class EmployeeForm(FlaskForm):
@@ -22,17 +22,17 @@ class EmployeeForm(FlaskForm):
     submit = SubmitField('Uložit')
 
 class Employees(MethodView):
-    @admin
+    @management
     def get(self):
         return render_template('employees.html', empls=db.fetch_all_by_cls(Zamestnanec))
 
 
 class EmployeeAdd(MethodView):
-    @admin
+    @management
     def get(self):
         return render_template('employee_form.html', form=EmployeeForm())
 
-    @admin
+    @management
     def post(self):
         employeeform = EmployeeForm()
         if not employeeform.validate_on_submit():
@@ -54,7 +54,7 @@ class EmployeeAdd(MethodView):
 
 
 class EmployeeDelete(MethodView):
-    @admin
+    @management
     def get(self):
         db.delete_employee(request.args.get('id'))
         flash("Zaměstnanec úspěšně smazán!",'alert alert-success')
@@ -62,13 +62,13 @@ class EmployeeDelete(MethodView):
 
 
 class EmployeeModify(MethodView):
-    @admin
+    @management
     def get(self):
         employee = db.fetch_employee_by_id(request.args.get('id'))
         emplform = EmployeeForm(obj=employee)
         return render_template('employee_form.html', employee=employee, form=emplform)
 
-    @admin
+    @management
     def post(self):
         emplform = EmployeeForm(request.form)
         if not emplform.validate_on_submit():
