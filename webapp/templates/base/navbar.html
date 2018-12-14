@@ -40,9 +40,21 @@
                                     <a class="dropdown-item"
                                       href="{{ url_for('vacations')  }}">Dovolená</a>
                                     <a class="dropdown-item" href="#">Úložiště dokumentů</a>
-
                                 </div>
                             </li>
+                    </li>
+                  {% if current_user.role == 'user'%}
+                  <li class="nav-item active">
+                 <a class="nav-link" href="{{ url_for('profile', id_zam=current_user.id_zam) }}">Můj profil</a> </li>
+                 <li class="nav-item active">
+                 <a class="nav-link" href="{{ url_for('my_vacation', id=current_user.id_zam) }}">Plánovaná dovolená</a></li>
+                 <li class="nav-item active">
+                 <a class="nav-link" href="{{ url_for('my_activities', id=current_user.id_zam) }}">Moje aktivity</a>
+             </li>
+                       <li class="nav-item active">
+                              <a class="nav-link" href="{{ url_for('activity-add')}}">Přidat aktivitu</a></li>
+                          <li class="nav-item active">
+             {% endif %}
 
                             <li class="nav-item active dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"

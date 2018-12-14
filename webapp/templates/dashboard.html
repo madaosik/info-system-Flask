@@ -8,6 +8,7 @@
     {% if current_user.is_admin() or current_user.is_boss() %}
         <h4>Aktivity ke schválení:</h4>
         {% if act %}
+             <p class="pending">Evidujeme nevyřízené <a href="{{ url_for('activities') }}">>> žádosti o aktivitu <<</a>!</p>
         {% else %}
             <p class="uptodate">Nenašli jsme žádné aktivity vyžadující Vaše schválení.</p>
         {% endif %}

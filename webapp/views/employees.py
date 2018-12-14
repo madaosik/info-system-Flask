@@ -41,7 +41,7 @@ class EmployeeAdd(MethodView):
         employee = Zamestnanec()
         employeeform.populate_obj(employee)
         id = db.add_employee(employee)
-        login = db.user_create(employee_id=id)
+        login = db.create_user(employee_id=id)
         if id:
             flash("Zaměstnanec %s %s úspěšně přidán!" % (employee.kr_jmeno, employee.prijmeni), 'alert alert-success')
         else:

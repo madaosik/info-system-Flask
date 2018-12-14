@@ -96,17 +96,17 @@ class Lekar_form(FlaskForm):
 #     role = SelectField('Role')
 #     submit = SubmitField('Uložit')
 
-class New_activity_form(FlaskForm):
+#class New_activity_form(FlaskForm):
 
-    vozidlo = SelectField('Vozidlo')
-    misto_z = StringField('Odkud', default="Brno-Tuřany")
-    misto_pres = StringField('Přes')
-    misto_kam = StringField('Kam', default="Brno-Tuřany")
-    datum_od = DateTimeLocalField('Datum a čas odjezdu', default=datetime.datetime.now, format="%Y-%m-%dT%H:%M",
-                              validators=[InputRequired(message="Doplňte den začátku aktivity!")])
-    datum_do = DateTimeLocalField('Datum a čas návratu', default=datetime.datetime.now, format="%Y-%m-%dT%H:%M",
-                              validators=[InputRequired(message="Doplňte den konce aktivity!")])
-    submit = SubmitField('Zaznamenat a odeslat k potvrzení')
+    #vozidlo = SelectField('Vozidlo')
+    #misto_z = StringField('Odkud', default="Brno-Tuřany")
+    #misto_pres = StringField('Přes')
+    #misto_kam = StringField('Kam', default="Brno-Tuřany")
+    #datum_od = DateTimeLocalField('Datum a čas odjezdu', default=datetime.datetime.now, format="%Y-%m-%dT%H:%M",
+    #                          validators=[InputRequired(message="Doplňte den začátku aktivity!")])
+    #datum_do = DateTimeLocalField('Datum a čas návratu', default=datetime.datetime.now, format="%Y-%m-%dT%H:%M",
+    #                          validators=[InputRequired(message="Doplňte den konce aktivity!")])
+    #submit = SubmitField('Zaznamenat a odeslat k potvrzení')
 
-    def fill_car_selectbox(self, cars):
-        self.vozidlo.choices = cars
+    #def fill_car_selectbox(self, cars):
+    #    self.vozidlo.choices = cars
