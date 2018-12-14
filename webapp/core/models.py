@@ -182,4 +182,21 @@ class Denni_evidence(Base):
     cas_zmeny = Column(TIMESTAMP, nullable=False, server_default=func.now(), server_onupdate=func.now())
 
 
+class Activity(Base):
+    __tablename__ = 'activity'
+
+    id_activity = Column(Integer, primary_key=True)
+    id_zam = Column(Integer, ForeignKey("zamestnanec.id_zam", ondelete='CASCADE'), nullable=False)
+    type = Column(String(30), nullable=False)
+    payoff = Column(Integer)
+    id_voz = Column(Integer, ForeignKey("vozidlo.id_voz"), nullable=False)
+    from_place = Column(String(30), nullable=False)
+    via_place = Column(String(30), nullable=False)
+    to_place = Column(String(30), nullable=False)
+    begin = Column(DateTime)
+    end = Column(DateTime)
+    approved = Column(Boolean, default=False)
+    seen = Column(Boolean, default=False)
+
+
 

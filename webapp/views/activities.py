@@ -87,3 +87,4 @@ def configure(app):
     app.add_url_rule('/activity_approve', view_func=ActivityApprove.as_view('activity-approve'))
     app.add_url_rule('/activity_decline', view_func=ActivityDecline.as_view('activity-decline'))
     app.add_url_rule('/activity_delete', view_func=ActivityDelete.as_view('activity-delete'))
+
