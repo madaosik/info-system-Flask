@@ -98,5 +98,5 @@ import datetime
 # def add_user_activity(id):
 #     activity_form = forms.New_activity_form()
 #     activity_form.fill_car_selectbox(db.get_cars_tuples())
-#     return render_template('new_activity.html', form=activity_form)
+#     return render_template('activity_new.html', form=activity_form)
 

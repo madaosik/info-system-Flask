@@ -186,6 +186,12 @@ def delete_act(id):
     session.query(Activity).filter_by(id_activity=id).delete()
     session.commit()
 
+
+def edit_act_payoff(id,payoff):
+    q = Activity.query.get(id)
+    q.payoff = payoff
+    session.commit()
+
 # Employee functions
 
 def delete_employee(id):
