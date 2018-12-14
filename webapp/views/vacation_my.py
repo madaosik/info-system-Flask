@@ -99,6 +99,19 @@ def holiday_check(holidays, instance):
     return None
 
 
+class VacationDelete(MethodView):
+    @employee
+    def post(self):
+        id_zam = request.args.get('id')
+        vacation = db.get_obj_by_id(Dovolena_zam_hist, request.args.get('id_vac'))
+        db.delete(vacation)
+        flash("Žádost o dovolenou byla úspěšně SMAZANA!", 'alert alert-success') #gramatika
+        vac = db.fetch_vacation_by_id(id_zam)
+        return render_template('vacation_my.html', id=id_zam, me=vac, date=datetime.datetime.now().date())
+
+
 def configure(app):
     app.add_url_rule('/my_vacation', view_func=MyVacation.as_view('my_vacation'))
     app.add_url_rule('/vacations_add', view_func=VacationAdd.as_view('vacation-add'))
+    app.add_url_rule('/my_vacation_del', view_func=VacationDelete.as_view('my_vacation_delete'))
+

@@ -26,7 +26,7 @@ class NewActivityForm(FlaskForm):
 
 
 class EditActivityPayoffForm(FlaskForm):
-    payoff = IntegerField('* Odmena', validators=[InputRequired("Zadejte vysku odmeny!")]) #prelozit
+    payoff = SelectField('* Odmena',coerce=int, validators=[InputRequired("Zadejte vysku odmeny!")] , choices=[(100,"100"), (500, '500')]) #prelozit
     submit = SubmitField('Potvrdit') #prelozit
 
 class Activities(MethodView):
@@ -99,9 +99,9 @@ class ActivityEditPayoff(MethodView):
             flash("Zadejte validni cislo odmeny!", 'alert alert-danger')  # prelozit
             return redirect(url_for('activities'))
         df = request.form.get('id')
-        print(df)
+        print(a.payoff.data)
         db.edit_act_payoff(df, a.payoff.data)
-        db.approve_act(request.args.get('id'))
+        db.approve_act(df)
         flash("Aktivita byla úspěšně SCHVÁLENA!", 'alert alert-success')
         return redirect(url_for('activities'))
 

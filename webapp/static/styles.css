@@ -99,6 +99,9 @@ table th {
 .deny_button{
     background-color: lightsalmon;
 }
+.edit_button{
+    background-color: #ffc107;
+}
 
 .navbar .navbar-brand {
   font-weight: bold;
