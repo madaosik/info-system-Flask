@@ -1,6 +1,6 @@
 <div class="container">
         {% if current_user.is_authenticated %}
-            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-radius">
 
                 <a class="navbar-brand text-large text-light mr-5">Láníček Transport s.r.o.</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -55,9 +55,11 @@
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <!--<div class="dropdown-header">Vozový park</div>-->
-                                    <a class="dropdown-item" href="{{  url_for('cars')  }}">Přehled vozidel</a>
+                                    <a class="dropdown-item" href="{{  url_for('car_profile')  }}">Karty vozidel</a>
+                                    <a class="dropdown-item" href="{{  url_for('cars')  }}">Technické údaje</a>
                                     <a class="dropdown-item" href="#">Technické kontroly</a>
-                                    <a class="dropdown-item" href="#">Plánované servisní práce</a>
+                                    <a class="dropdown-item" href="#">Prohlídky a certifikáty</a>
+                                    <a class="dropdown-item" href="#">Servisní deník</a>
                                     <a class="dropdown-item" href="#">Úložiště dokumentů</a>
                                 </div>
                             </li>

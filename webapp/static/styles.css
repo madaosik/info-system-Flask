@@ -104,3 +104,20 @@ table th {
   font-weight: bold;
   font-size: 1.5rem;
 }
+
+.car-grid {
+    border-radius: 20px 20px 20px 20px;
+}
+
+.navbar-radius {
+    border-radius: 10px 10px 10px 10px;
+}
+
+.cargrid-icon-check {
+    font-size: 2em;
+}
+
+.cargrid-icon-overdue {
+    font-size: 2em;
+    color: red;
+}
