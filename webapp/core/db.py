@@ -135,6 +135,12 @@ def get_cars_tuples():
         car_tuples_arr.append((car.id_voz, car_string))
     return car_tuples_arr
 
+def get_first_car_id():
+    pass
+
+def fetch_service_history(car_id):
+    pass
+
 
 def fetch_all_pending_approvals():
     return Activity.query.filter_by(approved=False).first()
