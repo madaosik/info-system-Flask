@@ -9,8 +9,6 @@ from webapp.views import vacations
 from webapp.views import vacation_my
 from webapp.views import cars
 from webapp.views import users
-from webapp.views import employee_profile
-from webapp.views import car_profile
 
 def configure_views(app):
     home.configure(app)
@@ -24,5 +22,5 @@ def configure_views(app):
     vacation_my.configure(app)
     cars.configure(app)
     users.configure(app)
-    employee_profile.configure(app)
-    car_profile.configure(app)
+
+

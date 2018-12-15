@@ -55,7 +55,7 @@
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <!--<div class="dropdown-header">Vozový park</div>-->
-                                    <a class="dropdown-item" href="{{  url_for('car_profile')  }}">Karty vozidel</a>
+                                    <a class="dropdown-item" href="{{  url_for('car-profiles')  }}">Karty vozidel</a>
                                     <a class="dropdown-item" href="{{  url_for('cars')  }}">Technické údaje</a>
                                     <a class="dropdown-item" href="#">Technické kontroly</a>
                                     <a class="dropdown-item" href="#">Prohlídky a certifikáty</a>
@@ -78,7 +78,7 @@
                             {%endif%}
                     <!------------------------ CURRENT ROLE IS ZAMESTNANEC ------------------------>
                     {% else %}
-                          <li class="nav-item active"><a class="nav-link" href="{{ url_for('profile', id_zam=current_user.id_zam) }}">Můj profil</a> </li>
+                          <li class="nav-item active"><a class="nav-link" href="{{ url_for('employeeprofile', id_zam=current_user.id_zam) }}">Můj profil</a> </li>
                           <li class="nav-item active"><a class="nav-link" href="{{ url_for('my_vacation', id=current_user.id_zam) }}">Plánovaná dovolená</a></li>
                           <li class="nav-item active"><a class="nav-link" href="{{ url_for('activities-my', id=current_user.id_zam) }}">Moje aktivity</a></li>
                     {% endif %}

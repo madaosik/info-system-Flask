@@ -66,9 +66,34 @@ class CarsModify(MethodView):
         flash("Vozidlo '%s' úspěšně upraveno!" % car.spz, 'alert alert-success')
         return redirect('cars')
 
+class CarProfiles(MethodView):
+    @management
+    def get(self):
+        return render_template('car_profiles.html', cars=db.fetch_all_cars())
+
+class EditCarProfile(MethodView):
+    @management
+    def get(self):
+        pass
+        # employee = db.get_empl_from_user(current_user.id)
+        # return render_template('my_profile_form.html', employee=employee, form=EditProfileForm(obj=employee), form_accessdata=EditAccessForm(obj=current_user))
+
+    def post(self):
+        pass
+        # id_zam = request.form.get('id_zam')
+        # editform = EditProfileForm()
+        # employee = db.fetch_employee_by_id(id_zam)
+        # if not editform.validate_on_submit():
+        #     return render_template('my_profile_form.html', employee=employee, form=editform)
+        # db.update_from_form(employee, editform)
+        # flash('Úprava profilu proběhla úspěšně!', 'alert alert-success')
+        # return redirect(url_for('employeeprofile', id_zam=id_zam))
+
+
 
 def configure(app):
     app.add_url_rule('/cars', view_func=Cars.as_view('cars'))
     app.add_url_rule('/cars_add', view_func=CarsAdd.as_view('car-add'))
     app.add_url_rule('/cars_delete', view_func=CarsDelete.as_view('car-del'))
     app.add_url_rule('/cars_modify', view_func=CarsModify.as_view('car-mod'))
+    app.add_url_rule('/car_profiles', view_func=CarProfiles.as_view('car-profiles'))

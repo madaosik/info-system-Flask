@@ -114,10 +114,15 @@ table th {
 }
 
 .cargrid-icon-check {
-    font-size: 2em;
+    font-size: 1.8em;
 }
 
 .cargrid-icon-overdue {
-    font-size: 2em;
+    font-size: 2.2em;
     color: red;
+}
+
+.cargrid-icon-upcoming {
+    font-size: 2em;
+    color: darkorange;
 }
