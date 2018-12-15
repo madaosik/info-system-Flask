@@ -105,6 +105,7 @@ class Dovolena_zam_hist(Base):
     celkem = Column(Integer)
     potvrzeni = Column(Boolean, default=False)
     seen = Column(Boolean, default=False)
+    seen_by_zam = Column(Boolean, default=False)
 
 class Vozidlo(Base):
     __tablename__ = 'vozidlo'

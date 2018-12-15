@@ -129,3 +129,8 @@ table th {
     font-size: 2em;
     color: darkorange;
 }
+
+.button-left{
+    float: left;
+    padding-right: 15px;
+}
