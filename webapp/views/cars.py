@@ -2,7 +2,7 @@ from flask import render_template, request, redirect, flash
 from flask.views import MethodView
 from webapp.core import db
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, SubmitField
+from wtforms import StringField, IntegerField, SubmitField, SelectField
 from wtforms.validators import InputRequired, NumberRange
 
 from webapp.core.models import Vozidlo
@@ -18,6 +18,13 @@ class CarForm(FlaskForm):
     pocet_naprav = IntegerField('* Počet náprav', validators=[NumberRange(min=2,max=10,message="Zadejte počet náprav mezi 2 a 10!")])
     emisni_trida = StringField('Emisní třída')
     submit = SubmitField('Uložit')
+
+class CarServiceDiarySelector(FlaskForm):
+    cars = SelectField('Servisni deník pro vozidlo:')
+
+    def __init__(self,*args,**kwargs):
+        super(CarServiceDiarySelector,self).__init__(*args, **kwargs)
+        self.cars.choices = db.get_cars_tuples()
 
 class Cars(MethodView):
     @management
@@ -71,12 +78,10 @@ class CarProfiles(MethodView):
     def get(self):
         return render_template('car_profiles.html', cars=db.fetch_all_cars())
 
-class EditCarProfile(MethodView):
+class CarTechnicalProbes(MethodView):
     @management
     def get(self):
-        pass
-        # employee = db.get_empl_from_user(current_user.id)
-        # return render_template('my_profile_form.html', employee=employee, form=EditProfileForm(obj=employee), form_accessdata=EditAccessForm(obj=current_user))
+        return render_template('car_techprobes.html')
 
     def post(self):
         pass
@@ -89,7 +94,11 @@ class EditCarProfile(MethodView):
         # flash('Úprava profilu proběhla úspěšně!', 'alert alert-success')
         # return redirect(url_for('employeeprofile', id_zam=id_zam))
 
-
+class CarServiceDiary(MethodView):
+    @management
+    def get(self):
+        car_id = db.get_first_car_id()
+        return render_template('car_servicediary.html',selector=CarServiceDiarySelector(),service_history=db.fetch_service_history(car_id))
 
 def configure(app):
     app.add_url_rule('/cars', view_func=Cars.as_view('cars'))
@@ -97,3 +106,5 @@ def configure(app):
     app.add_url_rule('/cars_delete', view_func=CarsDelete.as_view('car-del'))
     app.add_url_rule('/cars_modify', view_func=CarsModify.as_view('car-mod'))
     app.add_url_rule('/car_profiles', view_func=CarProfiles.as_view('car-profiles'))
+    app.add_url_rule('/car_techprobes', view_func=CarTechnicalProbes.as_view('car-techprobes'))
+    app.add_url_rule('/car_service', view_func=CarServiceDiary.as_view('car-servicediary'))
