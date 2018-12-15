@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, flash
+from flask import render_template, request, redirect, flash, url_for
 from flask.views import MethodView
 from webapp.core import db
 from flask_wtf import FlaskForm
@@ -7,6 +7,7 @@ from wtforms.validators import InputRequired, NumberRange
 
 from webapp.core.models import Vozidlo
 from webapp.roles import admin, management
+from webapp.views.forms import CzechDateField
 
 class CarForm(FlaskForm):
     spz = StringField('* SPZ', validators=[InputRequired("Zadejte SPZ!")])
@@ -18,6 +19,11 @@ class CarForm(FlaskForm):
     pocet_naprav = IntegerField('* Počet náprav', validators=[NumberRange(min=2,max=10,message="Zadejte počet náprav mezi 2 a 10!")])
     emisni_trida = StringField('Emisní třída')
     submit = SubmitField('Uložit')
+
+class CarDeadlineEditForm(FlaskForm):
+    date_expiry = CzechDateField('Nový termín', validators=[InputRequired(message="Doplňte nový termín!")])
+    submit = SubmitField('Uložit')
+
 
 class CarServiceDiarySelector(FlaskForm):
     cars = SelectField('Servisni deník pro vozidlo:')
@@ -73,26 +79,39 @@ class CarsModify(MethodView):
         flash("Vozidlo '%s' úspěšně upraveno!" % car.spz, 'alert alert-success')
         return redirect('cars')
 
+
+# VARIOUS CAR CONSTANTS
+
+
 class CarProfiles(MethodView):
+    car_deadline_types = {'techprobe': 1, 'tachoprobe': 2, 'fireprobe': 3}
+
     @management
     def get(self):
-        return render_template('car_profiles.html', cars=db.fetch_all_cars())
+        car_profiles = db.get_car_profile_data(self.car_deadline_types)
+        edit_form = CarDeadlineEditForm()
+        return render_template('car_profiles.html', car_profiles=car_profiles, form=edit_form)
 
-class CarTechnicalProbes(MethodView):
+class CarDeadlineAdd(CarProfiles):
+    deadline_type_str = {'techprobe': 'technické prohlídky', 'tachoprobe': 'prohlídky tachografu', 'fireprobe': 'prohlídky hasícího přístroje'}
+
     @management
-    def get(self):
-        return render_template('car_techprobes.html')
-
     def post(self):
-        pass
-        # id_zam = request.form.get('id_zam')
-        # editform = EditProfileForm()
-        # employee = db.fetch_employee_by_id(id_zam)
-        # if not editform.validate_on_submit():
-        #     return render_template('my_profile_form.html', employee=employee, form=editform)
-        # db.update_from_form(employee, editform)
-        # flash('Úprava profilu proběhla úspěšně!', 'alert alert-success')
-        # return redirect(url_for('employeeprofile', id_zam=id_zam))
+        form = CarDeadlineEditForm()
+        print(request.form.get('car_id'))
+        db.car_deadline_add(request.form.get('car_id'), request.form.get('deadline_type'), form.date_expiry.data, self.car_deadline_types)
+        flash("Datum expirace %s u vozidla '%s' bylo úspěšně stanoveno na %s!" % (self.deadline_type_str[request.form.get('deadline_type')], request.form.get('car_spz'), form.date_expiry.data.strftime("%d. %m. %Y")), 'alert alert-success')
+        return redirect(url_for('car-profiles'))
+
+class CarDeadlineEdit(CarDeadlineAdd):
+
+    @management
+    def post(self):
+        form = CarDeadlineEditForm()
+        deadline_id = request.form.get('id_deadline')
+        db.car_deadline_edit(deadline_id, form.date_expiry.data)
+        flash("Datum expirace %s u vozidla '%s' bylo úspěšně změněno na %s!" % (self.deadline_type_str[request.form.get('deadline_type')], request.form.get('car_spz'), form.date_expiry.data.strftime("%d. %m. %Y")), 'alert alert-success')
+        return redirect(url_for('car-profiles'))
 
 class CarServiceDiary(MethodView):
     @management
@@ -106,5 +125,6 @@ def configure(app):
     app.add_url_rule('/cars_delete', view_func=CarsDelete.as_view('car-del'))
     app.add_url_rule('/cars_modify', view_func=CarsModify.as_view('car-mod'))
     app.add_url_rule('/car_profiles', view_func=CarProfiles.as_view('car-profiles'))
-    app.add_url_rule('/car_techprobes', view_func=CarTechnicalProbes.as_view('car-techprobes'))
+    app.add_url_rule('/car_deadline_edit', view_func=CarDeadlineEdit.as_view('car-deadline-edit'))
+    app.add_url_rule('/car_deadline_add', view_func=CarDeadlineAdd.as_view('car-deadline-add'))
     app.add_url_rule('/car_service', view_func=CarServiceDiary.as_view('car-servicediary'))

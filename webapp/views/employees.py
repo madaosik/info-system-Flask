@@ -30,22 +30,28 @@ class EmployeeForm(FlaskForm):
         result = True
 
         if not telephone_is(self.telefon.data):
+
             self.telefon.errors.append('Zadejte validni cislo bez mezer!')
             result = False
         if 9 > len(self.telefon.data) or len(self.telefon.data) > 13:
             self.telefon.errors.append('Zadejte validni cislo bez mezer!')
             result = False
-
         return result
 
 
 def telephone_is(string):
+<<<<<<< HEAD
     tel = re.compile(r'[^+ 0-9]')
     num = re.compile(r'[^ 0-9]')
     a = string
     string = tel.search(string)
     a = num.search(a[1:])
     return not (bool(string) or bool(a))
+=======
+    allow = re.compile(r'[^+0-9]')
+    string = allow.search(string)
+    return not bool(string)
+>>>>>>> master
 
 class EditProfileForm(EmployeeForm):
     kr_jmeno = None

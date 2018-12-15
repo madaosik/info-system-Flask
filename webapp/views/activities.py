@@ -39,10 +39,12 @@ class NewActivityForm(FlaskForm):
 
 
 class EditActivityPayoffForm(FlaskForm):
-    payoff = SelectField('* Odmena', coerce=int, validators=[InputRequired("Zadejte vysku odmeny!")],
-                             choices=[(250, '250'), (500, '500'), (750, '750'), (1000, '1000'), (1500, '1500')])  # prelozit
+    payoff = SelectField('* Odměna', coerce=int, validators=[InputRequired("Zadejte vysku odmeny!")])  # prelozit
     submit = SubmitField('Potvrdit')  # prelozit
 
+    def __init__(self,*args,**kwargs):
+        super(EditActivityPayoffForm,self).__init__(*args, **kwargs)
+        self.payoff.choices = [(250, '250 Kč'), (500, '500 Kč'), (750, '750 Kč'), (1000, '1000 Kč'), (1500, '1500 Kč')]
 
 class Activities(MethodView):
     @management
@@ -88,7 +90,7 @@ class ActivityEditPayoff(MethodView):
         df = request.form.get('id')
         db.edit_act_payoff(df, a.payoff.data)
         db.approve_act(df)
-        flash("Aktivita byla úspěšně ZMĚNENA!", 'alert alert-success')
+        flash("Odměna u aktivity byla úspěšně ZMĚNENA!", 'alert alert-success')
         return redirect(url_for('activities'))
 
 

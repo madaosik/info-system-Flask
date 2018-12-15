@@ -111,7 +111,7 @@ class Vozidlo(Base):
     __tablename__ = 'vozidlo'
 
     id_voz = Column(Integer, primary_key=True)
-    spz = Column(String(10))
+    spz = Column(String(10), nullable=False)
     znacka = Column(String(20))
     model = Column(String(20))
     rok_vyroby = Column(Integer)
@@ -128,18 +128,6 @@ class Typ_dokumentu(Base):
 
     id_typu = Column(Integer, primary_key=True)
     popis_typu = String(20)
-
-class Dokument(Base):
-    __tablename__ = 'dokument'
-
-    id_dokumentu = Column(Integer, primary_key=True)
-    id_zam = Column(Integer, ForeignKey("zamestnanec.id_zam", ondelete='CASCADE'))
-    id_voz = Column(String(10), ForeignKey("vozidlo.spz", ondelete='CASCADE'))
-    typ_dokumentu = Column(Integer, ForeignKey("typ_dokumentu.id_typu", ondelete='CASCADE'))
-    adresa_uloziste = Column(String(30),nullable=False)
-    platnost_do = Column(Date)
-    zalozen_cas = Column(TIMESTAMP, nullable=False, server_default=func.now())
-    posl_editace = Column(TIMESTAMP, nullable=False, server_default=func.now(), server_onupdate=func.now())
 
 class Sazba(Base):
     __tablename__ = 'sazba'
@@ -183,15 +171,28 @@ class Activity(Base):
     approved = Column(Boolean, default=False)
     seen = Column(Boolean, default=False)
 
+class DeadlinesCarTypes(Base):
+    __tablename__ = 'deadlines_car_types'
 
-class ServiceHistory(Base):
-    __tablename__= 'service_history'
+    id_type = Column(Integer, primary_key=True)
+    description = Column(String(30), nullable=False)
 
-    id = Column(Integer, primary_key=True)
+class DeadlinesCar(Base):
+    __tablename__ = 'deadlines_car'
+
+    id_deadline = Column(Integer, primary_key=True)
+    id_type = Column(Integer, ForeignKey("deadlines_car_types.id_type", ondelete='CASCADE'), nullable=False)
     car_id = Column(Integer, ForeignKey("vozidlo.id_voz", ondelete='CASCADE'), nullable=False)
-    short_desc = Column(String(25), nullable=False)
-    long_desc = Column(String(100))
-    mileage = Column(Integer)
-    date = Column(DateTime, nullable=False)
-    recorded_time = Column(DateTime, server_default=func.now())
-    recorded_by = Column(Integer, ForeignKey("zamestnanec.id_zam", ondelete='NO ACTION'), nullable=False)
+    date_expiry = Column(Date)
+
+# class ServiceHistory(Base):
+#     __tablename__= 'service_history'
+#
+#     id = Column(Integer, primary_key=True)
+#     car_id = Column(Integer, ForeignKey("vozidlo.id_voz", ondelete='CASCADE'), nullable=False)
+#     short_desc = Column(String(25), nullable=False)
+#     long_desc = Column(String(100))
+#     mileage = Column(Integer)
+#     date = Column(DateTime, nullable=False)
+#     recorded_time = Column(DateTime, server_default=func.now())
+#     recorded_by = Column(Integer, ForeignKey("zamestnanec.id_zam", ondelete='NO ACTION'), nullable=False)

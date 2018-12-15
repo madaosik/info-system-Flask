@@ -17,18 +17,13 @@ depends_on = None
 
 
 def upgrade():
-    op.execute("alter table dokument drop foreign key dokument_ibfk_1;")
     op.drop_constraint('PRIMARY', 'vozidlo', type_='primary')
     op.execute("DELETE FROM vozidlo;")
     op.execute("ALTER TABLE vozidlo ADD id_voz int NOT NULL PRIMARY KEY AUTO_INCREMENT;")
-    op.alter_column('dokument', 'spz', type_=sa.Integer, existing_type=sa.String(length=10), nullable=False, new_column_name='id_voz')
-    op.create_foreign_key('fk_vozidlo_dokument', 'dokument', 'vozidlo', ['id_voz'], ['id_voz'])
-
+    op.execute("INSERT INTO `vozidlo` VALUES ('5B4 1234','Mercedes','Atego',2008,110,100,4,'EURO III','2018-12-15 16:04:14','2018-12-15 16:04:14',1),('6B9 1234','Mercedes','Sprinter',2004,110,1100,4,'EURO IV','2018-12-15 16:08:06','2018-12-15 16:08:06',2),('1C9 5345','Mercedes','Vito',2003,80,900,3,'EURO III','2018-12-15 16:08:45','2018-12-15 16:08:45',3);")
 
 def downgrade():
-    op.drop_constraint('fk_vozidlo_dokument', 'dokument', type_='foreignkey')
+    op.execute("DELETE FROM vozidlo;")
     op.drop_column('vozidlo', 'id_voz')
-    op.alter_column('dokument', 'id_voz', nullable=False, existing_type=sa.Integer, type_=sa.String(length=10), new_column_name='spz')
     op.create_primary_key('PRIMARY', 'vozidlo', ['spz'])
-    op.create_foreign_key('dokument_ibfk_1', 'dokument', 'vozidlo', ['spz'], ['spz'])
 

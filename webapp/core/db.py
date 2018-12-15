@@ -4,7 +4,6 @@ from webapp.core.models import *
 import sqlalchemy as sa
 from webapp.core.db_connector import session
 
-
 def get_obj_by_id(classname,id):
     return classname.query.get(id)
 
@@ -161,6 +160,36 @@ def fetch_car(id):
 def fetch_all_cars():
     return Vozidlo.query.all()
 
+
+
+def get_car_profile_data(car_dl_dict):
+    cars = fetch_all_cars()
+    car_profiles = []
+
+    for car in cars:
+        car_profile = {}
+        car_profile['car'] = car
+        for k,v in car_dl_dict.items():
+            dl_record = session.query(DeadlinesCar).filter(DeadlinesCar.id_type==v, DeadlinesCar.car_id==car.id_voz).first()
+            if not dl_record:
+                car_profile[k] = None
+            else:
+                deadline = {'dl_id': dl_record.id_deadline, 'dl_date': dl_record.date_expiry}
+                car_profile[k] = deadline
+
+        car_profiles.append(car_profile)
+
+    return car_profiles
+
+def car_deadline_edit(deadline_id, new_date):
+    deadline = session.query(DeadlinesCar).filter_by(id_deadline=deadline_id).first()
+    deadline.date_expiry = new_date
+    session.commit()
+
+def car_deadline_add(car_id, deadline_type, expiry_date, deadline_types_dict):
+    deadline = DeadlinesCar(id_type=deadline_types_dict[deadline_type],car_id=car_id,date_expiry=expiry_date)
+    session.add(deadline)
+    session.commit()
 
 #Vacation functions
 
