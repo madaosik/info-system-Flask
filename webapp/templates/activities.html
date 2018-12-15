@@ -35,15 +35,17 @@
                         <td>{{zamestnanec.prijmeni}}</td>
                     {% endif %}
                 {% endfor %}
-            <td>{{one.begin}}</td>
-            <td>{{one.end}}</td>
+            <td>{{one.begin.strftime('%d/%m/%Y %H:%M')}}</td>
+            <td>{{one.end.strftime('%d/%m/%Y %H:%M')}}</td>
             <td>{{one.type}}</td>
             <td>{% for car in cars %}
                     {% if car.id_voz == one.id_voz %}
                         {{ car.znacka }} {{ car.model }}
                     {% endif %}
                 {% endfor %}</td>
-        <td> {{ one.payoff }}</td>
+        <td>{% if one.payoff == None %} 0
+            {% else %}
+                {{ one.payoff }}{% endif %}</td>
             <td>
                 <form method="POST" action="{{ url_for('activity-approve', id=one.id_activity)}}">
                   <input type="submit" value=&#9745; class="btn approve_button">
@@ -62,7 +64,7 @@
     {%  endif %}
 
 
-    <h3>Schvalene aktivity</h3>
+    <h3>Schvalene nadcházející aktivity</h3>
     {%  if all %}
         <table class="centertable table table-hover table-sm center">
             <thead class="thead-light">
@@ -89,8 +91,8 @@
                         <td>{{zamestnanec.prijmeni}}</td>
                     {% endif %}
                 {% endfor %}
-            <td>{{one.begin}}</td>
-            <td>{{one.end}}</td>
+            <td>{{one.begin.strftime('%d/%m/%Y %H:%M')}}</td>
+            <td>{{one.end.strftime('%d/%m/%Y %H:%M')}}</td>
             <td>{{one.type}}</td>
             <td>{% for car in cars %}
                     {% if car.id_voz == one.id_voz %}
@@ -115,6 +117,58 @@
         </table>
     {%  endif %}
 
+      <h3>Historie 30 dni</h3>
+    {%  if all %}
+        <table class="centertable table table-hover table-sm center">
+            <thead class="thead-light">
+            <tr>
+                <th>Křestní jméno</th>
+                <th>Příjmení</th>
+                <th>Datum začátku</th>
+                <th>Datum konce</th>
+                <th>Typ</th>
+                <th>Vozidlo</th>
+                <th>Odmena</th>
+                <th colspan="2">Potvrzení</th>
+            </tr>
+            </thead>
+    {% else %}
+        <p>Neevidujeme žádné žádosti o aktivity.</p>
+    {% endif %}
+    {% for one in all %}
+        {% if one.approved == True %}
+        <tr>
+            {% for zamestnanec in empl %}
+                    {% if zamestnanec.id_zam == one.id_zam %}
+                        <td>{{ zamestnanec.kr_jmeno }}</td>
+                        <td>{{zamestnanec.prijmeni}}</td>
+                    {% endif %}
+                {% endfor %}
+            <td>{{one.begin.strftime('%d/%m/%Y %H:%M')}}</td>
+            <td>{{one.end.strftime('%d/%m/%Y %H:%M')}}</td>
+            <td>{{one.type}}</td>
+            <td>{% for car in cars %}
+                    {% if car.id_voz == one.id_voz %}
+                        {{ car.znacka }} {{ car.model }}
+                    {% endif %}
+                {% endfor %}</td>
+            <td>{{one.payoff}} </td>
+            <td>
+                <form method="POST" action="{{ url_for('activity-approve', id=one.id_activity)}}">
+                  <input type="submit" value=&#x270D; class="btn edit_button">
+                </form>
+            </td>
+            <td>
+                <form method="POST" action="{{ url_for('activity-decline', id=one.id_activity)}}">
+                  <input type="submit" value=&#9746; class="btn deny_button">
+                </form>
+            </td>
+        </tr>
+        {% endif %}
+    {% endfor %}
+    {% if all %}
+        </table>
+    {%  endif %}
 
 
 
