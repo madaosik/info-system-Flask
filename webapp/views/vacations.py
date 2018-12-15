@@ -11,6 +11,7 @@ from webapp.views.forms import CzechDateField
 from flask_wtf import FlaskForm
 from wtforms import SubmitField
 from wtforms.validators import InputRequired
+from czech_holidays import Holidays
 
 
 class VacationForm(FlaskForm):
