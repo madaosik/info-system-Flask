@@ -101,6 +101,8 @@ table th {
 }
 .edit_button{
     background-color: #ffc107;
+    font-size: 23px;
+    padding: 1px 9px 1px  9px
 }
 
 .navbar .navbar-brand {
