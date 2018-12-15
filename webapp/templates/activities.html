@@ -60,12 +60,12 @@
               </td>
             <td>
                 <input type="hidden" name="id" value="{{one.id_activity }}">
-                  <input type="submit" value=&#9745; class="btn approve_button">
+                  <input type="submit" value=&#9745; class="btn approve_button"  data-toggle="tooltip" data-html="true" title="Potvrdit">
                 </form>
             </td>
             <td>
                 <form method="POST" action="{{ url_for('activity-decline', id=one.id_activity)}}">
-                  <input type="submit" value=&#9746; class="btn deny_button">
+                  <input type="submit" value=&#9746; class="btn deny_button" data-toggle="tooltip" data-html="true" title="Zamítnout">
                 </form>
             </td>
         </tr>
@@ -115,8 +115,52 @@
                 {{one.payoff}}
             </td>
             <td>
+                <div data-toggle="tooltip" data-html="true" title="Editovat">
+                    <button type="button" class="btn edit_button" data-toggle="modal" data-target="#myEditModal">&#x270D;
+                    </button>
+                </div>
+
+                <!-- Modalne okno -->
+                <div class="modal fade" id="myEditModal" role="dialog">
+                    <div class="modal-dialog">
+
+                        <!-- Modal kontent-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                         <form method="POST" action="{{ url_for('activity-edit-payoff') }}">
+                            <div class="modal-body">
+                                Editace odmeny:
+
+                                    {% if form.payoff.errors %}
+                                        <div class="form-group  required has-error">
+                                            {{ form.payoff(id="payoff",required='required',type="number",value=one.payoff) }}
+                                            {% for error in form.payoff.errors %}
+                                                <p class="help-block">{{ error }}</p>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        <div class="form-group  required">
+                                            {{ form.payoff(id="payoff",required='required',type="number",value=one.payoff) }}
+                                        </div>
+                                    {% endif %}
+                            </div>
+                            <div class="modal-footer">
+                                <input type="hidden" name="id" value="{{ one.id_activity }}">
+                                <input type="submit" value=&#9745; class="btn approve_button" data-toggle="tooltip"
+                                       data-html="true" title="Potvrdit">
+
+                            </div>
+                             </form>
+                        </div>
+                    </div>
+
+                </div>
+            </td>
+            <td>
                 <form method="POST" action="{{ url_for('activity-decline', id=one.id_activity)}}">
-                  <input type="submit" value=&#9746; class="btn deny_button">
+                  <input type="submit" value=&#9746; class="btn deny_button"  data-toggle="tooltip" data-html="true" title="Zamítnout">
                 </form>
             </td>
         </tr>
@@ -163,23 +207,24 @@
                 {% endfor %}</td>
             <td>{{ one.payoff }} </td>
             <td>
-                <div class="container">
 
+                <div data-toggle="tooltip" data-html="true" title="Editovat">
                     <button type="button" class="btn edit_button" data-toggle="modal" data-target="#myModal">&#x270D;
                     </button>
+                </div>
 
-                    <!-- Modal -->
-                    <div class="modal fade" id="myModal" role="dialog">
-                        <div class="modal-dialog">
+                <!-- Modal -->
+                <div class="modal fade" id="myModal" role="dialog">
+                    <div class="modal-dialog">
 
-                            <!-- Modal content-->
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                </div>
-                                <div class="modal-body">
-                                    Editace odmeny:
-                                    <form method="POST" action="{{ url_for('activity-edit-payoff') }}">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                Editace odmeny:
+                                <form method="POST" action="{{ url_for('activity-edit-payoff') }}">
                                     {% if form.payoff.errors %}
                                         <div class="form-group  required has-error">
                                             {{ form.payoff(id="payoff",required='required',type="number",value=one.payoff) }}
@@ -192,22 +237,23 @@
                                             {{ form.payoff(id="payoff",required='required',type="number",value=one.payoff) }}
                                         </div>
                                     {% endif %}
-                                </div>
-                                <div class="modal-footer">
-                                     <input type="hidden" name="id" value="{{one.id_activity }}">
-                                    <input type="submit" value=&#9745; class="btn approve_button">
-                                    </form>
-                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <input type="hidden" name="id" value="{{ one.id_activity }}">
+                                <input type="submit" value=&#9745; class="btn approve_button" data-toggle="tooltip"
+                                       data-html="true" title="Potvrdit">
+                                </form>
                             </div>
 
-                        </div>
-            </div>
 
-            </div>
+                        </div>
+                    </div>
+
+                </div>
             </td>
             <td>
                 <form method="POST" action="{{ url_for('activity-decline', id=one.id_activity)}}">
-                  <input type="submit" value=&#9746; class="btn deny_button">
+                  <input type="submit" value=&#9746; class="btn deny_button"  data-toggle="tooltip" data-html="true" title="Zamítnout">
                 </form>
             </td>
         </tr>
