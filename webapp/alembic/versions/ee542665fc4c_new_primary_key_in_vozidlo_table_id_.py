@@ -20,6 +20,7 @@ def upgrade():
     op.drop_constraint('PRIMARY', 'vozidlo', type_='primary')
     op.execute("DELETE FROM vozidlo;")
     op.execute("ALTER TABLE vozidlo ADD id_voz int NOT NULL PRIMARY KEY AUTO_INCREMENT;")
+    op.execute("INSERT INTO `vozidlo` VALUES ('5B4 1234','Mercedes','Atego',2008,110,100,4,'EURO III','2018-12-15 16:04:14','2018-12-15 16:04:14',1),('6B9 1234','Mercedes','Sprinter',2004,110,1100,4,'EURO IV','2018-12-15 16:08:06','2018-12-15 16:08:06',2),('1C9 5345','Mercedes','Vito',2003,80,900,3,'EURO III','2018-12-15 16:08:45','2018-12-15 16:08:45',3);")
 
 def downgrade():
     op.execute("DELETE FROM vozidlo;")

@@ -73,20 +73,6 @@ def upgrade():
     sa.ForeignKeyConstraint(['odmena'], ['sazba.id_sazby'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id_cinnosti')
     )
-    op.create_table('dokument',
-    sa.Column('id_dokumentu', sa.Integer(), nullable=False),
-    sa.Column('id_zam', sa.Integer(), nullable=True),
-    sa.Column('id_voz', sa.String(length=10), nullable=True),
-    sa.Column('typ_dokumentu', sa.Integer(), nullable=True),
-    sa.Column('adresa_uloziste', sa.String(length=30), nullable=False),
-    sa.Column('platnost_do', sa.Date(), nullable=True),
-    sa.Column('zalozen_cas', sa.TIMESTAMP(), server_default=sa.text('now()'), nullable=False),
-    sa.Column('posl_editace', sa.TIMESTAMP(), server_default=sa.text('now()'), server_onupdate=sa.text('now()'), nullable=False),
-    sa.ForeignKeyConstraint(['id_voz'], ['vozidlo.spz'], ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['id_zam'], ['zamestnanec.id_zam'], ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['typ_dokumentu'], ['typ_dokumentu.id_typu'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id_dokumentu')
-    )
     op.create_table('dovolena_zam',
     sa.Column('id_naroku', sa.Integer(), nullable=False),
     sa.Column('id_zam', sa.Integer(), nullable=False),
@@ -146,7 +132,6 @@ def downgrade():
     op.drop_table('pracovni_sml')
     op.drop_table('lekarska_prohl')
     op.drop_table('dovolena_zam')
-    op.drop_table('dokument')
     op.drop_table('cinnost')
     op.drop_table('zamestnanec')
     op.drop_table('vozidlo')
