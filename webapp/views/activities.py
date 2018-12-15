@@ -28,6 +28,15 @@ class NewActivityForm(FlaskForm):
         super(NewActivityForm,self).__init__(*args, **kwargs)
         self.vozidlo.choices = db.get_cars_tuples()
 
+    def validate(self):
+        if not FlaskForm.validate(self):
+            return False
+        result = True
+        if self.begin.data > self.end.data:
+            self.end.errors.append('Začátek aktivity musí mít dřívejší datum než její konec!')
+            result = False
+        return result
+
 
 class EditActivityPayoffForm(FlaskForm):
     payoff = SelectField('* Odměna', coerce=int, validators=[InputRequired("Zadejte vysku odmeny!")])  # prelozit
