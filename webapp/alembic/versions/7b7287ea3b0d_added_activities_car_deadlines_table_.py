@@ -52,7 +52,8 @@ def upgrade():
     op.add_column('dovolena_zam_hist', sa.Column('seen', sa.Boolean(), nullable=True))
     op.add_column('dovolena_zam_hist', sa.Column('seen_by_zam', sa.Boolean(), nullable=True))
     # ### end Alembic commands ###
-
+    op.execute("INSERT INTO `deadlines_car_types` VALUES (1,'Technická kontrola'),(2,'Prohlídka tachografu'),(3,'Hasící přístroj');")
+    op.execute("INSERT INTO `deadlines_car` VALUES (1,1,1,'2018-12-26'),(2,2,1,'2018-12-28'),(3,3,1,'2019-01-10');")
 
 
 def downgrade():
