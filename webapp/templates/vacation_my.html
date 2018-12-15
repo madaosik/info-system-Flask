@@ -1,8 +1,9 @@
 {% extends 'base/base.html' %}
+<!-- input: me, all -->
 
 {% block title %}Dovolená{% endblock %}
 {% block body %}
-    <h3>Plánovaná dovolená</h3>
+    <h3>Zadosti o dovolenou</h3>
 
     {% if me %}
         <table class="centertable table table-hover table-sm">
@@ -12,6 +13,7 @@
             <th>Datum konce</th>
             <th>Celkem dní</th>
             <th>Potvrzení</th>
+            <th>Smazat</th>
         </tr>
         </thead>
     {% else %}
@@ -19,16 +21,21 @@
     {% endif %}
 {% if me %}
     {% for dovolena in me %}
-        {% if dovolena.do > date %}
+        {% if dovolena.do > date  or dovolena.potvrzeni== False%}
         <tr>
             <td>{{ dovolena.od }}</td>
             <td>{{ dovolena.do }}</td>
             <td>{{ dovolena.celkem }}</td>
             <td>{% if dovolena.potvrzeni == True %}
             Áno
+                {%  elif dovolena.seen== False %}
+                Neviděné
             {%  else %}
             Ne
             {% endif %}</td>
+        <td> <form method="POST" action="{{ url_for('my_vacation_delete', id=current_user.id_zam, id_vac=dovolena.id_zaznamu) }}">
+                  <input type="submit" value=&#9746; class="btn deny_button">
+                </form></td>
         </tr>
         {% endif %}
     {% endfor %}
@@ -53,7 +60,7 @@
     {% endif %}
 {% if me %}
     {% for dovolena in me %}
-        {% if dovolena.do < date%}
+        {% if dovolena.do < date and dovolena.potvrzeni == True%}
         <tr>
             <td>{{ dovolena.od }}</td>
             <td>{{ dovolena.do }}</td>
@@ -71,6 +78,6 @@
 {% endif %}
     <form method="GET" action="{{ url_for('vacation-add')}}">
      <input type="hidden" name="id" value="{{ current_user.id_zam}}">
-        <input type="submit" value="Přidat">
+        <input type="submit" value="Přidat" class="btn btn-secondary my-0 my-sm-0">
     </form>
 {% endblock %}

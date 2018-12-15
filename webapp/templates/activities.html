@@ -1,10 +1,11 @@
 
 {% extends "base/base.html" %}
+{% from "base/_formhelpers.html" import render_field %}
 
 <!-- input: empl, all, cars, date-->
 {% block title %}Aktivity{% endblock %}
 {% block body %}
-    <h3>Aktivity k schválení</h3>
+    <h3><i class="fas fa-clipboard-list"></i>   Aktivity k schválení</h3>
         <form class="form-inline my-2 my-lg-0 pb-4 pt-3" action="{{ url_for('dashboard-boss') }}">
           <button class="btn btn-primary my-0 my-sm-0" type="submit">Zpět na nástěnku</button>
         </form>
@@ -18,6 +19,7 @@
                 <th>Datum konce</th>
                 <th>Typ</th>
                 <th>Vozidlo</th>
+                <th>Odmena</th>
                 <th colspan="2">Potvrzení</th>
             </tr>
             </thead>
@@ -33,16 +35,31 @@
                         <td>{{zamestnanec.prijmeni}}</td>
                     {% endif %}
                 {% endfor %}
-            <td>{{one.begin}}</td>
-            <td>{{one.end}}</td>
+            <td>{{one.begin.strftime('%d/%m/%Y %H:%M')}}</td>
+            <td>{{one.end.strftime('%d/%m/%Y %H:%M')}}</td>
             <td>{{one.type}}</td>
             <td>{% for car in cars %}
                     {% if car.id_voz == one.id_voz %}
                         {{ car.znacka }} {{ car.model }}
                     {% endif %}
                 {% endfor %}</td>
+        <td>
+              <form method="POST" action="{{ url_for('activity-edit-payoff') }}">
+                {% if form.payoff.errors %}
+                    <div class="form-group  required has-error">
+                    {{ form.payoff(id="payoff",required='required',type="number ",value=one.payoff) }}
+                    {% for error in form.payoff.errors %}
+                        <p class="help-block">{{ error }}</p>
+                    {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="form-group  required">
+                    {{ form.payoff(id="payoff",required='required',type="number",value=one.payoff) }}
+                    </div>
+                {% endif %}
+              </td>
             <td>
-                <form method="POST" action="{{ url_for('activity-approve', id=one.id_activity)}}">
+                <input type="hidden" name="id" value="{{one.id_activity }}">
                   <input type="submit" value=&#9745; class="btn approve_button">
                 </form>
             </td>
@@ -57,6 +74,150 @@
     {% if all %}
         </table>
     {%  endif %}
+
+
+    <h3><i class="fas fa-clipboard-check"></i>   Schvalene nadcházející aktivity</h3>
+    {%  if all %}
+        <table class="centertable table table-hover table-sm center">
+            <thead class="thead-light">
+            <tr>
+                <th>Křestní jméno</th>
+                <th>Příjmení</th>
+                <th>Datum začátku</th>
+                <th>Datum konce</th>
+                <th>Typ</th>
+                <th>Vozidlo</th>
+                <th>Odmena</th>
+                <th colspan="2">Potvrzení</th>
+            </tr>
+            </thead>
+    {% else %}
+        <p>Neevidujeme žádné žádosti o aktivity.</p>
+    {% endif %}
+    {% for one in all %}
+        {% if one.approved == True %}
+        <tr>
+            {% for zamestnanec in empl %}
+                    {% if zamestnanec.id_zam == one.id_zam %}
+                        <td>{{ zamestnanec.kr_jmeno }}</td>
+                        <td>{{zamestnanec.prijmeni}}</td>
+                    {% endif %}
+                {% endfor %}
+            <td>{{one.begin.strftime('%d/%m/%Y %H:%M')}}</td>
+            <td>{{one.end.strftime('%d/%m/%Y %H:%M')}}</td>
+            <td>{{one.type}}</td>
+            <td>{% for car in cars %}
+                    {% if car.id_voz == one.id_voz %}
+                        {{ car.znacka }} {{ car.model }}
+                    {% endif %}
+            {% endfor %}</td>
+            <td>
+                {{one.payoff}}
+            </td>
+            <td>
+                <form method="POST" action="{{ url_for('activity-decline', id=one.id_activity)}}">
+                  <input type="submit" value=&#9746; class="btn deny_button">
+                </form>
+            </td>
+        </tr>
+        {% endif %}
+    {% endfor %}
+    {% if all %}
+        </table>
+    {%  endif %}
+
+      <h3><i class="fas fa-history"></i>   Historie 30 dni</h3>
+    {%  if all %}
+        <table class="centertable table table-hover table-sm center">
+            <thead class="thead-light">
+            <tr>
+                <th>Křestní jméno</th>
+                <th>Příjmení</th>
+                <th>Datum začátku</th>
+                <th>Datum konce</th>
+                <th>Typ</th>
+                <th>Vozidlo</th>
+                <th>Odmena</th>
+                <th colspan="2">Potvrzení</th>
+            </tr>
+            </thead>
+    {% else %}
+        <p>Neevidujeme žádné žádosti o aktivity.</p>
+    {% endif %}
+    {% for one in all %}
+        {% if one.approved == True and (date - one.end).days < 30 %}
+        <tr>
+            {% for zamestnanec in empl %}
+                    {% if zamestnanec.id_zam == one.id_zam %}
+                        <td>{{ zamestnanec.kr_jmeno }}</td>
+                        <td>{{zamestnanec.prijmeni}}</td>
+                    {% endif %}
+                {% endfor %}
+            <td>{{one.begin.strftime('%d/%m/%Y %H:%M')}}</td>
+            <td>{{one.end.strftime('%d/%m/%Y %H:%M')}}</td>
+            <td>{{one.type}}</td>
+            <td>{% for car in cars %}
+                    {% if car.id_voz == one.id_voz %}
+                        {{ car.znacka }} {{ car.model }}
+                    {% endif %}
+                {% endfor %}</td>
+            <td>{{ one.payoff }} </td>
+            <td>
+                <div class="container">
+
+                    <button type="button" class="btn edit_button" data-toggle="modal" data-target="#myModal">&#x270D;
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="myModal" role="dialog">
+                        <div class="modal-dialog">
+
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                </div>
+                                <div class="modal-body">
+                                    Editace odmeny:
+                                    <form method="POST" action="{{ url_for('activity-edit-payoff') }}">
+                                    {% if form.payoff.errors %}
+                                        <div class="form-group  required has-error">
+                                            {{ form.payoff(id="payoff",required='required',type="number",value=one.payoff) }}
+                                            {% for error in form.payoff.errors %}
+                                                <p class="help-block">{{ error }}</p>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        <div class="form-group  required">
+                                            {{ form.payoff(id="payoff",required='required',type="number",value=one.payoff) }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="modal-footer">
+                                     <input type="hidden" name="id" value="{{one.id_activity }}">
+                                    <input type="submit" value=&#9745; class="btn approve_button">
+                                    </form>
+                                </div>
+                            </div>
+
+                        </div>
+            </div>
+
+            </div>
+            </td>
+            <td>
+                <form method="POST" action="{{ url_for('activity-decline', id=one.id_activity)}}">
+                  <input type="submit" value=&#9746; class="btn deny_button">
+                </form>
+            </td>
+        </tr>
+        {% endif %}
+    {% endfor %}
+    {% if all %}
+        </table>
+    {%  endif %}
+
+
 
 
 {% endblock %}

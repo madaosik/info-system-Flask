@@ -171,6 +171,16 @@ def fetch_all_vacations():
 def fetch_vacation_by_id(id):
     return Dovolena_zam_hist.query.filter_by(id_zam=id)
 
+def fetch_unseen_zam_vacation(id):
+    return Dovolena_zam_hist.query.filter_by(id_zam=id, seen_by_zam=False).first()
+
+
+def mark_seen_zam_vacation(id):
+    q = Dovolena_zam_hist.query.filter_by(id_zam=id, seen_by_zam=False)
+    for a in q:
+        a.seen_by_zam = True
+    session.commit()
+
 
 #Activity functions
 
@@ -191,6 +201,28 @@ def decline_act(id):
 def delete_act(id):
     session.query(Activity).filter_by(id_activity=id).delete()
     session.commit()
+
+
+def edit_act_payoff(id,payoff):
+    q = Activity.query.get(id)
+    q.payoff = payoff
+    session.commit()
+
+
+def fetch_activity_by_id_zam(id):
+    return Activity.query.filter_by(id_zam=id)
+
+
+def fetch_activity_by_id_act(id):
+    return Activity.query.filter_by(id_activity=id).first()
+
+
+def update_activity_by_id_act(id,act):
+    q =Activity.query.filter_by(id_activity=id).first()
+    q = act
+    session.commit()
+
+
 
 # Employee functions
 

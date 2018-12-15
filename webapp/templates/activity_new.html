@@ -14,3 +14,14 @@
             </table>
         </form>
 {% endblock %}
+
+
+<form method="POST" action="{{ url_for('activity-edit-payoff') }}">
+            <input type="hidden" name="id" value="{{ one.id_activity }}">
+            {{ form.csrf_token }}
+            <table class="form_table">
+                {% for field in form %}
+                    {{ render_field(field,form) }}
+                {% endfor %}
+            </table>
+        </form></td>

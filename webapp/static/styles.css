@@ -99,6 +99,11 @@ table th {
 .deny_button{
     background-color: lightsalmon;
 }
+.edit_button{
+    background-color: #ffc107;
+    font-size: 23px;
+    padding: 1px 9px 1px  9px
+}
 
 .navbar .navbar-brand {
   font-weight: bold;
@@ -125,4 +130,9 @@ table th {
 .cargrid-icon-upcoming {
     font-size: 2em;
     color: darkorange;
+}
+
+.button-left{
+    float: left;
+    padding-right: 15px;
 }
