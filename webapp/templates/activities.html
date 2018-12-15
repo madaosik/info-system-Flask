@@ -132,8 +132,7 @@
                             </div>
                          <form method="POST" action="{{ url_for('activity-edit-payoff') }}">
                             <div class="modal-body">
-                                Editace odmeny:
-
+                                Změňte výši odměny:
                                     {% if form.payoff.errors %}
                                         <div class="form-group  required has-error">
                                             {{ form.payoff(id="payoff",required='required',type="number",value=one.payoff) }}

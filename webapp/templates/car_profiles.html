@@ -1,4 +1,5 @@
 {% extends 'base/base.html' %}
+{% from "base/_modalhelpers.html" import render_deadline_modal %}
 
 {% block title %}Karty vozidel{% endblock %}
 {% block body %}
@@ -9,12 +10,12 @@
         </form>
     </div>
     <div class="container-fluid">
-        {% for cars_row in cars | batch(2, '&nbsp;') %}
-            <!-- FOR EACH CAR TRIPLE -->
+        {% for car_profiles_row in car_profiles | batch(2, '&nbsp;') %}
+            <!-- FOR EACH CAR PROFILE DOUBLE -->
             <div class="row">
-                {% for car in cars_row %}
+                {% for car_profile in car_profiles_row %}
                         <!-- FOR EACH CAR -->
-                        {% if car.spz %}
+                        {% if car_profile['car'] %}
                             <div class="col border m-2 car-grid bg-light pb-2">
                                     <div class="container-fluid">
                                         <div class="row">
@@ -22,7 +23,7 @@
                                                 <div class="row text-center mt-3 mb-3">
                                                     <div class="col-9 p-1">
                                                         <form action="#">
-                                                            <button class="btn btn-primary" type="submit">{{ car.spz }}: {{ car.znacka }} {{ car.model }}</button>
+                                                            <button class="btn btn-primary" type="submit">{{ car_profile['car'].spz }}: {{ car_profile['car'].znacka }} {{ car_profile['car'].model }}</button>
                                                         </form>
                                                     </div>
                                                     <div class="col-3 text-left">
@@ -31,29 +32,54 @@
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-4 p-1 text-lg-right">Technická kontrola:</div>
-                                                    <div class="col-4 p-1 text-lg-center">1.9.2019</div>
-                                                    <div class="col-4 p-1 text-lg-center pr-2">
-                                                        <form action="#">
-                                                            <button class="btn btn-secondary" type="submit" onclick="actualizeTechProbe()">Aktualizovat</button>
-                                                        </form>
+                                                    <div class="col-4 p-1 text-lg-center" id="techprobedate">
+                                                        {% if car_profile['techprobe'] %}
+                                                            {{ car_profile['techprobe']['dl_date'].strftime("%d. %m. %Y") }}
+                                                        {% else %}
+                                                            žádná data
+                                                        {% endif %}
+                                                    </div>
+                                                    <div class="col-4 p-1 text-lg-center">
+                                                        {% if car_profile['techprobe'] %}
+                                                            {{ render_deadline_modal('Editovat',form,car_profile['car'],'techprobe','myTechProbeEditModal',car_profile['techprobe'],"Změňte termín expirace technické prohlídky:",'car-deadline-edit') }}
+                                                        {% else %}
+                                                            {{ render_deadline_modal('Přidat',form,car_profile['car'],'techprobe','myTechProbeEditModal',car_profile['techprobe'],"Přidejte termín expirace technické prohlídky:",'car-deadline-add') }}
+                                                        {% endif %}
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-4 p-1 text-lg-right">Prohlídka tachografu:</div>
-                                                    <div class="col-4 p-1 text-lg-center">12.5.2019</div>
+                                                   <div class="col-4 p-1 text-lg-center" id="tachoprobedate">
+                                                        {% if car_profile['tachoprobe'] %}
+                                                            {{ car_profile['tachoprobe']['dl_date'].strftime("%d. %m. %Y") }}
+                                                        {% else %}
+                                                            žádná data
+                                                        {% endif %}
+                                                    </div>
+
                                                     <div class="col-4 p-1 text-lg-center">
-                                                        <form action="#">
-                                                            <button class="btn btn-secondary" type="submit" onclick="actualizeTachoProbe()">Aktualizovat</button>
-                                                        </form>
+                                                        {% if car_profile['tachoprobe'] %}
+                                                            {{ render_deadline_modal('Editovat',form,car_profile['car'],'tachoprobe','myTachoProbeEditModal',car_profile['tachoprobe'],"Změňte termín expirace prohlídky tachografu:",'car-deadline-edit') }}
+                                                        {% else %}
+                                                            {{ render_deadline_modal('Přidat',form,car_profile['car'],'tachoprobe','myTachoProbeEditModal',car_profile['tachoprobe'],"Přidejte termín expirace prohlídky tachografu:",'car-deadline-add') }}
+                                                        {% endif %}
                                                     </div>
                                                 </div>
                                                 <div class="row border-bottom border-primary pb-1 mb-1">
                                                     <div class="col-4 p-1 text-lg-right">Hasící přístroj:</div>
-                                                    <div class="col-4 p-1 text-lg-center">15.11.2019</div>
+                                                       <div class="col-4 p-1 text-lg-center" id="fireprobedate">
+                                                        {% if car_profile['fireprobe'] %}
+                                                            {{ car_profile['fireprobe']['dl_date'].strftime("%d. %m. %Y") }}
+                                                        {% else %}
+                                                            žádná data
+                                                        {% endif %}
+                                                    </div>
                                                     <div class="col-4 p-1 text-lg-center">
-                                                        <form action="#">
-                                                            <button class="btn btn-secondary" type="submit" onclick="actualizeTachoProbe()">Aktualizovat</button>
-                                                        </form>
+                                                    {% if car_profile['fireprobe'] %}
+                                                            {{ render_deadline_modal('Editovat',form,car_profile['car'],'fireprobe','myFireProbeEditModal',car_profile['fireprobe'],"Změňte termín expirace prohlídky hasícího přístroje:",'car-deadline-edit') }}
+                                                        {% else %}
+                                                            {{ render_deadline_modal('Přidat',form,car_profile['car'],'fireprobe','myFireProbeEditModal',car_profile['fireprobe'],"Přidejte termín expirace prohlídky hasícího přístroje:",'car-deadline-add') }}
+                                                        {% endif %}
                                                     </div>
                                                 </div>
                                                 <div class="row mt-1">
