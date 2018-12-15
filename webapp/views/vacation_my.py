@@ -34,8 +34,12 @@ class MyVacation(MethodView):
     @norestrict
     def get(self):
         id_zam=request.args.get('id')
-        instance = db.fetch_vacation_by_id(id_zam)
-        return render_template('vacation_my.html', id=id_zam, me=instance, date=datetime.datetime.now().date())
+        if id_zam is None:
+            id_zam=current_user.id_zam
+        vacations = db.fetch_vacation_by_id(id_zam)
+        if current_user.id_zam == id_zam:
+            db.mark_seen_zam_vacation(id_zam)
+        return render_template('vacation_my.html', id=id_zam, me=vacations, date=datetime.datetime.now().date())
 
 
 class VacationAdd(MethodView):
@@ -80,6 +84,7 @@ class VacationAdd(MethodView):
 
         if instance.od.isoweekday() > instance.do.isoweekday():
             instance.celkem -= 2
+        instance.rok=instance.od.year
         db.add(instance)
         flash("Žádost o dovolenou byla úspěšně vytvořena a odeslána ke schválení!", 'alert alert-success')
         if instance.od < datetime.datetime.now().date():

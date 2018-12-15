@@ -1,6 +1,7 @@
 from functools import wraps
-from flask_login import current_user
+
 from flask import abort, redirect, url_for
+from flask_login import current_user
 
 roles = ['admin', 'user', 'boss']
 

@@ -1,13 +1,14 @@
 from flask import render_template
 from flask.views import MethodView
 from webapp.core import db
-from webapp.roles import admin, employee, management
+from webapp.roles import admin, employee, management, current_user
 
 class EmplDashboard(MethodView):
     @employee
     def get(self):
-        notifications = db.fetch_notifications()
+        notifications = db.fetch_unseen_zam_vacation(current_user.id_zam)
         return render_template('dashboard.html', title='IS - Zaměstnanec', notif=notifications)
+
 
 class BossDashboard(MethodView):
     @management

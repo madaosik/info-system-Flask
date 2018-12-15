@@ -21,5 +21,17 @@
                 </form>
             {% endif %}
         </div>
+        {% else %}
+         {% if notif %}
+             <h4><span style="font-size: 1.0em;"><i class="fas fa-bell" aria-hidden="true"></i></span> Novinky:</h4>
+                 <form class="form-inline my-2 my-lg-0 pb-1 pt-3 pr-3" action="{{ url_for('my_vacation') }}">
+                    <button class="btn btn-primary my-0 my-sm-0" type="submit">Schvalene dovolene </button>
+                </form>
+             {% else %}
+             <h4><span style="font-size: 1.0em;"></span> Nemate zadne novinky.</h4>
+            {% endif %}
+
     {% endif %}
+
+
 {% endblock %}
