@@ -34,7 +34,7 @@
             Ne
             {% endif %}</td>
         <td> <form method="POST" action="{{ url_for('my_vacation_delete', id=current_user.id_zam, id_vac=dovolena.id_zaznamu) }}">
-                  <input type="submit" value=&#9746; class="btn deny_button">
+                  <input type="submit" value=&#x2718; class="btn deny_button" data-toggle="tooltip" data-html="true" title="Smazat">
                 </form></td>
         </tr>
         {% endif %}
