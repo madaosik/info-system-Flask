@@ -14,6 +14,7 @@ from webapp.core import db
 
 import datetime
 
+
 class VacationForm(FlaskForm):
     od = CzechDateField('Datum začátku', validators=[InputRequired(message="Doplňte datum začátku dovolené!")])
     do = CzechDateField('Datum konce (včetně)', validators=[InputRequired(message="Doplňte datum konce dovolené!")])
@@ -81,6 +82,8 @@ class VacationAdd(MethodView):
             instance.celkem -= 2
         db.add(instance)
         flash("Žádost o dovolenou byla úspěšně vytvořena a odeslána ke schválení!", 'alert alert-success')
+        if instance.od < datetime.datetime.now().date():
+            flash("Žádost o dovolenou byla vytvořena do minulosti!", 'alert alert-warning')
         return redirect(url_for('my_vacation', id=current_user.id_zam))
 
 

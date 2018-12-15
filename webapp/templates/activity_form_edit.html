@@ -1,9 +1,12 @@
 {% extends 'base/base.html' %}
 {% from "base/_formhelpers.html" import render_field %}
-
+<!-- input form, activity -->
+{% block title %}Upravit aktivitu{% endblock %}
 {% block body %}
-    <h3>Nová žádost o aktivitu</h3>
- <form method="POST" action="{{ url_for('activity-add', id_zam=current_user.id_zam)}}">
+
+    <h3>Úprava aktivity</h3>
+     <form method="POST" action="{{ url_for('activity-edit') }}">
+                    <input type="hidden" name="id" value="{{ activity.id_activity }}">
 
         {{ form.csrf_token }}
         <table class="form_table">
@@ -12,4 +15,5 @@
             {% endfor %}
         </table>
     </form>
+
 {% endblock %}

@@ -192,6 +192,22 @@ def edit_act_payoff(id,payoff):
     q.payoff = payoff
     session.commit()
 
+
+def fetch_activity_by_id_zam(id):
+    return Activity.query.filter_by(id_zam=id)
+
+
+def fetch_activity_by_id_act(id):
+    return Activity.query.filter_by(id_activity=id).first()
+
+
+def update_activity_by_id_act(id,act):
+    q =Activity.query.filter_by(id_activity=id).first()
+    q = act
+    session.commit()
+
+
+
 # Employee functions
 
 def delete_employee(id):
