@@ -5,9 +5,9 @@
 {% block body %}
 
     <h3>Úprava profilu</h3>
-    <a href="{{ url_for('profile') }}">Zpět na můj profil</a>
+    <a href="{{ url_for('employeeprofile') }}">Zpět na můj profil</a>
     <br><br>
-    <form method="POST" action="{{ url_for('profile-mod') }}">
+    <form method="POST" action="{{ url_for('employeeprofile-mod') }}">
         <input type="hidden" name="id_zam" value="{{ employee.id_zam}}">
 
     {{ form.csrf_token }}
@@ -20,7 +20,7 @@
 
     <h3>Úprava přístupových údajů</h3>
         <br>
-    <form method="POST" action="{{ url_for('profile-access-mod') }}">
+    <form method="POST" action="{{ url_for('employeeprofile-access-mod') }}">
         <input type="hidden" name="id_zam" value="{{ employee.id_zam}}">
 
     {{ form_accessdata.csrf_token }}

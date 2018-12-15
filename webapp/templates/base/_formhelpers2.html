@@ -1,0 +1,17 @@
+{% macro render_field(field,form) %}
+    {% if (field == form.csrf_token) %}
+    {% else %}
+        {% if not field.type=='SelectField' %}
+            {{ field(size=30,**kwargs)|safe }}
+        {% else %}
+            {{ field(size=30,**kwargs,class="form-control", placeholder=field.label)|safe }}
+        {% endif %}
+        {% if field.errors %}
+            <ul class="errors">
+                {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endif %}
+{% endmacro %}

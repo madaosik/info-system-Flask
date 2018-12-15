@@ -1,4 +1,5 @@
-from flask import render_template, request, redirect, flash
+from flask import render_template, request, redirect, flash, url_for
+from flask_login import current_user
 from flask.views import MethodView
 from webapp.core import db
 from flask_wtf import FlaskForm
@@ -6,8 +7,9 @@ from wtforms import StringField, SubmitField, BooleanField
 from wtforms.validators import InputRequired, Email
 
 from webapp.core.models import Zamestnanec
-from webapp.roles import management
+from webapp.roles import management,employee
 from webapp.views.forms import CzechDateField
+from webapp.views.users import UserEditForm
 
 class EmployeeForm(FlaskForm):
     kr_jmeno = StringField('* Křestní jméno', validators=[InputRequired(message="Doplňte křestní jméno!")])
@@ -20,6 +22,16 @@ class EmployeeForm(FlaskForm):
     prac_sml = StringField('Číslo pracovní sml.')
     aktivni = BooleanField('Aktivní', default='checked')
     submit = SubmitField('Uložit')
+
+class EditProfileForm(EmployeeForm):
+    kr_jmeno = None
+    prijmeni = None
+    dat_nar = None
+    prac_sml = None
+    aktivni = None
+
+class EditAccessForm(UserEditForm):
+    role = None
 
 class Employees(MethodView):
     @management
@@ -79,8 +91,43 @@ class EmployeeModify(MethodView):
         return redirect('employees')
 
 
+class EmployeeProfile(MethodView):
+    @employee
+    def get(self):
+        return render_template('my_profile.html', me=db.get_empl_from_user(current_user.id))
+
+class EditEmployeeProfile(MethodView):
+    @employee
+    def get(self):
+        employee = db.get_empl_from_user(current_user.id)
+        return render_template('my_profile_form.html', employee=employee, form=EditProfileForm(obj=employee), form_accessdata=EditAccessForm(obj=current_user))
+
+    def post(self):
+        id_zam = request.form.get('id_zam')
+        editform = EditProfileForm()
+        employee = db.fetch_employee_by_id(id_zam)
+        if not editform.validate_on_submit():
+            return render_template('my_profile_form.html', employee=employee, form=editform)
+        db.update_from_form(employee, editform)
+        flash('Úprava profilu proběhla úspěšně!', 'alert alert-success')
+        return redirect(url_for('employeeprofile', id_zam=id_zam))
+
+class EditEmployeeAccess(MethodView):
+    @employee
+    def post(self):
+        accessform = EditAccessForm(request.form)
+        if not accessform.validate_on_submit():
+            return redirect(url_for('employeeprofile-mod'))
+        db.edit_user_from_form(current_user.id,accessform.data)
+        flash('Úprava přistupových údajů proběhla úspěšně!', 'alert alert-success')
+        return redirect(url_for('employeeprofile-mod'))
+
+
 def configure(app):
     app.add_url_rule('/employees', view_func=Employees.as_view('employees'))
     app.add_url_rule('/employees_add', view_func=EmployeeAdd.as_view('employee-add'))
     app.add_url_rule('/employees_delete', view_func=EmployeeDelete.as_view('employee-del'))
     app.add_url_rule('/employees_modify', view_func=EmployeeModify.as_view('employee-mod'))
+    app.add_url_rule('/profile', view_func=EmployeeProfile.as_view('employeeprofile'))
+    app.add_url_rule('/profile_edit', view_func=EditEmployeeProfile.as_view('employeeprofile-mod'))
+    app.add_url_rule('/profile_access_mod', view_func=EditEmployeeAccess.as_view('employeeprofile-access-mod'))

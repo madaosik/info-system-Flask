@@ -14,7 +14,7 @@
     <tr><td>Číslo pracovní sml. : </td><td>{{ me.prac_sml }}</td></tr>
     </table>
     <br>
-    <form method="GET" action="{{ url_for('profile-mod') }}">
+    <form method="GET" action="{{ url_for('employeeprofile-mod') }}">
     <input type="hidden" name="id_zam" value="{{ current_user.id_zam}}">
                   <input type="submit" value="Upravit profil a přístupové údaje">
     </form>
