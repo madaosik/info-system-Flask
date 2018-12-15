@@ -17,7 +17,7 @@
                 {% endfor %}
             </table>
         </form>
-
+    {% if form_accessdata %}
     <h3>Úprava přístupových údajů</h3>
         <br>
     <form method="POST" action="{{ url_for('employeeprofile-access-mod') }}">
@@ -30,5 +30,6 @@
                 {% endfor %}
             </table>
         </form>
+    {% endif %}
 
 {% endblock %}
