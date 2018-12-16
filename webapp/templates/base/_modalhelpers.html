@@ -23,7 +23,6 @@
                             </div>
                          <form method="POST" action="{{ url_for(process_view) }}">
                             <div class="modal-body">
-                            {{ modal_id }}{{ car.id_voz }}
                                 {{ action_string }}
                                     {% if form.date_expiry.errors %}
                                         <div class="form-group required has-error">
