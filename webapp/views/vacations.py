@@ -53,6 +53,7 @@ class VacationsHist(MethodView):
         return render_template('vacation_hist.html', vac=vac, selector=VacationEmployeeSelector(), id=a.empl.data,
                                date=datetime.datetime.now().date())
 
+    @management
     def post(self):
         a = VacationEmployeeSelector()
         vac = db.fetch_vacation_by_id(a.empl.data)
@@ -104,6 +105,7 @@ class VacationAdd(MethodView):
     def get(self):
         return render_template('vacation_form.html', form=VacationForm())
 
+    @norestrict
     def post(self):
         vacform = VacationForm()
         instance = db.get_obj_by_clsname(Dovolena_zam_hist)
