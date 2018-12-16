@@ -35,7 +35,7 @@
             </tr>
             </thead>
     {% else %}
-        <p>Neevidujeme žádné žádosti o dovolenou.</p>
+        <p class = "pb-4 pt-3 ">Neevidujeme žádné žádosti o dovolenou.</p>
     {% endif %}
     {% for dovolena in all %}
         {% if dovolena.potvrzeni == False and dovolena.seen == False %}
@@ -79,7 +79,7 @@
             </tr>
             </thead>
          {% else %}
-        <p>Neevidujeme žádné již schválené dovolené.</p>
+        <p class = "pb-4 pt-3 ">Neevidujeme žádné již schválené dovolené.</p>
         {% endif %}
     {% for dovolena in all %}
         {% if dovolena.potvrzeni == True and dovolena.do > date %}
