@@ -18,8 +18,11 @@
             {% endif %}
         {% endfor %}
     {% endif %}
-    <h4><i class="far fa-calendar-alt pr-3"></i>Ke schválení</h4>
     {%  if glob['kschvaleni'] %}
+        <span class="newstitle">
+        {% endif %}<h4><i class="fas fa-bell pr-3"></i>Ke schválení</h4>
+    {%  if glob['kschvaleni'] %}
+        </span>
         <table class="centertable table table-hover table-sm center">
             <thead class="thead-light">
             <tr>
