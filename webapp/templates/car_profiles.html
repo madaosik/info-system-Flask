@@ -93,7 +93,11 @@
                                                 <span style="font-size: 1.5em;"><i class="fas fa-wrench" aria-hidden="true"></i></span>
                                             </div>
                                             <div class="col-7 p-1 text-lg-center">
-                                                {{ car_profile['service'].short_desc }} ({{ car_profile['service'].date.strftime("%d. %m. %Y") }})
+                                                {% if car_profile['service'] %}
+                                                    {{ car_profile['service'].short_desc }} ({{ car_profile['service'].date.strftime("%d. %m. %Y") }})
+                                                {% else %}
+                                                    Žádné servisní záznamy
+                                                {% endif %}
                                             </div>
                                             <!--<div class="col-4 p-1 text-lg-center">5.4.2018</div>-->
                                             <div class="col-4 p-1 text-lg-center">
