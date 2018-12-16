@@ -105,11 +105,11 @@
 
 
     {% if glob['overdue']==True %}
-        <div class="cargrid-icon-overdue pl-3 pb-3"><i class="fas fa-calendar-times" aria-hidden="true"></i></div>
+        <div class="cargrid-icon-overdue pl-3 pb-3" ><i class="fas fa-calendar-times" aria-hidden="true" data-toggle="tooltip"data-html="true" title="Expirováno"></i></div>
     {% elif glob['upcoming']==True %}
-        <div class="cargrid-icon-upcoming pl-3 pb-3"><i class="fas fa-calendar-check" aria-hidden="true"></i></div>
+        <div class="cargrid-icon-upcoming pl-3 pb-3"><i class="fas fa-calendar-check" aria-hidden="true" data-toggle="tooltip"data-html="true" title="Blížící se expirace "></i></div>
     {% else %}
-        <div class="cargrid-icon-check pl-3 pb-3"><i class="fas fa-calendar-check" aria-hidden="true"></i></div>
+        <div class="cargrid-icon-check pl-3 pb-3"><i class="fas fa-calendar-check" aria-hidden="true" data-toggle="tooltip"data-html="true" title="Nehrozí prodlení"></i></div>
     {% endif %}
 
 {% endmacro %}

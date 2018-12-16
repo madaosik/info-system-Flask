@@ -4,7 +4,6 @@
 {% block title %}Můj profil{% endblock %}
 {% block body %}
 
-    {% block heading %}<h3>Úprava profilu</h3>{% endblock %}
     <a href="{{ url_for('employeeprofile') }}">Zpět na můj profil</a>
     <br><br>
     <form method="POST" action="{{ url_for('employeeprofile-mod') }}">
