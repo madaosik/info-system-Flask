@@ -1,6 +1,7 @@
 {% extends 'base/base.html' %}
 {% from "base/_formhelpers.html" import render_field %}
-
+{% from "base/_navhelpers.html" import render_bodytopnav_specific %}
+{% block bodytopnav %} {{ render_bodytopnav_specific('activities-my',"Zpět na moje aktivity") }} {% endblock %}
 {% block body %}
     {% block heading %}<h3>Nová žádost o aktivitu</h3>{% endblock %}
  <form method="POST" action="{{ url_for('activity-add', id_zam=current_user.id_zam)}}">

@@ -1,7 +1,8 @@
 {% extends 'base/base.html' %}
 {% from "base/_formhelpers.html" import render_field %}
-
+{% from "base/_navhelpers.html" import render_bodytopnav_specific %}
 {% block title %}Dovolená{% endblock %}
+{% block bodytopnav %} {{ render_bodytopnav_specific('my_vacation',"Zpět na moji dovolenou") }} {% endblock %}
 {% block heading %}<h3>Nová žádost o dovolenou</h3>{% endblock %}
 {% block body %}
 

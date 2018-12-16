@@ -1,8 +1,11 @@
 {% extends 'base/base.html' %}
 {% from "base/_formhelpers.html" import render_field %}
+{% from "base/_navhelpers.html" import render_bodytopnav_specific %}
 <!-- input form, activity -->
 {% block title %}Upravit aktivitu{% endblock %}
- {% block heading %}<h3>Úprava aktivity</h3>{% endblock %}
+
+{% block bodytopnav %} {{ render_bodytopnav_specific('activities-my',"Zpět na moje aktivity") }} {% endblock %}
+{% block heading %}<h3>Úprava aktivity</h3>{% endblock %}
 {% block body %}
 
 
