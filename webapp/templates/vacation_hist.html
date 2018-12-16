@@ -1,35 +1,53 @@
 {% extends 'base/base.html' %}
 
-{% block title %}Dovolená{% endblock %}
+{% block title %}Dovolená historie{% endblock %}
+{% block heading %}<h3>Dovolená historie</h3>{% endblock %}
 {% block body %}
-    {% block heading %}<h3>Dovolená historie</h3>{% endblock %}
-    {%  if empl %}
+    <div class="row">
+        <div class="col-11">
+            <form method="POST" class ="form-inline my-2 my-lg-0 pb-4 pt-3" action="{{ url_for('vacations_hist') }}">
+
+                <div class="form-group  required">
+                    {{ selector.empl(id="empl",required='required',type="number",value=selector.empl) }}
+                </div>
+
+                <input type="submit" value="Vybrat" data-toggle="tooltip"
+                       data-html="true"  class="btn btn-secondary ml-2" title="Vybrat">
+            </form>
+        </div>
+    </div>
+    <div class="row">
         <table class="centertable table table-hover table-sm">
             <thead class="thead-light">
             <tr>
-                <th>Křestní jméno</th>
-                <th>Příjmení</th>
-                <th colspan="2">Akce</th>
+                <th>Datum začátku</th>
+                <th>Datum konce</th>
+                <th>Celkem dní</th>
+                <th>Potvrzení</th>
             </tr>
             </thead>
-    {% else %}
-        <p>Neevidujeme žádné zaznamy o historii.</p>
-    {% endif %}
-    {% for empls in empl %}
-        <tr>
-            <td>{{empls.kr_jmeno}}</td>
-            <td>{{empls.prijmeni}}</td>
-            <td class="centertable">
-                <form method="get" action="{{ url_for('vacations_hist_one')}}">
-                     <input type="hidden" name="id" value="{{ empls.id_zam}}">
-                  <input type="submit" value="Detail" >
-                </form>
-            </td>
-        </tr>
-    {% endfor %}
-    {% if all %}
-        </table>
-    {%  endif %}
-    <p><a class="btn btn-secondary" href="{{ url_for('vacations') }}">Zpět</a></p>
+            {% if id %}
+                {% for dovolena in me %}
 
+                        <tr>
+                            <td>{{ dovolena.od.strftime('%d/%m/%Y') }}</td>
+                            <td>{{ dovolena.do.strftime('%d/%m/%Y') }}</td>
+                            <td>{{ dovolena.celkem }}</td>
+                            <td>{% if dovolena.potvrzeni == True %}
+                                Áno
+                                {% elif dovolena.seen == False %}
+                                Neviděné
+                            {% else %}
+                                Ne
+                            {% endif %}</td>
+                        </tr>
+
+                {% endfor %}
+
+                </table>
+                {% else %}
+                </table>
+            {% endif %}
+    </div>
 {% endblock %}
+

@@ -140,11 +140,11 @@ def fetch_service_history(car_id):
 
 
 def fetch_all_pending_approvals():
-    return Activity.query.filter_by(approved=False).first()
+    return Activity.query.filter_by(approved=False, seen=False).first()
 
 
 def fetch_all_pending_vacation():
-    return Dovolena_zam_hist.query.filter_by(potvrzeni=False).first()
+    return Dovolena_zam_hist.query.filter_by(potvrzeni=False , seen=False).first()
 
 
 def fetch_notifications():
@@ -196,11 +196,11 @@ def car_deadline_delete(deadline_id):
 #Vacation functions
 
 def fetch_all_vacations():
-    return Dovolena_zam_hist.query.all()
+    return Dovolena_zam_hist.query.order_by(sa.desc(Dovolena_zam_hist.od))
 
 
 def fetch_vacation_by_id(id):
-    return Dovolena_zam_hist.query.filter_by(id_zam=id)
+    return Dovolena_zam_hist.query.order_by(sa.desc(Dovolena_zam_hist.od)).filter_by(id_zam=id)
 
 def fetch_unseen_zam_vacation(id):
     return Dovolena_zam_hist.query.filter_by(id_zam=id, seen_by_zam=False, seen=True,).first()
@@ -292,7 +292,7 @@ def get_employee_tuples():
     employees = Zamestnanec.query.all()
     empl_tuples_arr = []
     for employee in employees:
-        if Uzivatel.query.filter_by(id_zam=employee.id_zam).first() is None:
+        if Uzivatel.query.filter_by(id_zam=employee.id_zam).first() is not None:
             employee_string = "%s %s" % (employee.kr_jmeno, employee.prijmeni)
             empl_tuples_arr.append((employee.id_zam, employee_string))
     return empl_tuples_arr

@@ -27,8 +27,8 @@
             {% for dovolena in me %}
                 {% if dovolena.do > date  or dovolena.potvrzeni== False%}
                 <tr>
-                    <td>{{ dovolena.od }}</td>
-                    <td>{{ dovolena.do }}</td>
+                    <td>{{ dovolena.od.strftime('%d/%m/%Y') }}</td>
+                    <td>{{ dovolena.do.strftime('%d/%m/%Y') }}</td>
                     <td>{{ dovolena.celkem }}</td>
                     <td>{% if dovolena.potvrzeni == True %}
                     Áno
@@ -48,7 +48,7 @@
         {% endif %}
     </div>
     <div class="container-fluid">
-         <h3>Historie dovolené</h3>
+         <h3><i class="fas fa-history pr-3 pt-3"></i>Historie dovolené</h3>
 
         {% if me %}
             <table class="centertable table table-hover table-sm">
@@ -67,8 +67,8 @@
         {% for dovolena in me %}
             {% if dovolena.do < date and dovolena.potvrzeni == True%}
             <tr>
-                <td>{{ dovolena.od }}</td>
-                <td>{{ dovolena.do }}</td>
+                <td>{{ dovolena.od.strftime('%d/%m/%Y') }}</td>
+                <td>{{ dovolena.do.strftime('%d/%m/%Y') }}</td>
                 <td>{{ dovolena.celkem }}</td>
                 <td>{% if dovolena.potvrzeni == True %}
                 Áno

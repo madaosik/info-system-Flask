@@ -2,8 +2,9 @@
 {% from "base/_formhelpers.html" import render_field %}
 
 {% block title %}Dovolená{% endblock %}
+{% block heading %}<h3>Nová žádost o dovolenou</h3>{% endblock %}
 {% block body %}
-    {% block heading %}<h3>Nová žádost o dovolenou</h3>{% endblock %}
+
 
     <form method="POST" action="{{ url_for('vacation-add', id_zam=current_user.id_zam)}}">
 

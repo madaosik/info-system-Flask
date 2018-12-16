@@ -8,8 +8,29 @@
 {% block bodytopnav %}{{ render_back_to_dashboard(current_user) }}
 {% endblock %}
 {% block body %}
+        {% set glob={} %}
+    {% set _ = glob.update({'kschvaleni':False}) %}
+    {% set _ = glob.update({'schvalene':False}) %}
+    {% set _ = glob.update({'historie':False}) %}
+    {% if all %}
+
+        {% for act in all %}
+            {% if act.approved == False and act.seen == False%}
+                {% set _ = glob.update({'kschvaleni':True}) %}
+            {% endif %}
+            {% if act.approved == True and date < act.end  %}
+                {% set _ = glob.update({'schvalene':True}) %}
+            {% endif %}
+            {% if act.approved == True and (date - act.end).days < 30 and date > act.end %}
+                {%set historie=True%}
+                {% set _ = glob.update({'historie':True}) %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+
     <span class="newstitle"><h4><i class="fas fa-bell pr-3"></i>Ke schválení</h4></span>
-    {%  if all %}
+    {%  if glob['kschvaleni'] %}
         <table class="centertable table table-hover table-sm center">
             <thead class="thead-light">
             <tr>
@@ -24,10 +45,10 @@
             </tr>
             </thead>
     {% else %}
-        <p>Neevidujeme žádné žádosti o aktivity.</p>
+        <p class = "pb-4 pt-3 ">Neevidujeme žádné žádosti ke schválení.</pclass>
     {% endif %}
     {% for one in all %}
-        {% if one.approved == False %}
+        {% if one.approved == False and one.seen == False %}
         <tr>
             {% for zamestnanec in empl %}
                     {% if zamestnanec.id_zam == one.id_zam %}
@@ -77,7 +98,7 @@
 
 
     <h4><i class="fas fa-clipboard-check pr-3 pt-3"></i>Již schválené</h4>
-    {%  if all %}
+    {%  if glob['schvalene'] %}
         <table class="centertable table table-hover table-sm center">
             <thead class="thead-light">
             <tr>
@@ -92,10 +113,10 @@
             </tr>
             </thead>
     {% else %}
-        <p>Neevidujeme žádné žádosti o aktivity.</p>
+        <p class="pb-4 pt-3" >Neevidujeme žádné již schválené aktivity.</p>
     {% endif %}
     {% for one in all %}
-        {% if one.approved == True %}
+        {% if one.approved == True and date < one.end %}
         <tr>
             {% for zamestnanec in empl %}
                     {% if zamestnanec.id_zam == one.id_zam %}
@@ -169,8 +190,11 @@
         </table>
     {%  endif %}
 
+
+
+
     <h4><i class="fas fa-history pr-3 pt-3"></i>Historie 30 dní</h4>
-    {%  if all %}
+    {%  if glob['historie']  %}
         <table class="centertable table table-hover table-sm center">
             <thead class="thead-light">
             <tr>
@@ -185,7 +209,7 @@
             </tr>
             </thead>
     {% else %}
-        <p>Neevidujeme žádné žádosti o schválení aktivit.</p>
+        <p class="pb-4 pt-3" >Neevidujeme žádnou historii.</p>
     {% endif %}
     {% for one in all %}
         {% if one.approved == True and (date - one.end).days < 30 and date > one.end%}
