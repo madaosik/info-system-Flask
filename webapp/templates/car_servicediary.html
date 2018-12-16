@@ -5,7 +5,7 @@
 {% block body %}
         <div class="row">
             <div class="col-11">
-                <form class="form-inline my-2 my-lg-0 pb-4 pt-3" action="#">
+                <form class="form-inline my-2 my-lg-0 pb-4 pt-3" method="POST" action="{{ url_for('car-service-diary-change') }}">
                     {{ selector.csrf_token }}
                     {{ selector.cars(class="form-control") }}
                     <button class="btn btn-secondary my-0 my-sm-0 ml-3" type="submit">Přejít na vozidlo</button>
