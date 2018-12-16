@@ -186,14 +186,17 @@ class DeadlinesCar(Base):
     car_id = Column(Integer, ForeignKey("vozidlo.id_voz", ondelete='CASCADE'), nullable=False)
     date_expiry = Column(Date)
 
-# class ServiceHistory(Base):
-#     __tablename__= 'service_history'
-#
-#     id = Column(Integer, primary_key=True)
-#     car_id = Column(Integer, ForeignKey("vozidlo.id_voz", ondelete='CASCADE'), nullable=False)
-#     short_desc = Column(String(25), nullable=False)
-#     long_desc = Column(String(100))
-#     mileage = Column(Integer)
-#     date = Column(DateTime, nullable=False)
-#     recorded_time = Column(DateTime, server_default=func.now())
-#     recorded_by = Column(Integer, ForeignKey("zamestnanec.id_zam", ondelete='NO ACTION'), nullable=False)
+
+class ServiceHistory(Base):
+    __tablename__='service_history'
+
+    id = Column(Integer, primary_key=True)
+    car_id = Column(Integer, ForeignKey("vozidlo.id_voz", ondelete='CASCADE'), nullable=False)
+    short_desc = Column(String(25), nullable=False)
+    long_desc = Column(String(100))
+    mileage = Column(Integer)
+    mechanic = Column(String(25))
+    receipt_no = Column(String(15))
+    date = Column(Date, nullable=False)
+    recorded_time = Column(DateTime, server_default=func.now())
+    recorded_by = Column(Integer, ForeignKey("zamestnanec.id_zam", ondelete='NO ACTION'), nullable=False)

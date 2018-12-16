@@ -74,41 +74,42 @@
 {% endmacro %}
 
 {% macro render_status_icon(car_profile,overdue_tresh,upcoming_tresh) %}
-    {% set status='ok' %}
+    {% set glob={} %}
+    {% set _ = glob.update({'upcoming':False}) %}
+    {% set _ = glob.update({'overdue':False}) %}
+
     {% if car_profile['techprobe'] %}
         {% if car_profile['techprobe']['dl_date'] < overdue_tresh %}
-            {% set status='overdue' %}
+            {% set _ = glob.update({'overdue':True}) %}
         {% elif car_profile['techprobe']['dl_date'] < upcoming_tresh %}
-           {% set status='upcoming' %}
+            {% set _ = glob.update({'upcoming':True}) %}
         {% endif %}
     {% endif %}
 
-    {% if status=='ok' %}
-        {% if car_profile['tachoprobe'] %}
-            {% if car_profile['tachoprobe']['dl_date'] < overdue_tresh %}
-                {% set status='overdue' %}
-            {% elif car_profile['tachoprobe']['dl_date'] < upcoming_tresh %}
-                {% set status='upcoming' %}
-            {% endif %}
+
+    {% if car_profile['tachoprobe'] %}
+        {% if car_profile['tachoprobe']['dl_date'] < overdue_tresh %}
+            {% set _ = glob.update({'overdue':True}) %}
+        {% elif car_profile['tachoprobe']['dl_date'] < upcoming_tresh %}
+            {% set _ = glob.update({'upcoming':True}) %}
         {% endif %}
     {% endif %}
 
-    {% if status=='ok' %}
-        {% if car_profile['fireprobe'] %}
-            {% if car_profile['fireprobe']['dl_date'] < overdue_tresh %}
-                {% set status='overdue' %}
-            {% elif car_profile['fireprobe']['dl_date'] < upcoming_tresh %}
-                {% set status='upcoming' %}
-            {% endif %}
+    {% if car_profile['fireprobe'] %}
+        {% if car_profile['fireprobe']['dl_date'] < overdue_tresh %}
+            {% set _ = glob.update({'overdue':True}) %}
+        {% elif car_profile['fireprobe']['dl_date'] < upcoming_tresh %}
+            {% set _ = glob.update({'upcoming':True}) %}
         {% endif %}
     {% endif %}
 
-    {% if status=='ok' %}
-        <div class="cargrid-icon-check pl-3 pb-3"><i class="fas fa-calendar-check" aria-hidden="true"></i></div>
-    {% elif status=='upcoming' %}
+
+    {% if glob['overdue']==True %}
+        <div class="cargrid-icon-overdue pl-3 pb-3"><i class="fas fa-calendar-times" aria-hidden="true"></i></div>
+    {% elif glob['upcoming']==True %}
         <div class="cargrid-icon-upcoming pl-3 pb-3"><i class="fas fa-calendar-check" aria-hidden="true"></i></div>
     {% else %}
-        <div class="cargrid-icon-overdue pl-3 pb-3"><i class="fas fa-calendar-check" aria-hidden="true"></i></div>
+        <div class="cargrid-icon-check pl-3 pb-3"><i class="fas fa-calendar-check" aria-hidden="true"></i></div>
     {% endif %}
 
 {% endmacro %}
