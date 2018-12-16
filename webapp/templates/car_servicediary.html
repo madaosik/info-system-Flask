@@ -1,37 +1,36 @@
 {% extends 'base/base.html' %}
 
 {% block title %}Servisní deník{% endblock %}
+{% block heading %}<h3>Servisní deník</h3>{% endblock %}
 {% block body %}
-    <div class="container-fluid">
-        {% block heading %}<h3>Servisní deník</h3>{% endblock %}
         <div class="row">
-            <div class="col-9">
+            <div class="col-11">
                 <form class="form-inline my-2 my-lg-0 pb-4 pt-3" action="#">
                     {{ selector.csrf_token }}
                     {{ selector.cars(class="form-control") }}
                     <button class="btn btn-secondary my-0 my-sm-0 ml-3" type="submit">Přejít na vozidlo</button>
                 </form>
             </div>
-            <div class="col-3 text-lg-right">
+            <div class="col-1 text-lg-right">
                 <form class="form-inline my-2 my-lg-0 pb-4 pt-3" action="#">
-                    <button class="btn btn-primary my-0 my-sm-0 ml-3" type="submit">Přidat servisní prohlídku</button>
+                    <button class="btn btn-primary my-0 my-sm-0" type="submit"><span class="add-icon"><i class="fas fa-plus" aria-hidden="true"></i></span></button>
                 </form>
             </div>
         </div>
-    </div>
-    <div class="container-fluid">
-        <table class="table table-hover table-sm text-center">
-            <thead class="thead-light">
-            <tr>
-                <th>Datum</th>
-                <th>Úkon</th>
-                <th>Detailní popis</th>
-                <th>Stav tachometru</th>
-                <th>Provedl</th>
-                <th>Číslo faktury</th>
-                <th colspan="2">Akce</th>
-            </tr>
-            </thead>
-    </div>
+        <div class="row">
+            <table class="table table-hover table-sm text-center">
+                <thead class="thead-light">
+                <tr>
+                    <th>Datum</th>
+                    <th>Úkon</th>
+                    <th>Detailní popis</th>
+                    <th>Stav tachometru</th>
+                    <th>Provedl</th>
+                    <th>Číslo faktury</th>
+                    <th colspan="2">Akce</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
 {% endblock %}
 

@@ -1,5 +1,5 @@
 {% extends 'base/base.html' %}
-{% from "base/_modalhelpers.html" import render_deadline_modal %}
+{% from "base/_modalhelpers.html" import render_deadline_modal, render_delete_button, render_status_icon %}
 {% from "base/_navhelpers.html" import render_bodytopnav_general %}
 
 {% block title %}Karty vozidel{% endblock %}
@@ -12,19 +12,19 @@
         {% for car_profile in car_profiles_row %}
                 <!-- FOR EACH CAR -->
                 {% if car_profile['car'] %}
-                    <div class="col border m-2 car-grid bg-light pb-2">
+                    <div class="col border m-2 car-grid bg-light pb-2 pt-2">
                             <div class="container-fluid">
                                 <div class="row">
                                     <div class="col bg-light">
-                                        <div class="row text-center mt-3 mb-3">
-                                            <div class="col-9 p-1">
-                                                <form action="{{ url_for('car-mod')}}">
-                                                    <input type="hidden" name="id" value="{{ car_profile['car'].id_voz }}">
-                                                    <button class="btn btn-primary" type="submit">{{ car_profile['car'].spz }}: {{ car_profile['car'].znacka }} {{ car_profile['car'].model }}</button>
-                                                </form>
-                                            </div>
-                                            <div class="col-3 text-left">
-                                                <span class="cargrid-icon-check"><i class="fas fa-calendar-check" aria-hidden="true"></i></span>
+                                        <div class="row text-center mb-1">
+                                            <div class="col-12 p-1 text-left">
+                                                <div class="btn-group">
+                                                    <form action="{{ url_for('car-mod')}}">
+                                                        <input type="hidden" name="id" value="{{ car_profile['car'].id_voz }}">
+                                                        <button class="btn btn-secondary pt-1 mt-2 pb-1" type="submit">{{ car_profile['car'].spz }}: {{ car_profile['car'].znacka }} {{ car_profile['car'].model }}</button>
+                                                    </form>
+                                                    {{ render_status_icon(car_profile['car'],overdue_tresh,upcoming_tresh) }}
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -38,7 +38,10 @@
                                             </div>
                                             <div class="col-4 p-1 text-lg-center">
                                                 {% if car_profile['techprobe'] %}
-                                                    {{ render_deadline_modal('Editovat',form,car_profile['car'],'techprobe','myTechProbeEditModal',car_profile['techprobe'],"Změňte termín expirace technické prohlídky:",'car-deadline-edit') }}
+                                                    <div class="btn-group">
+                                                        {{ render_deadline_modal('Editovat',form,car_profile['car'],'techprobe','myTechProbeEditModal',car_profile['techprobe'],"Změňte termín expirace technické prohlídky:",'car-deadline-edit') }}
+                                                        {{ render_delete_button(car_profile['techprobe']['dl_id'],'techprobe',car_profile['car'].spz) }}
+                                                    </div>
                                                 {% else %}
                                                     {{ render_deadline_modal('Přidat',form,car_profile['car'],'techprobe','myTechProbeAddModal',car_profile['techprobe'],"Přidejte termín expirace technické prohlídky:",'car-deadline-add') }}
                                                 {% endif %}
@@ -56,13 +59,16 @@
 
                                             <div class="col-4 p-1 text-lg-center">
                                                 {% if car_profile['tachoprobe'] %}
-                                                    {{ render_deadline_modal('Editovat',form,car_profile['car'],'tachoprobe','myTachoProbeEditModal',car_profile['tachoprobe'],"Změňte termín expirace prohlídky tachografu:",'car-deadline-edit') }}
+                                                    <div class="btn-group">
+                                                        {{ render_deadline_modal('Editovat',form,car_profile['car'],'tachoprobe','myTachoProbeEditModal',car_profile['tachoprobe'],"Změňte termín expirace prohlídky tachografu:",'car-deadline-edit') }}
+                                                        {{ render_delete_button(car_profile['tachoprobe']['dl_id'],'tachoprobe',car_profile['car'].spz) }}
+                                                    </div>
                                                 {% else %}
                                                     {{ render_deadline_modal('Přidat',form,car_profile['car'],'tachoprobe','myTachoProbeAddModal',car_profile['tachoprobe'],"Přidejte termín expirace prohlídky tachografu:",'car-deadline-add') }}
                                                 {% endif %}
                                             </div>
                                         </div>
-                                        <div class="row border-bottom border-primary pb-1 mb-1">
+                                        <div class="row border-bottom border-secondary pb-1 mb-1">
                                             <div class="col-4 p-1 text-lg-right">Hasící přístroj:</div>
                                                <div class="col-4 p-1 text-lg-center" id="fireprobedate">
                                                 {% if car_profile['fireprobe'] %}
@@ -73,7 +79,10 @@
                                             </div>
                                             <div class="col-4 p-1 text-lg-center">
                                             {% if car_profile['fireprobe'] %}
-                                                    {{ render_deadline_modal('Editovat',form,car_profile['car'],'fireprobe','myFireProbeEditModal',car_profile['fireprobe'],"Změňte termín expirace prohlídky hasícího přístroje:",'car-deadline-edit') }}
+                                                    <div class="btn-group">
+                                                        {{ render_deadline_modal('Editovat',form,car_profile['car'],'fireprobe','myFireProbeEditModal',car_profile['fireprobe'],"Změňte termín expirace prohlídky hasícího přístroje:",'car-deadline-edit') }}
+                                                        {{ render_delete_button(car_profile['fireprobe']['dl_id'],'fireprobe',car_profile['car'].spz) }}
+                                                    </div>
                                                 {% else %}
                                                     {{ render_deadline_modal('Přidat',form,car_profile['car'],'fireprobe','myFireProbeAddModal',car_profile['fireprobe'],"Přidejte termín expirace prohlídky hasícího přístroje:",'car-deadline-add') }}
                                                 {% endif %}

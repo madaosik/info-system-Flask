@@ -188,6 +188,11 @@ def car_deadline_add(car_id, deadline_type, expiry_date, deadline_types_dict):
     session.add(deadline)
     session.commit()
 
+def car_deadline_delete(deadline_id):
+    session.query(DeadlinesCar).filter_by(id_deadline=deadline_id).delete()
+    session.commit()
+
+
 #Vacation functions
 
 def fetch_all_vacations():

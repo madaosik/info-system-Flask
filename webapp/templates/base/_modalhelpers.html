@@ -2,9 +2,9 @@
 
     <div data-toggle="tooltip" data-html="true" data-placement="right" title="{{ action }}">
         {% if action == 'Editovat' %}
-            <button type="button" class="btn btn-secondary pl-3 pr-3" data-toggle="modal" data-target="#{{ modal_id }}{{ deadline['dl_id'] }}">&#x270D;</button>
+            <button type="button" class="btn btn-secondary pl-2 pr-2" data-toggle="modal" data-target="#{{ modal_id }}{{ deadline['dl_id'] }}"><i class="fas fa-edit" aria-hidden="true"></i></button>
         {% else %}
-            <button type="button" class="btn btn-secondary pl-3 pr-3" data-toggle="modal" data-target="#{{ modal_id }}{{ car.id_voz }}">&#x270D;</button>
+            <button type="button" class="btn btn-secondary pl-2 pr-2" data-toggle="modal" data-target="#{{ modal_id }}{{ car.id_voz }}"><i class="fas fa-plus" aria-hidden="true"></i></button>
         {% endif %}
     </div>
 
@@ -14,52 +14,101 @@
         <div class="modal fade" id="{{ modal_id }}{{ car.id_voz }}" role="dialog">
     {% endif %}
     <!-- Modal window -->
-                    <div class="modal-dialog">
+        <div class="modal-dialog">
 
-                        <!-- Modal window content-->
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            </div>
-                         <form method="POST" action="{{ url_for(process_view) }}">
-                            <div class="modal-body">
-                                {{ action_string }}
-                                    {% if form.date_expiry.errors %}
-                                        <div class="form-group required has-error">
-                                            {% if action == 'Editovat' %}
-                                                {{ form.date_expiry(id="date_expiry",required='required',type="date",value=deadline['dl_date']) }}
-                                            {% else %}
-                                                {{ form.date_expiry(id="date_expiry",required='required',type="date") }}
-                                            {% endif %}
-                                            {% for error in form.date_expiry.errors %}
-                                                <p class="help-block">{{ error }}</p>
-                                            {% endfor %}
-                                        </div>
-                                    {% else %}
-                                        <div class="form-group  required">
-                                            {% if action == 'Editovat' %}
-                                                {{ form.date_expiry(id="date_expiry",required='required',type="date",value=deadline['dl_date']) }}
-                                            {% else %}
-                                                {{ form.date_expiry(id="date_expiry",required='required',type="date") }}
-                                            {% endif %}
-                                        </div>
-                                    {% endif %}
-                            </div>
-                            <div class="modal-footer">
-                                {% if action == 'Editovat' %}
-                                    <input type="hidden" name="id_deadline" value="{{ deadline['dl_id'] }}">
-                                {% else %}
-                                    <input type="hidden" name="car_id" value="{{ car.id_voz }}">
-                                {% endif %}
-                                <input type="hidden" name="car_spz" value="{{ car.spz }}">
-                                <input type="hidden" name="deadline_type" value="{{ deadline_type}}">
-                                <input type="submit" value=&#9745; class="btn approve_button" data-toggle="tooltip"
-                                       data-html="true" title="Potvrdit">
-                            </div>
-                             </form>
-                        </div>
-                    </div>
-
+            <!-- Modal window content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
+             <form method="POST" action="{{ url_for(process_view) }}">
+                <div class="modal-body">
+                    {{ action_string }}
+                        {% if form.date_expiry.errors %}
+                            <div class="form-group required has-error">
+                                {% if action == 'Editovat' %}
+                                    {{ form.date_expiry(id="date_expiry",required='required',type="date",value=deadline['dl_date']) }}
+                                {% else %}
+                                    {{ form.date_expiry(id="date_expiry",required='required',type="date") }}
+                                {% endif %}
+                                {% for error in form.date_expiry.errors %}
+                                    <p class="help-block">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="form-group  required">
+                                {% if action == 'Editovat' %}
+                                    {{ form.date_expiry(id="date_expiry",required='required',type="date",value=deadline['dl_date']) }}
+                                {% else %}
+                                    {{ form.date_expiry(id="date_expiry",required='required',type="date") }}
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                </div>
+                <div class="modal-footer">
+                    {% if action == 'Editovat' %}
+                        <input type="hidden" name="id_deadline" value="{{ deadline['dl_id'] }}">
+                    {% else %}
+                        <input type="hidden" name="car_id" value="{{ car.id_voz }}">
+                    {% endif %}
+                    <input type="hidden" name="car_spz" value="{{ car.spz }}">
+                    <input type="hidden" name="deadline_type" value="{{ deadline_type}}">
+                    <input type="submit" value=&#9745; class="btn approve_button" data-toggle="tooltip"
+                           data-html="true" title="Potvrdit">
+                </div>
+                 </form>
+            </div>
+        </div>
+
+    </div>
+
+{% endmacro %}
+
+{% macro render_delete_button(deadline_id,deadline_type,spz) %}
+    <form method="POST" action="{{ url_for('car-deadline-del') }}">
+        <input type="hidden" name="dl_id" value="{{ deadline_id }}">
+        <input type="hidden" name="deadline_type" value="{{ deadline_type }}">
+        <input type="hidden" name="car_spz" value="{{ spz }}">
+        <button class="btn btn-secondary pl-2 ml-1" type="submit"><div class="text-center"><i class="fas fa-trash" aria-hidden="true"></i></div></button>
+    </form>
+{% endmacro %}
+
+{% macro render_status_icon(car_profile,overdue_tresh,upcoming_tresh) %}
+    {% set status='ok' %}
+    {% if car_profile['techprobe'] %}
+        {% if car_profile['techprobe']['dl_date'] < overdue_tresh %}
+            {% set status='overdue' %}
+        {% elif car_profile['techprobe']['dl_date'] < upcoming_tresh %}
+           {% set status='upcoming' %}
+        {% endif %}
+    {% endif %}
+
+    {% if status=='ok' %}
+        {% if car_profile['tachoprobe'] %}
+            {% if car_profile['tachoprobe']['dl_date'] < overdue_tresh %}
+                {% set status='overdue' %}
+            {% elif car_profile['tachoprobe']['dl_date'] < upcoming_tresh %}
+                {% set status='upcoming' %}
+            {% endif %}
+        {% endif %}
+    {% endif %}
+
+    {% if status=='ok' %}
+        {% if car_profile['fireprobe'] %}
+            {% if car_profile['fireprobe']['dl_date'] < overdue_tresh %}
+                {% set status='overdue' %}
+            {% elif car_profile['fireprobe']['dl_date'] < upcoming_tresh %}
+                {% set status='upcoming' %}
+            {% endif %}
+        {% endif %}
+    {% endif %}
+
+    {% if status=='ok' %}
+        <div class="cargrid-icon-check pl-3 pb-3"><i class="fas fa-calendar-check" aria-hidden="true"></i></div>
+    {% elif status=='upcoming' %}
+        <div class="cargrid-icon-upcoming pl-3 pb-3"><i class="fas fa-calendar-check" aria-hidden="true"></i></div>
+    {% else %}
+        <div class="cargrid-icon-overdue pl-3 pb-3"><i class="fas fa-calendar-check" aria-hidden="true"></i></div>
+    {% endif %}
 
 {% endmacro %}
