@@ -9,8 +9,27 @@
           <button class="btn btn-primary my-0 my-sm-0" type="submit">Zpět na nástěnku</button>
         </form>
     <h3><i class="fas fa-clipboard-list"></i>   Aktivity k schválení</h3>
+        {% set glob={} %}
+    {% set _ = glob.update({'kschvaleni':False}) %}
+    {% set _ = glob.update({'schvalene':False}) %}
+    {% set _ = glob.update({'historie':False}) %}
+    {% if all %}
 
-    {%  if all %}
+        {% for act in all %}
+            {% if act.approved == False %}
+                {% set _ = glob.update({'kschvaleni':True}) %}
+            {% endif %}
+            {% if act.approved == True and date < act.end  %}
+                {% set _ = glob.update({'schvalene':True}) %}
+            {% endif %}
+            {% if act.approved == True and (date - act.end).days < 30 and date > act.end %}
+                {%set historie=True%}
+                {% set _ = glob.update({'historie':True}) %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    {%  if glob['kschvaleni'] %}
         <table class="centertable table table-hover table-sm center">
             <thead class="thead-light">
             <tr>
@@ -78,7 +97,7 @@
 
 
     <h3><i class="fas fa-clipboard-check"></i>   Schvalene nadcházející aktivity</h3>
-    {%  if all %}
+    {%  if glob['schvalene'] %}
         <table class="centertable table table-hover table-sm center">
             <thead class="thead-light">
             <tr>
@@ -96,7 +115,7 @@
         <p>Neevidujeme žádné žádosti o aktivity.</p>
     {% endif %}
     {% for one in all %}
-        {% if one.approved == True %}
+        {% if one.approved == True and date < one.end %}
         <tr>
             {% for zamestnanec in empl %}
                     {% if zamestnanec.id_zam == one.id_zam %}
@@ -170,8 +189,8 @@
         </table>
     {%  endif %}
 
-      <h3><i class="fas fa-history"></i>   Historie 30 dni</h3>
-    {%  if all %}
+      <h3><i class="fas fa-history"></i>   Historie 30 dni</h3> {{ historie }}
+    {%  if glob['historie']  %}
         <table class="centertable table table-hover table-sm center">
             <thead class="thead-light">
             <tr>
