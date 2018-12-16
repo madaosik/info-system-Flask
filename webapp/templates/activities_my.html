@@ -4,7 +4,7 @@
 
 {% block title %}Moje aktivity{% endblock %}
 {% block heading %}<h3>Žádosti o aktivity</h3>{% endblock %}
-{% block bodytopnav %} {{ render_bodytopnav(current_user,'activity-add') }} {% endblock %}
+{% block bodytopnav %} {{ render_bodytopnav_specific(current_user,'activity-add') }} {% endblock %}
 {% block body %}
         {% if me %}
             <table class="centertable table table-hover table-sm">

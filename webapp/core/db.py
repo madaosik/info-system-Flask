@@ -196,11 +196,11 @@ def car_deadline_delete(deadline_id):
 #Vacation functions
 
 def fetch_all_vacations():
-    return Dovolena_zam_hist.query.all()
+    return Dovolena_zam_hist.query.order_by(sa.desc(Dovolena_zam_hist.od))
 
 
 def fetch_vacation_by_id(id):
-    return Dovolena_zam_hist.query.filter_by(id_zam=id)
+    return Dovolena_zam_hist.query.order_by(sa.desc(Dovolena_zam_hist.od)).filter_by(id_zam=id)
 
 def fetch_unseen_zam_vacation(id):
     return Dovolena_zam_hist.query.filter_by(id_zam=id, seen_by_zam=False, seen=True,).first()
