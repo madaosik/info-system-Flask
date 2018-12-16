@@ -2,9 +2,9 @@
 {% from "base/_formhelpers.html" import render_field %}
 
 {% block title %}Můj profil{% endblock %}
+{% block heading %}<h3>Úprava profilu</h3>{% endblock %}
 {% block body %}
 
-    {% block heading %}<h3>Úprava profilu</h3>{% endblock %}
     <a href="{{ url_for('employeeprofile') }}">Zpět na můj profil</a>
     <br><br>
     <form method="POST" action="{{ url_for('employeeprofile-mod') }}">
@@ -18,7 +18,7 @@
             </table>
         </form>
     {% if form_accessdata %}
-    {% block heading %}<h3>Úprava přístupových údajů</h3>{% endblock %}
+  <h3>Úprava přístupových údajů</h3>
         <br>
     <form method="POST" action="{{ url_for('employeeprofile-access-mod') }}">
         <input type="hidden" name="id_zam" value="{{ employee.id_zam}}">
