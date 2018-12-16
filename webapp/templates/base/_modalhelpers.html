@@ -1,57 +1,66 @@
 {% macro render_deadline_modal(action,form,car,deadline_type,modal_id,deadline,action_string,process_view) %}
 
     <div data-toggle="tooltip" data-html="true" data-placement="right" title="{{ action }}">
-        <button type="button" class="btn btn-secondary pl-3 pr-3" data-toggle="modal" data-target="#{{ modal_id }}{{ deadline['dl_id'] }}">&#x270D;
-        </button>
+        {% if action == 'Editovat' %}
+            <button type="button" class="btn btn-secondary pl-3 pr-3" data-toggle="modal" data-target="#{{ modal_id }}{{ deadline['dl_id'] }}">&#x270D;</button>
+        {% else %}
+            <button type="button" class="btn btn-secondary pl-3 pr-3" data-toggle="modal" data-target="#{{ modal_id }}{{ car.id_voz }}">&#x270D;</button>
+        {% endif %}
     </div>
+
+    {% if action == 'Editovat' %}
+        <div class="modal fade" id="{{ modal_id }}{{ deadline['dl_id'] }}" role="dialog">
+    {% else %}
+        <div class="modal fade" id="{{ modal_id }}{{ car.id_voz }}" role="dialog">
+    {% endif %}
     <!-- Modal window -->
-    <div class="modal fade" id="{{ modal_id }}{{ deadline['dl_id'] }}" role="dialog">
-        <div class="modal-dialog">
+                    <div class="modal-dialog">
 
-            <!-- Modal window content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-             <form method="POST" action="{{ url_for(process_view) }}">
-                <div class="modal-body">
-                    {{ action_string }}
-                        {% if form.date_expiry.errors %}
-                            <div class="form-group required has-error">
-                                {% if action == 'Editovat' %}
-                                    {{ form.date_expiry(id="date_expiry",required='required',type="date",value=deadline['dl_date']) }}
-                                {% else %}
-                                    {{ form.date_expiry(id="date_expiry",required='required',type="date") }}
-                                {% endif %}
-                                {% for error in form.date_expiry.errors %}
-                                    <p class="help-block">{{ error }}</p>
-                                {% endfor %}
+                        <!-- Modal window content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
                             </div>
-                        {% else %}
-                            <div class="form-group  required">
-                                {% if action == 'Editovat' %}
-                                    {{ form.date_expiry(id="date_expiry",required='required',type="date",value=deadline['dl_date']) }}
-                                {% else %}
-                                    {{ form.date_expiry(id="date_expiry",required='required',type="date") }}
-                                {% endif %}
+                         <form method="POST" action="{{ url_for(process_view) }}">
+                            <div class="modal-body">
+                            {{ modal_id }}{{ car.id_voz }}
+                                {{ action_string }}
+                                    {% if form.date_expiry.errors %}
+                                        <div class="form-group required has-error">
+                                            {% if action == 'Editovat' %}
+                                                {{ form.date_expiry(id="date_expiry",required='required',type="date",value=deadline['dl_date']) }}
+                                            {% else %}
+                                                {{ form.date_expiry(id="date_expiry",required='required',type="date") }}
+                                            {% endif %}
+                                            {% for error in form.date_expiry.errors %}
+                                                <p class="help-block">{{ error }}</p>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        <div class="form-group  required">
+                                            {% if action == 'Editovat' %}
+                                                {{ form.date_expiry(id="date_expiry",required='required',type="date",value=deadline['dl_date']) }}
+                                            {% else %}
+                                                {{ form.date_expiry(id="date_expiry",required='required',type="date") }}
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
                             </div>
-                        {% endif %}
-                </div>
-                <div class="modal-footer">
-                    {% if action == 'Editovat' %}
-                        <input type="hidden" name="id_deadline" value="{{ deadline['dl_id'] }}">
-                    {% else %}
-                        <input type="hidden" name="car_id" value="{{ car.id_voz }}">
-                    {% endif %}
-                    <input type="hidden" name="car_spz" value="{{ car.spz }}">
-                    <input type="hidden" name="deadline_type" value="{{ deadline_type}}">
-                    <input type="submit" value=&#9745; class="btn approve_button" data-toggle="tooltip"
-                           data-html="true" title="Potvrdit">
-                </div>
-                 </form>
-            </div>
-        </div>
+                            <div class="modal-footer">
+                                {% if action == 'Editovat' %}
+                                    <input type="hidden" name="id_deadline" value="{{ deadline['dl_id'] }}">
+                                {% else %}
+                                    <input type="hidden" name="car_id" value="{{ car.id_voz }}">
+                                {% endif %}
+                                <input type="hidden" name="car_spz" value="{{ car.spz }}">
+                                <input type="hidden" name="deadline_type" value="{{ deadline_type}}">
+                                <input type="submit" value=&#9745; class="btn approve_button" data-toggle="tooltip"
+                                       data-html="true" title="Potvrdit">
+                            </div>
+                             </form>
+                        </div>
+                    </div>
 
-    </div>
+                </div>
 
 {% endmacro %}

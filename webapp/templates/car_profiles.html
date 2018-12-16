@@ -40,7 +40,7 @@
                                                 {% if car_profile['techprobe'] %}
                                                     {{ render_deadline_modal('Editovat',form,car_profile['car'],'techprobe','myTechProbeEditModal',car_profile['techprobe'],"Změňte termín expirace technické prohlídky:",'car-deadline-edit') }}
                                                 {% else %}
-                                                    {{ render_deadline_modal('Přidat',form,car_profile['car'],'techprobe','myTechProbeEditModal',car_profile['techprobe'],"Přidejte termín expirace technické prohlídky:",'car-deadline-add') }}
+                                                    {{ render_deadline_modal('Přidat',form,car_profile['car'],'techprobe','myTechProbeAddModal',car_profile['techprobe'],"Přidejte termín expirace technické prohlídky:",'car-deadline-add') }}
                                                 {% endif %}
                                             </div>
                                         </div>
@@ -58,7 +58,7 @@
                                                 {% if car_profile['tachoprobe'] %}
                                                     {{ render_deadline_modal('Editovat',form,car_profile['car'],'tachoprobe','myTachoProbeEditModal',car_profile['tachoprobe'],"Změňte termín expirace prohlídky tachografu:",'car-deadline-edit') }}
                                                 {% else %}
-                                                    {{ render_deadline_modal('Přidat',form,car_profile['car'],'tachoprobe','myTachoProbeEditModal',car_profile['tachoprobe'],"Přidejte termín expirace prohlídky tachografu:",'car-deadline-add') }}
+                                                    {{ render_deadline_modal('Přidat',form,car_profile['car'],'tachoprobe','myTachoProbeAddModal',car_profile['tachoprobe'],"Přidejte termín expirace prohlídky tachografu:",'car-deadline-add') }}
                                                 {% endif %}
                                             </div>
                                         </div>
@@ -75,7 +75,7 @@
                                             {% if car_profile['fireprobe'] %}
                                                     {{ render_deadline_modal('Editovat',form,car_profile['car'],'fireprobe','myFireProbeEditModal',car_profile['fireprobe'],"Změňte termín expirace prohlídky hasícího přístroje:",'car-deadline-edit') }}
                                                 {% else %}
-                                                    {{ render_deadline_modal('Přidat',form,car_profile['car'],'fireprobe','myFireProbeEditModal',car_profile['fireprobe'],"Přidejte termín expirace prohlídky hasícího přístroje:",'car-deadline-add') }}
+                                                    {{ render_deadline_modal('Přidat',form,car_profile['car'],'fireprobe','myFireProbeAddModal',car_profile['fireprobe'],"Přidejte termín expirace prohlídky hasícího přístroje:",'car-deadline-add') }}
                                                 {% endif %}
                                             </div>
                                         </div>
