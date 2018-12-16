@@ -1,4 +1,5 @@
 from flask import render_template, request, redirect, flash, url_for
+from flask_login import current_user
 from flask.views import MethodView
 from webapp.core import db
 from flask_wtf import FlaskForm
@@ -31,7 +32,6 @@ class CarForm(FlaskForm):
         return result
 
 class CarServiceForm(FlaskForm):
-    car = SelectField('Vozidlo')
     short_desc = StringField('Úkon', validators=[InputRequired("Zadejte servisní úkon!")])
     long_desc = TextAreaField('Detailní popis')
     mileage = IntegerField('Stav tachometru (km)')
@@ -42,7 +42,6 @@ class CarServiceForm(FlaskForm):
 
     def __init__(self,*args,**kwargs):
         super(CarServiceForm,self).__init__(*args, **kwargs)
-        self.car.choices = db.get_cars_tuples()
 
 class CarDeadlineEditForm(FlaskForm):
     date_expiry = CzechDateField('Nový termín', validators=[InputRequired(message="Doplňte nový termín!")])
@@ -128,7 +127,10 @@ class CarDeadlineAdd(CarProfiles):
         flash("Datum expirace %s u vozidla '%s' bylo úspěšně stanoveno na %s!" % (self.deadline_type_str[request.form.get('deadline_type')], request.form.get('car_spz'), form.date_expiry.data.strftime("%d. %m. %Y")), 'alert alert-success')
         return redirect(url_for('car-profiles'))
 
-class CarDeadlineEdit(CarDeadlineAdd):
+class CarDeadlineEdit(MethodView):
+    deadline_type_str = {'techprobe': 'technické prohlídky', 'tachoprobe': 'prohlídky tachografu',
+                         'fireprobe': 'prohlídky hasícího přístroje'}
+
     @management
     def post(self):
         form = CarDeadlineEditForm()
@@ -138,7 +140,9 @@ class CarDeadlineEdit(CarDeadlineAdd):
         return redirect(url_for('car-profiles'))
 
 
-class CarDeadlineDelete(CarDeadlineAdd):
+class CarDeadlineDelete(MethodView):
+    deadline_type_str = {'techprobe': 'technické prohlídky', 'tachoprobe': 'prohlídky tachografu',
+                         'fireprobe': 'prohlídky hasícího přístroje'}
     @management
     def post(self):
         deadline_id = request.form.get('dl_id')
@@ -168,22 +172,47 @@ class CarServiceDiaryChange(MethodView):
 class CarServiceAdd(MethodView):
 
     @management
-    def get(self):
-        form = CarServiceForm(car=car_id)
-        return render_template('car_service_add.html',form=form,car_id=car_id)
+    def get(self,car_id):
+        form = CarServiceForm()
+        return render_template('car_service_add.html',form=form,car=db.fetch_car(car_id))
 
     @management
-    def post(self):
+    def post(self,car_id):
         form = CarServiceForm(obj=request.form)
-        car_id = request.form.get('car_id')
-        db.service_add(request.form)
+        if not form.validate_on_submit():
+            return render_template('car_service_add.html', form=form, car=db.fetch_car(car_id))
+        db.service_add(car_id,current_user.id_zam,form)
+        car = db.fetch_car(car_id)
+        flash("Servisní úkon k vozidlu '%s' byl úspěšně přidán!" % car.spz, 'alert alert-success')
         return redirect(url_for('car-service-diary',car_id=car_id))
 
 class CarServiceModify(MethodView):
-    pass
+    @management
+    def get(self,car_id,service_id):
+        service = db.fetch_service_by_id(service_id)
+        form = CarServiceForm(obj=service)
+        return render_template('car_service_add.html', form=form, car=db.fetch_car(car_id), service=service)
+
+    def post(self,car_id,service_id):
+        form = CarServiceForm(request.form)
+        car = db.fetch_car(car_id)
+        service = db.fetch_service_by_id(service_id)
+        if not form.validate_on_submit():
+            return render_template('car_service_add.html',car=car,form=form,service=service)
+        service = db.fetch_service_by_id(service_id)
+        db.update_from_form(service,form)
+        flash("Servisní úkon k vozidlu '%s' byl úspěšně upraven!" % car.spz, 'alert alert-success')
+        return redirect(url_for('car-service-diary', car_id=car_id))
+
+
 
 class CarServiceDelete(MethodView):
-    pass
+    @management
+    def get(self,car_id,service_id):
+        db.service_delete(service_id)
+        car = db.fetch_car(car_id)
+        flash("Servisní úkon k vozidlu '%s' byl úspěšně smazán!" % car.spz, 'alert alert-success')
+        return redirect(url_for('car-service-diary', car_id=car.id_voz))
 
 def configure(app):
     app.add_url_rule('/cars', view_func=Cars.as_view('cars'))
@@ -196,7 +225,7 @@ def configure(app):
     app.add_url_rule('/car_deadline_del', view_func=CarDeadlineDelete.as_view('car-deadline-del'))
     app.add_url_rule('/car_service/<int:car_id>', view_func=CarServiceDiary.as_view('car-service-diary'))
     app.add_url_rule('/car_service_change', view_func=CarServiceDiaryChange.as_view('car-service-diary-change'))
-    app.add_url_rule('/car_service_add', view_func=CarServiceAdd.as_view('car-service-add'))
-    app.add_url_rule('/car_service_mod', view_func=CarServiceModify.as_view('car-service-mod'))
-    app.add_url_rule('/car_service_del', view_func=CarServiceDelete.as_view('car-service-del'))
+    app.add_url_rule('/car_service_add/car=<int:car_id>', view_func=CarServiceAdd.as_view('car-service-add'))
+    app.add_url_rule('/car_service_mod/car=<int:car_id>&service_id=<int:service_id>', view_func=CarServiceModify.as_view('car-service-mod'))
+    app.add_url_rule('/car_service_del/car=<int:car_id>&service_id=<int:service_id>', view_func=CarServiceDelete.as_view('car-service-del'))
 

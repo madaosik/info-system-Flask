@@ -1,8 +1,16 @@
 {% extends 'base/base.html' %}
+{% from "base/_navhelpers.html" import render_bodytopnav_specific %}
 
 {% block title %}Servisní deník{% endblock %}
 {% block heading %}<h3>Servisní deník</h3>{% endblock %}
 {% block body %}
+        <div class="row">
+            <div class="col-12">
+                <form class="form-inline my-2 my-lg-0 pb-4 pt-3" action="{{ url_for('car-profiles') }}">
+                  <button class="btn btn-primary my-0 my-sm-0" type="submit">Zpět na karty vozidel</button>
+                </form>
+            </div>
+        </div>
         <div class="row">
             <div class="col-11">
                 <form class="form-inline my-2 my-lg-0 pb-4 pt-3" method="POST" action="{{ url_for('car-service-diary-change') }}">
@@ -30,6 +38,26 @@
                     <th colspan="2">Akce</th>
                 </tr>
                 </thead>
+                 {% for service in service_history %}
+                    <tr>
+                        <td>{{ service.date.strftime("%d. %m. %Y") }}</td>
+                        <td>{{ service.short_desc }}</td>
+                        <td>{{ service.long_desc }}</td>
+                        <td>{{ service.mileage }} km</td>
+                        <td>{{ service.mechanic }}</td>
+                        <td>{{ service.receipt_no }}</td>
+                        <td>
+                            <form method="GET" action="{{ url_for('car-service-mod', car_id=car.id_voz, service_id=service.id) }}">
+                              <input type="submit" value="Detail">
+                            </form>
+                        </td>
+                        <td>
+                            <form method="GET" action="{{ url_for('car-service-del', car_id=car.id_voz, service_id=service.id) }}">
+                                <input type="submit" value="Smazat">
+                            </form>
+                        </td>
+                    </tr>
+                 {% endfor %}
             </table>
         </div>
 {% endblock %}

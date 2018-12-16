@@ -92,12 +92,12 @@
                                             <div class="col-1 p-1 text-lg-left">
                                                 <span style="font-size: 1.5em;"><i class="fas fa-wrench" aria-hidden="true"></i></span>
                                             </div>
-                                            <div class="col-7 p-1 text-lg-left">
-                                                Výměna brzdových třmenů (2.5.2018)
+                                            <div class="col-7 p-1 text-lg-center">
+                                                {{ car_profile['service'].short_desc }} ({{ car_profile['service'].date.strftime("%d. %m. %Y") }})
                                             </div>
                                             <!--<div class="col-4 p-1 text-lg-center">5.4.2018</div>-->
                                             <div class="col-4 p-1 text-lg-center">
-                                                <form action="#">
+                                                <form method="GET" action="{{ url_for('car-service-diary',car_id=car_profile['car'].id_voz) }}">
                                                     <button class="btn btn-secondary" type="submit">Servisní deník</button>
                                                 </form>
                                             </div>

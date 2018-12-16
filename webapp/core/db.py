@@ -136,7 +136,10 @@ def get_first_car_id():
     return car.id_voz
 
 def fetch_service_history(car_id):
-    return ServiceHistory.query.filter_by(car_id=car_id).all()
+    return ServiceHistory.query.filter_by(car_id=car_id).order_by(sa.desc(ServiceHistory.date)).all()
+
+def fetch_service_latest(car_id):
+    return ServiceHistory.query.filter_by(car_id=car_id).order_by(sa.desc(ServiceHistory.date)).first()
 
 
 def fetch_all_pending_approvals():
@@ -166,6 +169,7 @@ def get_car_profile_data(car_dl_dict):
     for car in cars:
         car_profile = {}
         car_profile['car'] = car
+        car_profile['service'] = fetch_service_latest(car.id_voz)
         for k,v in car_dl_dict.items():
             dl_record = session.query(DeadlinesCar).filter(DeadlinesCar.id_type==v, DeadlinesCar.car_id==car.id_voz).first()
             if not dl_record:
@@ -299,10 +303,17 @@ def get_employee_tuples():
 
 # Service history
 
-def service_add(form):
+def service_add(car_id,author_id,form):
     service = ServiceHistory()
     form.populate_obj(service)
+    service.car_id=car_id
+    service.recorded_by=author_id
     session.add(service)
     session.commit()
 
+def service_delete(service_id):
+    session.query(ServiceHistory).filter_by(id=service_id).delete()
+    session.commit()
 
+def fetch_service_by_id(service_id):
+    return session.query(ServiceHistory).filter_by(id=service_id).first()
