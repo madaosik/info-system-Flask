@@ -4,7 +4,7 @@ from flask.views import MethodView
 from webapp.core import db
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, BooleanField
-from wtforms.validators import InputRequired, Email
+from wtforms.validators import InputRequired, Email, length
 
 from webapp.core.models import Zamestnanec
 from webapp.roles import management,employee
@@ -13,14 +13,16 @@ from webapp.views.users import UserEditForm
 import re
 
 class EmployeeForm(FlaskForm):
-    kr_jmeno = StringField('* Křestní jméno', validators=[InputRequired(message="Doplňte křestní jméno!")])
-    prijmeni = StringField('* Příjmení', validators=[InputRequired(message="Doplňte příjmení!")])
+    kr_jmeno = StringField('* Křestní jméno',
+                           validators=[InputRequired(message="Doplňte křestní jméno!"), length(max=20)])
+    prijmeni = StringField('* Příjmení', validators=[InputRequired(message="Doplňte příjmení!"), length(max=20)])
     dat_nar = CzechDateField('Datum narození')
-    trv_bydliste = StringField('Trvalé bydliště')
-    prech_bydliste = StringField('Přechodné bydliště')
-    telefon = StringField('Telefon')
-    email = StringField('* E-mail', validators=[Email(message="E-mailová adresa nemá správný formát!")])
-    prac_sml = StringField('Číslo pracovní sml.')
+    trv_bydliste = StringField('Trvalé bydliště', validators=[length(max=50)])
+    prech_bydliste = StringField('Přechodné bydliště', validators=[length(max=50)])
+    telefon = StringField('Telefon', validators=[length(max=15)])
+    email = StringField('* E-mail', validators=[Email(message="E-mailová adresa nemá správný formát!"),
+                                                length(max=50, message="Zadaný email je příliš dlouhý!")])
+    prac_sml = StringField('Číslo pracovní sml.', validators=[length(max=15)])
     aktivni = BooleanField('Aktivní', default='checked')
     submit = SubmitField('Uložit')
 

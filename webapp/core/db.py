@@ -297,6 +297,12 @@ def get_employee_tuples():
             empl_tuples_arr.append((employee.id_zam, employee_string))
     return empl_tuples_arr
 
+# Service history
 
+def service_add(form):
+    service = ServiceHistory()
+    form.populate_obj(service)
+    session.add(service)
+    session.commit()
 
 

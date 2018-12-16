@@ -11,13 +11,22 @@
         <h3>Přidat servisní úkon</h3>
     {% endif %}
 {% endblock %}
-{% block bodytopnav %}{{ render_bodytopnav_specific('car-service-diary',"Zpět do servisního deníku") }}{% endblock %}
+{% block bodytopnav %}
+    <div class="col-11 text-lg-left">
+        <form class="form-inline my-2 my-lg-0 pb-4 pt-3" action="{{ url_for('car-service-diary',car_id=car_id) }}">
+              <button class="btn btn-primary my-0 my-sm-0" type="submit">Zpět na servisní deník vozidla</button>
+        </form>
+    </div>
+{% endblock %}
 {% block body %}
 
     {% if service %}
-        <form method="GET" action="{{ url_for('car-service-mod', car_id=car_id, service_id=service.id) }}">
+        <form method="POST" action="{{ url_for('car-service-mod') }}">
+            <input type="hidden" name="car_id" value="{{ car_id }}">
+            <input type="hidden" name="service_id" value="{{ service_id }}">
     {% else %}
-        <form method="GET" action="{{ url_for('car-service-add', car_id=car_id) }}">
+        <form method="POST" action="{{ url_for('car-service-add') }}">
+            <input type="hidden" name="car_id" value="{{ car_id }}">
     {% endif %}
         {{ form.csrf_token }}
                 <table class="form_table">
