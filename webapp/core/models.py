@@ -170,6 +170,7 @@ class Activity(Base):
     end = Column(DateTime)
     approved = Column(Boolean, default=False)
     seen = Column(Boolean, default=False)
+    seen_by_zam = Column(Boolean, default=False)
 
 class DeadlinesCarTypes(Base):
     __tablename__ = 'deadlines_car_types'

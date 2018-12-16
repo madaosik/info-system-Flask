@@ -201,11 +201,11 @@ def fetch_vacation_by_id(id):
     return Dovolena_zam_hist.query.filter_by(id_zam=id)
 
 def fetch_unseen_zam_vacation(id):
-    return Dovolena_zam_hist.query.filter_by(id_zam=id, seen_by_zam=False).first()
+    return Dovolena_zam_hist.query.filter_by(id_zam=id, seen_by_zam=False, seen=True,).first()
 
 
 def mark_seen_zam_vacation(id):
-    q = Dovolena_zam_hist.query.filter_by(id_zam=id, seen_by_zam=False)
+    q = Dovolena_zam_hist.query.filter_by(id_zam=id, seen_by_zam=False, seen=True,)
     for a in q:
         a.seen_by_zam = True
     session.commit()
@@ -251,6 +251,16 @@ def update_activity_by_id_act(id,act):
     q = act
     session.commit()
 
+
+def fetch_unseen_zam_activity(id):
+    return Activity.query.filter_by(id_zam=id, seen=True, seen_by_zam=False).first()
+
+
+def mark_seen_zam_activity(id):
+    q = Activity.query.filter_by(id_zam=id, seen=True, seen_by_zam=False)
+    for a in q:
+        a.seen_by_zam = True
+    session.commit()
 
 
 # Employee functions

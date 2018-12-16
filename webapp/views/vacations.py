@@ -11,6 +11,7 @@ from webapp.views.forms import CzechDateField
 from flask_wtf import FlaskForm
 from wtforms import SubmitField
 from wtforms.validators import InputRequired
+from czech_holidays import Holidays
 
 
 class VacationForm(FlaskForm):
@@ -98,7 +99,6 @@ class VacationAdd(MethodView):
         db.update_from_form(instance, vacform)
         instance.id_zam = current_user.id_zam
         instance.celkem = (instance.do - instance.od).days + 1
-        print("1sssssss")
         for one in requests:
             if (one.od <= instance.od <= one.do) or (one.od <= instance.do <= one.do) or (one.od > instance.od and one.do < instance.do ):
                 flash("Evidujeme již Vaši žádost o dovolenou od %s do %s!" % (one.od.isoformat(), one.do.isoformat()), 'alert alert-danger')
@@ -109,7 +109,6 @@ class VacationAdd(MethodView):
         if 6 <= instance.do.isoweekday():
             flash("Dovolená nesmí končit během víkendových dní!", 'alert alert-danger')
             return render_template('vacation_form.html', form=vacform)
-        print("2sssssss")
         if instance.od.year != instance.do.year:
             holidays_to = Holidays(instance.do.year)
             err = holiday_check(holidays_to, instance)
@@ -119,7 +118,6 @@ class VacationAdd(MethodView):
                 flash("Dovolená nesmí končit v den státního svátku!", 'alert alert-danger')
             if err:
                 return render_template('vacation_form.html', form=vacform)
-        print("sssssss")
         holidays = Holidays(instance.od.year)
         err = holiday_check(holidays, instance)
         if err == 'stateholidaystart':

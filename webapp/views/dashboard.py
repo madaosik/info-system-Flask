@@ -6,8 +6,9 @@ from webapp.roles import admin, employee, management, current_user
 class EmplDashboard(MethodView):
     @employee
     def get(self):
-        notifications = db.fetch_unseen_zam_vacation(current_user.id_zam)
-        return render_template('dashboard.html', title='IS - Zaměstnanec', notif=notifications)
+        vacations = db.fetch_unseen_zam_vacation(current_user.id_zam)
+        act = db.fetch_unseen_zam_activity(current_user.id_zam)
+        return render_template('dashboard.html', title='IS - Zaměstnanec', notif_vac=vacations, notif_act=act)
 
 
 class BossDashboard(MethodView):

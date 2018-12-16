@@ -9,6 +9,7 @@ from wtforms.validators import InputRequired
 import datetime
 from webapp.roles import employee, admin, management, norestrict
 from webapp.core.models import *
+from czech_holidays import Holidays
 
 
 class NewActivityForm(FlaskForm):
@@ -27,6 +28,28 @@ class NewActivityForm(FlaskForm):
     def __init__(self,*args,**kwargs):
         super(NewActivityForm,self).__init__(*args, **kwargs)
         self.vozidlo.choices = db.get_cars_tuples()
+
+    def validate(self):
+        if not FlaskForm.validate(self):
+            return False
+        result = True
+        if self.begin.data > self.end.data:
+            self.end.errors.append('Začátek aktivity musí mít dřívejší datum než její konec!')
+            result = False
+        err = holiday_check_act(Holidays(self.begin.data.year), self)
+        if err == 'stateholidaystart':
+            self.begin.errors.append("Aktivita nesmí začínat v den státního svátku!!")
+            result = False
+        if err == 'stateholidayend':
+            self.end.errors.append("Aktivita nesmí končit v den státního svátku!")
+            result = False
+        if 6 <= self.begin.data.isoweekday():
+            self.begin.errors.append("Aktivita nesmí začínat během víkendových dní!")
+            result = False
+        if 6 <= self.end.data.isoweekday():
+            self.end.errors.append("Aktivita nesmí končit během víkendových dní!")
+            result = False
+        return result
 
 
 class EditActivityPayoffForm(FlaskForm):
@@ -85,6 +108,19 @@ class ActivityEditPayoff(MethodView):
         return redirect(url_for('activities'))
 
 
+def holiday_check_act(holidays, act):
+    holidays.pop(0)  # because new year has a duplicity there
+    for day in holidays:  # check for holidays
+        if day == act.begin.data:
+            return 'stateholidaystart'
+            error = "Dovolená nesmí začínat v den státního svátku!"
+            return error
+        elif day == act.end.data:
+            error = "Dovolená nesmí končit v den státního svátku!"
+            return 'stateholidayend'
+    return None
+
+
 class MyActivities(MethodView):
     @norestrict
     def get(self):
@@ -93,6 +129,7 @@ class MyActivities(MethodView):
             id_zam = current_user.id_zam
         act = db.fetch_activity_by_id_zam(id_zam)
         cars = db.fetch_all_by_cls(Vozidlo)
+        db.mark_seen_zam_activity(id_zam)
         return render_template('activities_my.html', id=id_zam, me=act, date=datetime.datetime.now(), cars=cars)
 
 

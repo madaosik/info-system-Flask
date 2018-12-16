@@ -10,6 +10,7 @@ from webapp.core.models import Zamestnanec
 from webapp.roles import management,employee
 from webapp.views.forms import CzechDateField
 from webapp.views.users import UserEditForm
+import re
 
 class EmployeeForm(FlaskForm):
     kr_jmeno = StringField('* Křestní jméno', validators=[InputRequired(message="Doplňte křestní jméno!")])
@@ -22,6 +23,31 @@ class EmployeeForm(FlaskForm):
     prac_sml = StringField('Číslo pracovní sml.')
     aktivni = BooleanField('Aktivní', default='checked')
     submit = SubmitField('Uložit')
+
+    def validate(self):
+        if not FlaskForm.validate(self):
+            return False
+        result = True
+
+        if not telephone_is(self.telefon.data):
+            self.telefon.errors.append('Zadejte validní číslo bez mezer!')
+            result = False
+        if 9 > len(self.telefon.data) or len(self.telefon.data) > 13:
+            self.telefon.errors.append('Zadejte validní číslo bez mezer!')
+            result = False
+        if len(self.telefon.data) == 0:
+            result = True
+
+        return result
+
+
+def telephone_is(string):
+    tel = re.compile(r'[^+ 0-9]')
+    num = re.compile(r'[^ 0-9]')
+    a = string
+    string = tel.search(string)
+    a = num.search(a[1:])
+    return not (bool(string) or bool(a))
 
 class EditProfileForm(EmployeeForm):
     kr_jmeno = None
