@@ -49,14 +49,12 @@ class VacationsHist(MethodView):
     @management
     def get(self):
         a = VacationEmployeeSelector()
-        print(a.empl.data)
         vac = db.fetch_all_by_cls(Dovolena_zam_hist)
         return render_template('vacation_hist.html', vac=vac, selector=VacationEmployeeSelector(), id=a.empl.data,
                                date=datetime.datetime.now().date())
 
     def post(self):
         a = VacationEmployeeSelector()
-        print(a.empl.data)
         vac = db.fetch_vacation_by_id(a.empl.data)
         return render_template('vacation_hist.html', selector=VacationEmployeeSelector(), id=a.empl.data, me=vac,
                                date=datetime.datetime.now().date())

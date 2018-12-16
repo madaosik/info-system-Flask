@@ -2,9 +2,10 @@
 {% from "base/_formhelpers.html" import render_field %}
 <!-- input form, activity -->
 {% block title %}Upravit aktivitu{% endblock %}
+ {% block heading %}<h3>Úprava aktivity</h3>{% endblock %}
 {% block body %}
 
-    {% block heading %}<h3>Úprava aktivity</h3>{% endblock %}
+
      <form method="POST" action="{{ url_for('activity-edit') }}">
                     <input type="hidden" name="id" value="{{ activity.id_activity }}">
 
