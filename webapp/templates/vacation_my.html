@@ -4,12 +4,24 @@
 {% block title %}Dovolená{% endblock %}
 {% block heading %}<h3><i class="far fa-calendar-alt mr-4"></i>Žádosti o dovolenou</h3>{% endblock %}
 {% block bodynav %}
-
-
 {% endblock %}
 {% block body %}
+    {% set glob={} %}
+    {% set _ = glob.update({'zadosti':False}) %}
+    {% set _ = glob.update({'schvalena':False}) %}
+    {%  if me %}
+        {% for dovolena in me %}
+            {% if dovolena.do > date  or dovolena.potvrzeni== False%}
+                {% set _ = glob.update({'zadosti':True}) %}
+            {% endif %}
+            {% if dovolena.do < date and dovolena.potvrzeni == True%}
+                {% set _ = glob.update({'schvalena':True}) %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
     <div class="container-fluid pt-3">
-        {% if me %}
+        {% if glob['zadosti'] %}
             <table class="centertable table table-hover table-sm">
             <thead class="thead-light">
             <tr>
@@ -21,7 +33,7 @@
             </tr>
             </thead>
         {% else %}
-            <p>Neevidujeme žádné záznamy dovolené.</p>
+            <p class = "pb-4 pt-3 ">Neevidujeme žádné záznamy dovolené.</p>
         {% endif %}
         {% if me %}
             {% for dovolena in me %}
@@ -50,7 +62,7 @@
     <div class="container-fluid">
          <h3><i class="fas fa-history pr-3 pt-3"></i>Historie dovolené</h3>
 
-        {% if me %}
+        {% if glob['schvalena'] %}
             <table class="centertable table table-hover table-sm">
             <thead class="thead-light">
             <tr>
@@ -61,7 +73,7 @@
             </tr>
             </thead>
         {% else %}
-            <p>Neevidujeme žádné záznamy dovolené.</p>
+            <p class = "pb-4 pt-3 ">Neevidujeme žádné záznamy dovolené.</p>
         {% endif %}
     {% if me %}
         {% for dovolena in me %}
