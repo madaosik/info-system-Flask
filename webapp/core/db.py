@@ -292,7 +292,7 @@ def get_employee_tuples():
     employees = Zamestnanec.query.all()
     empl_tuples_arr = []
     for employee in employees:
-        if Uzivatel.query.filter_by(id_zam=employee.id_zam).first() is None:
+        if Uzivatel.query.filter_by(id_zam=employee.id_zam).first() is not None:
             employee_string = "%s %s" % (employee.kr_jmeno, employee.prijmeni)
             empl_tuples_arr.append((employee.id_zam, employee_string))
     return empl_tuples_arr

@@ -27,8 +27,8 @@
             {% for dovolena in me %}
                 {% if dovolena.do > date  or dovolena.potvrzeni== False%}
                 <tr>
-                    <td>{{ dovolena.od }}</td>
-                    <td>{{ dovolena.do }}</td>
+                    <td>{{ dovolena.od.strftime('%d/%m/%Y') }}</td>
+                    <td>{{ dovolena.do.strftime('%d/%m/%Y') }}</td>
                     <td>{{ dovolena.celkem }}</td>
                     <td>{% if dovolena.potvrzeni == True %}
                     Áno
@@ -67,8 +67,8 @@
         {% for dovolena in me %}
             {% if dovolena.do < date and dovolena.potvrzeni == True%}
             <tr>
-                <td>{{ dovolena.od }}</td>
-                <td>{{ dovolena.do }}</td>
+                <td>{{ dovolena.od.strftime('%d/%m/%Y') }}</td>
+                <td>{{ dovolena.do.strftime('%d/%m/%Y') }}</td>
                 <td>{{ dovolena.celkem }}</td>
                 <td>{% if dovolena.potvrzeni == True %}
                 Áno

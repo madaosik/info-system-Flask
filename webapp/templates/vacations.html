@@ -43,8 +43,8 @@
                         <td>{{zamestnanec.prijmeni}}</td>
                     {% endif %}
                 {% endfor %}
-            <td>{{dovolena.od}}</td>
-            <td>{{dovolena.do}}</td>
+            <td>{{dovolena.od.strftime('%d/%m/%Y')}}</td>
+            <td>{{dovolena.do.strftime('%d/%m/%Y')}}</td>
             <td>{{dovolena.celkem}}</td>
             <td>
                 <form method="POST" action="{{ url_for('vac_approve', id = dovolena.id_zaznamu) }}">
@@ -88,8 +88,8 @@
                     {% endif %}
                 {% endfor %}
 
-            <td>{{dovolena.od}}</td>
-            <td>{{dovolena.do}}</td>
+            <td>{{dovolena.od.strftime('%d/%m/%Y')}}</td>
+            <td>{{dovolena.do.strftime('%d/%m/%Y')}}</td>
             <td>{{dovolena.celkem}}</td>
             <td>
                 <form method="POST" action="{{ url_for('vac_decline', id = dovolena.id_zaznamu) }}">
