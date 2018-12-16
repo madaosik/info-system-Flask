@@ -1,52 +1,51 @@
 {% extends 'base/base.html' %}
+{% from "base/_navhelpers.html" import render_bodytopnav_general %}
 
 {% block title %}Uživatelé{% endblock %}
+{% block heading %}<i class="fas fa-users-cog pr-3"></i>Registrovaní uživatelé{% endblock %}
+{% block bodytopnav %}{{ render_bodytopnav_general(current_user,'user-add') }}{% endblock %}
 {% block body %}
-    <h3>Registrovaní uživatelé</h3>
-        <form class="form-inline my-2 my-lg-0 pb-4 pt-3" action="{{ url_for('user-add') }}">
-            <button class="btn btn-primary my-0 my-sm-0" type="submit">Přidat uživatele</button>
-        </form>
-        <table class="table table-hover table-sm text-center">
-                <thead class="thead-light">
-                <tr>
-                    <th>Login</th>
-                    <th>Zaměstnanec</th>
-                    <th>Role</th>
-                    <th>Počet přihlášení</th>
-                    <th>Poslední přihlášení</th>
-                    <th>Čas poslední změny</th>
-                    <th colspan="2">Akce</th>
-                </tr>
-                </thead>
-        {% for user in users %}
+    <table class="table table-hover table-sm text-center">
+            <thead class="thead-light">
             <tr>
-                <td>{{user[0].login}}</td>
-                <td>{{user[1].kr_jmeno}} {{user[1].prijmeni}}</td>
-                <td>{{ role_dict[user[0].role]}}</td>
-                {% if user[0].poc_prihl %}
-                    <td>{{user[0].poc_prihl}}</td>
-                {% else %}
-                    <td>0</td>
-                {% endif %}
-                {% if user[0].posl_prihl %}
-                    <td>{{user[0].posl_prihl}}</td>
-                {% else %}
-                    <td>dosud nepřihlášen</td>
-                {% endif %}
-                <td>{{user[0].cas_posl_zmeny}}</td>
-                <td>
-                    <form method="GET" action="{{ url_for('user-mod') }}">
-                        <input type="hidden" name="id" value="{{ user[0].id }}">
-                      <input type="submit" value="Upravit">
-                    </form>
-                </td>
-                <td>
-                    <form method="GET" action="{{ url_for('user-del') }}">
-                        <input type="hidden" name="id" value="{{ user[0].id }}">
-                      <input type="submit" value="Smazat">
-                    </form>
-                </td>
+                <th>Login</th>
+                <th>Zaměstnanec</th>
+                <th>Role</th>
+                <th>Počet přihlášení</th>
+                <th>Poslední přihlášení</th>
+                <th>Čas poslední změny</th>
+                <th colspan="2">Akce</th>
             </tr>
-        {% endfor %}
-        </table>
+            </thead>
+    {% for user in users %}
+        <tr>
+            <td>{{user[0].login}}</td>
+            <td>{{user[1].kr_jmeno}} {{user[1].prijmeni}}</td>
+            <td>{{ role_dict[user[0].role]}}</td>
+            {% if user[0].poc_prihl %}
+                <td>{{user[0].poc_prihl}}</td>
+            {% else %}
+                <td>0</td>
+            {% endif %}
+            {% if user[0].posl_prihl %}
+                <td>{{user[0].posl_prihl}}</td>
+            {% else %}
+                <td>dosud nepřihlášen</td>
+            {% endif %}
+            <td>{{user[0].cas_posl_zmeny}}</td>
+            <td>
+                <form method="GET" action="{{ url_for('user-mod') }}">
+                    <input type="hidden" name="id" value="{{ user[0].id }}">
+                  <input type="submit" value="Upravit">
+                </form>
+            </td>
+            <td>
+                <form method="GET" action="{{ url_for('user-del') }}">
+                    <input type="hidden" name="id" value="{{ user[0].id }}">
+                  <input type="submit" value="Smazat">
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
 {% endblock %}

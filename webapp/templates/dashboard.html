@@ -1,43 +1,40 @@
 {% extends "base/base.html" %}
 
 {% block title %}Nástěnka{% endblock %}
-
-{% block body %}
-    <h3>Vítej, {{ current_user.login }}!</h3>
-    <br>
-    {% if current_user.is_admin() or current_user.is_boss() %}
-        {% if act or vac %}
-            <h4><span style="font-size: 1.0em;"><i class="fas fa-bell" aria-hidden="true"></i></span> Novinky:</h4>
-        {% endif %}
-        <div class="btn-group">
-            {% if act %}
-                 <form class="form-inline my-2 my-lg-0 pb-1 pt-3 pr-3" action="{{ url_for('activities') }}">
-                    <button class="btn btn-primary my-0 my-sm-0" type="submit">Aktivity ke schválení</button>
-                </form>
-            {% endif %}
-            {% if vac %}
-                <form class="form-inline my-2 my-lg-0 pb-1 pt-3" action="{{ url_for('vacations') }}">
-                    <button class="btn btn-primary my-0 my-sm-0" type="submit">Dovolená ke schválení</button>
-                </form>
+{% block heading %}<h3>Vítej, <strong>{{ zam.kr_jmeno }} {{ zam.prijmeni }}</strong>!</h3>{% endblock %}
+    {% block body %}
+        <div class="container-fluid pt-3">
+            {% if current_user.is_admin() or current_user.is_boss() %}
+                {% if act or vac %}
+                    <h4><span class="newstitle"><i class="fas fa-bell mr-2" aria-hidden="true"></i>Vyžaduje Vaši pozornost:</span></h4>
+                {% endif %}
+                <div class="btn-group">
+                    {% if act %}
+                         <form class="form-inline my-2 my-lg-0 pb-1 pt-3 pr-3" action="{{ url_for('activities') }}">
+                            <button class="btn btn-primary my-0 my-sm-0" type="submit">Aktivity ke schválení</button>
+                        </form>
+                    {% endif %}
+                    {% if vac %}
+                        <form class="form-inline my-2 my-lg-0 pb-1 pt-3" action="{{ url_for('vacations') }}">
+                            <button class="btn btn-primary my-0 my-sm-0" type="submit">Dovolená ke schválení</button>
+                        </form>
+                    {% endif %}
+                </div>
+                {% else %}
+                 {% if notif_vac or notif_act %}
+                     <h4><span style="font-size: 1.0em;"><i class="fas fa-bell" aria-hidden="true"></i></span> Novinky:</h4>
+                     {% if notif_vac %}
+                         <form class="form-inline my-2 my-lg-0 pb-1 pt-3 pr-3" action="{{ url_for('my_vacation') }}">
+                            <button class="btn btn-primary my-0 my-sm-0" type="submit">Schválené dovolené </button>
+                        </form>
+                         {% endif %}
+                     {% if notif_act %}
+                      <form class="form-inline my-2 my-lg-0 pb-1 pt-3 pr-3" action="{{ url_for('activities-my', id=current_user.id_zam) }}">
+                            <button class="btn btn-primary my-0 my-sm-0" type="submit">Schválené aktivity</button>
+                         {% endif %}
+                     {% else %}
+                     <h4><span style="font-size: 1.0em;"></span> Nemáte žádné novinky.</h4>
+                    {% endif %}
             {% endif %}
         </div>
-        {% else %}
-         {% if notif_vac or notif_act %}
-             <h4><span style="font-size: 1.0em;"><i class="fas fa-bell" aria-hidden="true"></i></span> Novinky:</h4>
-             {% if notif_vac %}
-                 <form class="form-inline my-2 my-lg-0 pb-1 pt-3 pr-3" action="{{ url_for('my_vacation') }}">
-                    <button class="btn btn-primary my-0 my-sm-0" type="submit">Schválené dovolené </button>
-                </form>
-                 {% endif %}
-             {% if notif_act %}
-              <form class="form-inline my-2 my-lg-0 pb-1 pt-3 pr-3" action="{{ url_for('activities-my', id=current_user.id_zam) }}">
-                    <button class="btn btn-primary my-0 my-sm-0" type="submit">Schválené aktivity</button>
-                 {% endif %}
-             {% else %}
-             <h4><span style="font-size: 1.0em;"></span> Nemáte žádné novinky.</h4>
-            {% endif %}
-
-    {% endif %}
-
-
 {% endblock %}

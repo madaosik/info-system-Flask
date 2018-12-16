@@ -2,15 +2,23 @@
 {% from "base/_formhelpers.html" import render_field %}
 
 {% block title %}Aktivity{% endblock %}
-
-{% block body %}
-    <h3>Přidat novou aktivitu</h3>
-    <form method="POST" action="{{ url_for('activity-add', id=current_user.id) }}">
-    {{ form.csrf_token }}
-            <table class="form_table">
-                {% for field in form %}
-                    {{ render_field(field,form) }}
-                {% endfor %}
-            </table>
+{% block heading %}<h3>Přidat novou aktivitu</h3>{% endblock %}
+{% block bodytopnav %}
+    <div class="col-11 text-lg-left">
+        <form class="form-inline my-2 my-lg-0 pb-4 pt-3" action="{{ url_for('activities-my') }}">
+          <button class="btn btn-primary my-0 my-sm-0" type="submit">Zpět na moje aktivity</button>
         </form>
+    </div>
+{% endblock %}
+{% block body %}
+    <div class="container-fluid">
+        <form method="POST" action="{{ url_for('activity-add', id=current_user.id) }}">
+        {{ form.csrf_token }}
+                <table class="form_table">
+                    {% for field in form %}
+                        {{ render_field(field,form) }}
+                    {% endfor %}
+                </table>
+            </form>
+    </div>
 {% endblock %}

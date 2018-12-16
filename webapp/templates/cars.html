@@ -1,11 +1,10 @@
 {% extends 'base/base.html' %}
+{% from "base/_navhelpers.html" import render_bodytopnav_general %}
 
 {% block title %}Vozidla{% endblock %}
+{% block heading %}<i class="fas fa-car pr-3"></i>Vozidla v evidenci{% endblock %}
+{% block bodytopnav %}{{ render_bodytopnav_general(current_user,'car-add') }}{% endblock %}
 {% block body %}
-    <h3>Vozidla v evidenci</h3>
-    <form class="form-inline my-2 my-lg-0 pb-4 pt-3" action="{{ url_for('car-add') }}">
-      <button class="btn btn-primary my-0 my-sm-0" type="submit">Přidat vozidlo</button>
-    </form>
     {%  if cars %}
         <table class="table table-hover table-sm text-center">
             <thead class="thead-light">

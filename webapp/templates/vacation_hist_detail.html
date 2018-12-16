@@ -4,7 +4,7 @@
 {% block body %}
     <h2>{{ empl.kr_jmeno}} {{  empl.prijmeni  }}</h2>
     {% if check %}
-    <h3>Nejbližší dovolené</h3>
+    {% block heading %}<h3>Nejbližší dovolené</h3>{% endblock %}
 
 
         <table class="centertable table table-hover table-sm">
@@ -34,7 +34,7 @@
     </table>
 {% endif %}
 
-     <h3>Historie dovolené</h3>
+     {% block heading %}<h3>Historie dovolené</h3>{% endblock %}
 
     {% if check %}
         <table class="centertable table table-hover table-sm">

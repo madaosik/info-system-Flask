@@ -133,7 +133,16 @@ table th {
     color: darkorange;
 }
 
+.add-icon {
+    font-size: 1.3em;
+}
+
 .button-left{
     float: left;
     padding-right: 15px;
+}
+
+.newstitle {
+    font-size: 1.0em;
+    color: red;
 }

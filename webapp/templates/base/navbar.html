@@ -28,10 +28,10 @@
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <!--<div class="dropdown-header">Zaměstnanci</div>-->
                                     <a class="dropdown-item" href="{{ url_for('employees') }}">Přehled zaměstnanců</a>
-                                    <a class="dropdown-item" href="{{ url_for('medic_visits')  }}">Lékařské prohlídky</a>
-                                    <a class="dropdown-item" href="#">Pracovní smlouvy</a>
+                                    <!--<a class="dropdown-item" href="#">Lékařské prohlídky</a>-->
+                                    <!--<a class="dropdown-item" href="#">Pracovní smlouvy</a>-->
                                     <a class="dropdown-item" href="{{ url_for('vacations')  }}">Dovolená</a>
-                                    <a class="dropdown-item" href="#">Úložiště dokumentů</a>
+                                    <!--<a class="dropdown-item" href="#">Úložiště dokumentů</a>-->
                                 </div>
                             </li>
                             <li class="nav-item active dropdown">
@@ -43,7 +43,7 @@
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <!--<div class="dropdown-header">Evidence činností</div>-->
                                     <a class="dropdown-item" href="{{ url_for('activities')  }}">Přehled aktivit</a>
-                                    <a class="dropdown-item" href="#">Docházka</a>
+                                    <!--<a class="dropdown-item" href="#">Docházka</a>-->
 
                                 </div>
                             </li>
@@ -84,7 +84,7 @@
 
                     </ul>
                     <form class="form-inline my-2 my-lg-0" action="{{ url_for('logout') }}">
-                      <button class="btn btn-secondary my-0 my-sm-0" type="submit">Odhlásit: {{ current_user.login }}</button>
+                      <button class="btn btn-secondary my-0 my-sm-0" type="submit"><i class="fas fa-user pr-2"></i>{{ current_user.login }}<i class="fas fa-sign-out-alt pl-2"></i></button>
                     </form>
             </nav>
         {% endif %}

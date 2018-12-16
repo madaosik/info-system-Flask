@@ -67,9 +67,6 @@ def create_user(**kwargs):
     session.commit()
     return login
 
-def first_login_edit(id,form_data_dict):
-    user
-
 def get_obj_by_clsname(classname,**kwargs):
     if 'initobject' in kwargs:
         instance = classname(obj=kwargs['initobject'])

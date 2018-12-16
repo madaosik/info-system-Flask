@@ -1,18 +1,18 @@
 {% extends 'base/base.html' %}
 {% from "base/_formhelpers.html" import render_field  %}
+{% from "base/_navhelpers.html" import render_bodytopnav_specific %}
 
 {% block title %}Vozidla{% endblock %}
 
-{% block body %}
+{% block heading %}
     {% if car %}
-        <h3>Úprava vozidla: {{ car.spz }}</h3>
+        <h3><i class="fas fa-car pr-3"></i>Úprava vozidla: {{ car.spz }}</h3>
     {% else %}
-        <h3>Přidat vozidlo</h3>
+        <h3><i class="fas fa-car pr-3"></i>Přidat vozidlo</h3>
     {% endif %}
-
-    <form class="form-inline my-2 my-lg-0 pb-4 pt-3" action="{{ url_for('cars') }}">
-      <button class="btn btn-primary my-0 my-sm-0" type="submit">Zpět na přehled vozidel</button>
-    </form>
+{% endblock %}
+{% block bodytopnav %} {{ render_bodytopnav_specific('car-profiles',"Zpět na karty vozidel") }} {% endblock %}
+{% block body %}
 
     {% if car %}
         <form method="POST" action="{{ url_for('car-mod') }}">

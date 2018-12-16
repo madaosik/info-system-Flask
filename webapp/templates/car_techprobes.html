@@ -3,7 +3,7 @@
 {% block title %}Karty vozidel{% endblock %}
 {% block body %}
     <div class="container-fluid">
-        <h3>Evidence technických kontrol</h3>
+        {% block heading %}<h3>Evidence technických kontrol</h3>{% endblock %}
         <form class="form-inline my-2 my-lg-0 pb-4 pt-3" action="#">
             <button class="btn btn-primary my-0 my-sm-0" type="submit">Evidovat technickou prohlídku</button>
         </form>

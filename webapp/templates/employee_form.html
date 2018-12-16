@@ -1,18 +1,18 @@
 {% extends "base/base.html" %}
 {% from "base/_formhelpers.html" import render_field %}
+{% from "base/_navhelpers.html" import render_bodytopnav_specific %}
+
 <!-- input: employee, form-->
 {% block title %}Zaměstnanci{% endblock %}
-{% block body %}
-
+{% block heading %}
     {% if employee %}
         <h3>Úprava zaměstnance: {{ employee.kr_jmeno }} {{ employee.prijmeni }}</h3>
     {% else %}
         <h3>Přidat zaměstnance</h3>
     {% endif %}
-
-    <form class="form-inline my-2 my-lg-0 pb-4 pt-3" action="{{ url_for('employees') }}">
-      <button class="btn btn-primary my-0 my-sm-0" type="submit">Zpět na přehled zaměstnanců</button>
-    </form>
+{% endblock %}
+{% block bodytopnav %}{{ render_bodytopnav_specific('employees',"Zpět na přehled zaměstnanců") }}{% endblock %}
+{% block body %}
 
     {% if employee %}
         <form method="POST" action="{{ url_for('employee-mod') }}">

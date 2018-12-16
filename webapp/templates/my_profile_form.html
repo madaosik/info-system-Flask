@@ -4,7 +4,7 @@
 {% block title %}Můj profil{% endblock %}
 {% block body %}
 
-    <h3>Úprava profilu</h3>
+    {% block heading %}<h3>Úprava profilu</h3>{% endblock %}
     <a href="{{ url_for('employeeprofile') }}">Zpět na můj profil</a>
     <br><br>
     <form method="POST" action="{{ url_for('employeeprofile-mod') }}">
@@ -18,7 +18,7 @@
             </table>
         </form>
     {% if form_accessdata %}
-    <h3>Úprava přístupových údajů</h3>
+    {% block heading %}<h3>Úprava přístupových údajů</h3>{% endblock %}
         <br>
     <form method="POST" action="{{ url_for('employeeprofile-access-mod') }}">
         <input type="hidden" name="id_zam" value="{{ employee.id_zam}}">

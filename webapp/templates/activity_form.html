@@ -2,7 +2,7 @@
 {% from "base/_formhelpers.html" import render_field %}
 
 {% block body %}
-    <h3>Nová žádost o aktivitu</h3>
+    {% block heading %}<h3>Nová žádost o aktivitu</h3>{% endblock %}
  <form method="POST" action="{{ url_for('activity-add', id_zam=current_user.id_zam)}}">
 
         {{ form.csrf_token }}

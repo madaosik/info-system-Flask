@@ -1,15 +1,11 @@
 {% extends 'base/base.html' %}
+{% from "base/_navhelpers.html" import render_back_to_dashboard %}
 
 {% block title %}Dovolená{% endblock %}
+{% block heading %}Dovolená{% endblock %}
+{% block bodytopnav %}{{ render_back_to_dashboard(current_user) }}{% endblock %}
 {% block body %}
-
-    <form class="form-inline my-2 my-lg-0 pb-3 pt-0" action="{{ url_for('dashboard-boss') }}">
-      <button class="btn btn-primary my-0 my-sm-0" type="submit">Zpět na nástěnku</button>
-    </form>
-
-    <div class="container-fluid">
-     <div class="container-fluid">
-    <h3><i class="far fa-calendar-alt"></i>   Dovolená k schválení</h3>
+    <h4><i class="far fa-calendar-alt pr-3"></i>Ke schválení</h4>
     {%  if all %}
         <table class="centertable table table-hover table-sm center">
             <thead class="thead-light">
@@ -53,9 +49,7 @@
     {% if all %}
         </table>
     {%  endif %}
-    </div>
-    <div class="container-fluid">
-    <h3><i class="far fa-calendar-check"></i>   Schválená nadcházející dovolená</h3>
+    <h4><i class="far fa-calendar-check pr-3"></i>Již schválená:</h4>
 
         <table class="centertable table table-hover table-sm">
             <thead class="thead-light">
@@ -90,10 +84,7 @@
         {% endif %}
     {% endfor %}
         </table>
-    </div>
-
     <a class="btn btn-secondary mb-3 mt-3 " href="{{ url_for('vacations_hist') }}">Přejít na historii</a>
-
     </div>
 {% endblock %}
 

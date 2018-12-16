@@ -61,14 +61,17 @@ class CarsAdd(MethodView):
         carform.populate_obj(car)
         db.add(car)
         flash("Vozidlo '%s' úspěšně přidáno!" % car.spz, 'alert alert-success')
-        return redirect('cars')
+        return redirect(url_for('car-profiles'))
 
 
 class CarsDelete(MethodView):
     @management
     def get(self):
+        car = db.fetch_car(request.args.get('id'))
+        spz = car.spz
         db.delete_car(request.args.get('id'))
-        return redirect('cars')
+        flash("Vozidlo '%s' úspěšně smazáno!" % spz, 'alert alert-success')
+        return redirect(url_for('cars'))
 
 
 class CarsModify(MethodView):
@@ -86,7 +89,7 @@ class CarsModify(MethodView):
         car = db.fetch_car(request.form.get('id'))
         db.update_from_form(car, carform)
         flash("Vozidlo '%s' úspěšně upraveno!" % car.spz, 'alert alert-success')
-        return redirect('cars')
+        return redirect(url_for('car-profiles'))
 
 
 # VARIOUS CAR CONSTANTS
