@@ -2,7 +2,7 @@
 {% from "base/_navhelpers.html" import render_back_to_dashboard %}
 
 {% block title %}Dovolená{% endblock %}
-{% block heading %}Dovolená{% endblock %}
+{% block heading %}<i class="fas fa-plane-departure pr-3"></i>Evidence dovolených{% endblock %}
 {% block bodytopnav %}{{ render_back_to_dashboard(current_user) }}{% endblock %}
 {% block body %}
     {% set glob={} %}
