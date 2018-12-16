@@ -20,6 +20,15 @@ class CarForm(FlaskForm):
     emisni_trida = StringField('Emisní třída')
     submit = SubmitField('Uložit')
 
+    def validate(self):
+        if not FlaskForm.validate(self):
+            return False
+        result = True
+        if not 9 > len(self.spz.data) >= 7:
+            self.spz.errors.append('Zadejte validní ŠPZ!')
+            result = False
+        return result
+
 class CarDeadlineEditForm(FlaskForm):
     date_expiry = CzechDateField('Nový termín', validators=[InputRequired(message="Doplňte nový termín!")])
     submit = SubmitField('Uložit')

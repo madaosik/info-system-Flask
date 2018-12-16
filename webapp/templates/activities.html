@@ -189,7 +189,7 @@
         <p>Neevidujeme žádné žádosti o aktivity.</p>
     {% endif %}
     {% for one in all %}
-        {% if one.approved == True and (date - one.end).days < 30 %}
+        {% if one.approved == True and (date - one.end).days < 30 and date > one.end%}
         <tr>
             {% for zamestnanec in empl %}
                     {% if zamestnanec.id_zam == one.id_zam %}

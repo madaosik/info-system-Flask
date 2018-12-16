@@ -54,13 +54,15 @@
                 <td>
                      <form method="GET" action="{{ url_for('activity-edit') }}">
                     <input type="hidden" name="id" value="{{ aktivita.id_activity }}">
-                     <input type="submit" value=&#9998; class="btn edit_button">
+                     <input type="submit" value=&#9998; class="btn edit_button" data-toggle="tooltip"
+                                       data-html="true" title="Editovat">
                 </form>
                 </td>
                 <td>
                     <form method="POST"
                           action="{{ url_for('activity-my-delete', id=aktivita.id_activity) }}">
-                        <input type="submit" value=&#9746; class="btn deny_button">
+                        <input type="submit" value=&#x2718; class="btn deny_button" data-toggle="tooltip"
+                                       data-html="true" title="Smazat">
                     </form>
 
                 </td>
@@ -71,7 +73,7 @@
     </table>
 {% endif %}
 
-     <h3>Historie aktivit</h3>
+     <h3><i class="fas fa-history"></i>   Historie aktivit</h3>
 
     {% if me %}
         <table class="centertable table table-hover table-sm">

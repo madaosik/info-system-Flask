@@ -39,12 +39,12 @@
             <td>{{dovolena.celkem}}</td>
             <td>
                 <form method="POST" action="{{ url_for('vac_approve', id = dovolena.id_zaznamu) }}">
-                  <input type="submit" value=&#9745; class="btn approve_button">
+                  <input type="submit" value=&#9745; class="btn approve_button" data-toggle="tooltip" data-html="true" title="Potvrdit">
                 </form>
             </td>
             <td>
                 <form method="POST" action="{{ url_for('vac_decline', id = dovolena.id_zaznamu) }}">
-                  <input type="submit" value=&#9746; class="btn deny_button">
+                  <input type="submit" value=&#9746; class="btn deny_button" data-toggle="tooltip" data-html="true" title="Zamítnout">
                 </form>
             </td>
         </tr>
@@ -83,7 +83,7 @@
             <td>{{dovolena.celkem}}</td>
             <td>
                 <form method="POST" action="{{ url_for('vac_decline', id = dovolena.id_zaznamu) }}">
-                  <input type="submit" value=&#9746; class="btn deny_button">
+                  <input type="submit" value=&#9746; class="btn deny_button" data-toggle="tooltip" data-html="true" title="Zamítnout">
                 </form>
             </td>
         </tr>
