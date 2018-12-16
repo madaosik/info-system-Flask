@@ -9,9 +9,17 @@ from webapp.core import db
 
 from webapp.views.forms import CzechDateField
 from flask_wtf import FlaskForm
-from wtforms import SubmitField
+from wtforms import SubmitField, SelectField
 from wtforms.validators import InputRequired
 from czech_holidays import Holidays
+
+
+class VacationEmployeeSelector(FlaskForm):
+    empl = SelectField('Dovolená pro zaměstnance:')
+
+    def __init__(self,*args,**kwargs):
+        super(VacationEmployeeSelector,self).__init__(*args, **kwargs)
+        self.empl.choices = db.get_employee_tuples()
 
 
 class VacationForm(FlaskForm):
@@ -40,9 +48,18 @@ class Vacations(MethodView):
 class VacationsHist(MethodView):
     @management
     def get(self):
-        all_instances = db.fetch_all_by_cls(Dovolena_zam_hist)
-        empl = db.fetch_all_by_cls(Zamestnanec)
-        return render_template('vacation_hist.html', all=all_instances, empl=empl, date=datetime.datetime.now().date())
+        a = VacationEmployeeSelector()
+        print(a.empl.data)
+        vac = db.fetch_all_by_cls(Dovolena_zam_hist)
+        return render_template('vacation_hist.html', vac=vac, selector=VacationEmployeeSelector(), id=a.empl.data,
+                               date=datetime.datetime.now().date())
+
+    def post(self):
+        a = VacationEmployeeSelector()
+        print(a.empl.data)
+        vac = db.fetch_vacation_by_id(a.empl.data)
+        return render_template('vacation_hist.html', selector=VacationEmployeeSelector(), id=a.empl.data, me=vac,
+                               date=datetime.datetime.now().date())
 
 
 class VacationsHistOne(MethodView):
@@ -143,16 +160,16 @@ class VacationAdd(MethodView):
 def holiday_check(holidays, instance):
     holidays.pop(0)  # because new year has a duplicity there
     for day in holidays:  # check for holidays
+        error = None
         if instance.do > day > instance.od and day.isoweekday() < 6:
             instance.celkem -= 1
         if day == instance.od:
-            return 'stateholidaystart'
             error = "Dovolená nesmí začínat v den státního svátku!"
-            return error
+            return 'stateholidaystart'
         elif day == instance.do:
             error = "Dovolená nesmí končit v den státního svátku!"
             return 'stateholidayend'
-    return None
+    return error
 
 
 class VacationDelete(MethodView):
