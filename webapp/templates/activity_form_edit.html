@@ -4,7 +4,7 @@
 {% block title %}Upravit aktivitu{% endblock %}
 {% block body %}
 
-    <h3>Úprava aktivity</h3>
+    {% block heading %}<h3>Úprava aktivity</h3>{% endblock %}
      <form method="POST" action="{{ url_for('activity-edit') }}">
                     <input type="hidden" name="id" value="{{ activity.id_activity }}">
 

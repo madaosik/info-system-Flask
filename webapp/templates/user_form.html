@@ -1,18 +1,17 @@
 {% extends 'base/base.html' %}
 {% from "base/_formhelpers.html" import render_field  %}
+{% from "base/_navhelpers.html" import render_bodytopnav_specific %}
 
 {% block title %}Uživatelé{% endblock %}
-{% block body %}
+{% block heading %}
     {% if user %}
-        <h3>Úprava uživatele: <strong>{{ user.login }}</strong></h3>
+        <h3><i class="fas fa-user-cog pr-3"></i>Úprava uživatele: <strong>{{ user.login }}</strong></h3>
     {% else %}
-        <h3>Nový uživatel</h3>
+        <h3><i class="fas fa-user-plus pr-3"></i>Nový uživatel</h3>
     {% endif %}
-
-    <form class="form-inline my-2 my-lg-0 pb-4 pt-3" action="{{ url_for('users') }}">
-      <button class="btn btn-primary my-0 my-sm-0" type="submit">Zpět na přehled uživatelů</button>
-    </form>
-
+{% endblock %}
+{% block bodytopnav %}{{ render_bodytopnav_specific('users',"Zpět na přehled uživatelů") }}{% endblock %}
+{% block body %}
     {% if user %}
         <form method="POST" action=" {{ url_for('user-mod') }}">
             <input type="hidden" name="id" value="{{ user.id }}">

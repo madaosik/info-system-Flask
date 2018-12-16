@@ -1,11 +1,19 @@
 {% macro render_deadline_modal(action,form,car,deadline_type,modal_id,deadline,action_string,process_view) %}
 
     <div data-toggle="tooltip" data-html="true" data-placement="right" title="{{ action }}">
-        <button type="button" class="btn btn-secondary pl-3 pr-3" data-toggle="modal" data-target="#{{ modal_id }}{{ deadline['dl_id'] }}">&#x270D;
-        </button>
+        {% if action == 'Editovat' %}
+            <button type="button" class="btn btn-secondary pl-2 pr-2" data-toggle="modal" data-target="#{{ modal_id }}{{ deadline['dl_id'] }}"><i class="fas fa-edit" aria-hidden="true"></i></button>
+        {% else %}
+            <button type="button" class="btn btn-secondary pl-2 pr-2" data-toggle="modal" data-target="#{{ modal_id }}{{ car.id_voz }}"><i class="fas fa-plus" aria-hidden="true"></i></button>
+        {% endif %}
     </div>
+
+    {% if action == 'Editovat' %}
+        <div class="modal fade" id="{{ modal_id }}{{ deadline['dl_id'] }}" role="dialog">
+    {% else %}
+        <div class="modal fade" id="{{ modal_id }}{{ car.id_voz }}" role="dialog">
+    {% endif %}
     <!-- Modal window -->
-    <div class="modal fade" id="{{ modal_id }}{{ deadline['dl_id'] }}" role="dialog">
         <div class="modal-dialog">
 
             <!-- Modal window content-->
@@ -53,5 +61,54 @@
         </div>
 
     </div>
+
+{% endmacro %}
+
+{% macro render_delete_button(deadline_id,deadline_type,spz) %}
+    <form method="POST" action="{{ url_for('car-deadline-del') }}">
+        <input type="hidden" name="dl_id" value="{{ deadline_id }}">
+        <input type="hidden" name="deadline_type" value="{{ deadline_type }}">
+        <input type="hidden" name="car_spz" value="{{ spz }}">
+        <button class="btn btn-secondary pl-2 ml-1" type="submit"><div class="text-center"><i class="fas fa-trash" aria-hidden="true"></i></div></button>
+    </form>
+{% endmacro %}
+
+{% macro render_status_icon(car_profile,overdue_tresh,upcoming_tresh) %}
+    {% set status='ok' %}
+    {% if car_profile['techprobe'] %}
+        {% if car_profile['techprobe']['dl_date'] < overdue_tresh %}
+            {% set status='overdue' %}
+        {% elif car_profile['techprobe']['dl_date'] < upcoming_tresh %}
+           {% set status='upcoming' %}
+        {% endif %}
+    {% endif %}
+
+    {% if status=='ok' %}
+        {% if car_profile['tachoprobe'] %}
+            {% if car_profile['tachoprobe']['dl_date'] < overdue_tresh %}
+                {% set status='overdue' %}
+            {% elif car_profile['tachoprobe']['dl_date'] < upcoming_tresh %}
+                {% set status='upcoming' %}
+            {% endif %}
+        {% endif %}
+    {% endif %}
+
+    {% if status=='ok' %}
+        {% if car_profile['fireprobe'] %}
+            {% if car_profile['fireprobe']['dl_date'] < overdue_tresh %}
+                {% set status='overdue' %}
+            {% elif car_profile['fireprobe']['dl_date'] < upcoming_tresh %}
+                {% set status='upcoming' %}
+            {% endif %}
+        {% endif %}
+    {% endif %}
+
+    {% if status=='ok' %}
+        <div class="cargrid-icon-check pl-3 pb-3"><i class="fas fa-calendar-check" aria-hidden="true"></i></div>
+    {% elif status=='upcoming' %}
+        <div class="cargrid-icon-upcoming pl-3 pb-3"><i class="fas fa-calendar-check" aria-hidden="true"></i></div>
+    {% else %}
+        <div class="cargrid-icon-overdue pl-3 pb-3"><i class="fas fa-calendar-check" aria-hidden="true"></i></div>
+    {% endif %}
 
 {% endmacro %}

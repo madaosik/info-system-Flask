@@ -1,16 +1,25 @@
 {% extends 'base/base.html' %}
+{% from "base/_navhelpers.html" import render_back_to_dashboard %}
 
 {% block title %}Dovolená{% endblock %}
+{% block heading %}Dovolená{% endblock %}
+{% block bodytopnav %}{{ render_back_to_dashboard(current_user) }}{% endblock %}
 {% block body %}
-
-    <form class="form-inline my-2 my-lg-0 pb-3 pt-0" action="{{ url_for('dashboard-boss') }}">
-      <button class="btn btn-primary my-0 my-sm-0" type="submit">Zpět na nástěnku</button>
-    </form>
-
-    <div class="container-fluid">
-     <div class="container-fluid">
-    <h3><i class="far fa-calendar-alt"></i>   Dovolená k schválení</h3>
+    {% set glob={} %}
+    {% set _ = glob.update({'kschvaleni':False}) %}
+    {% set _ = glob.update({'schvalena':False}) %}
     {%  if all %}
+        {% for dovolena in all %}
+            {% if dovolena.potvrzeni == False and dovolena.seen == False%}
+                {% set _ = glob.update({'kschvaleni':True}) %}
+            {% endif %}
+            {% if dovolena.potvrzeni == True and dovolena.do > date %}
+                {% set _ = glob.update({'schvalena':True}) %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+    <h4><i class="far fa-calendar-alt pr-3"></i>Ke schválení</h4>
+    {%  if glob['kschvaleni'] %}
         <table class="centertable table table-hover table-sm center">
             <thead class="thead-light">
             <tr>
@@ -26,7 +35,7 @@
         <p>Neevidujeme žádné žádosti o dovolenou.</p>
     {% endif %}
     {% for dovolena in all %}
-        {% if dovolena.potvrzeni == False %}
+        {% if dovolena.potvrzeni == False and dovolena.seen == False %}
         <tr>
             {% for zamestnanec in empl %}
                     {% if zamestnanec.id_zam == dovolena.id_zam %}
@@ -50,13 +59,11 @@
         </tr>
         {% endif %}
     {% endfor %}
-    {% if all %}
+    {% if glob['kschvaleni'] %}
         </table>
     {%  endif %}
-    </div>
-    <div class="container-fluid">
-    <h3><i class="far fa-calendar-check"></i>   Schválená nadcházející dovolená</h3>
-
+    <h4><i class="far fa-calendar-check pr-3"></i>Již schválená:</h4>
+    {% if glob['schvalena'] %}
         <table class="centertable table table-hover table-sm">
             <thead class="thead-light">
             <tr>
@@ -68,6 +75,9 @@
                 <th>Zrušit</th>
             </tr>
             </thead>
+         {% else %}
+        <p>Neevidujeme žádné již schválené dovolené.</p>
+        {% endif %}
     {% for dovolena in all %}
         {% if dovolena.potvrzeni == True and dovolena.do > date %}
         <tr>
@@ -90,10 +100,7 @@
         {% endif %}
     {% endfor %}
         </table>
-    </div>
-
     <a class="btn btn-secondary mb-3 mt-3 " href="{{ url_for('vacations_hist') }}">Přejít na historii</a>
-
     </div>
 {% endblock %}
 

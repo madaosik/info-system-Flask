@@ -35,7 +35,17 @@
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="row" style="padding-top: 20px;">
                 <div class="container">
-                    {% block body %}{% endblock %}
+                    <div class="container-fluid mb-2">
+                        <h3>{% block heading %}{% endblock %}</h3>
+                    </div>
+                    <div class="container-fluid">
+                        <div class="row">
+                            {% block bodytopnav %}{% endblock %}
+                        </div>
+                    </div>
+                    <div class="container-fluid mt-2">
+                        {% block body %}{% endblock %}
+                    </div>
                 </div>
             </div>
         </div>

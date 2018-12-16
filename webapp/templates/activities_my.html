@@ -1,126 +1,102 @@
 {% extends 'base/base.html' %}
+{% from "base/_navhelpers.html" import render_bodytopnav %}
 <!-- input me, all, date, id, cars -->
 
 {% block title %}Moje aktivity{% endblock %}
+{% block heading %}<h3>Žádosti o aktivity</h3>{% endblock %}
+{% block bodytopnav %} {{ render_bodytopnav(current_user,'activity-add') }} {% endblock %}
 {% block body %}
-        <h3>Žádosti o aktivity</h3>
-        {% if current_user.role == 'admin' %}
-            <form class="form-inline my-2 my-lg-0 pb-4 pt-3" action="{{ url_for('dashboard-boss') }}">
-              <button class="btn btn-primary my-0 my-sm-0" type="submit">Zpět na nástěnku</button>
-            </form>
-        {% else %}
-            <form class="form-inline my-2 my-lg-0 pb-4 pt-3" action="{{ url_for('dashboard-empl') }}">
-              <button class="btn btn-primary my-0 my-sm-0" type="submit">Zpět na nástěnku</button>
-            </form>
-        {% endif %}
-
-
-    {% if me %}
-        <table class="centertable table table-hover table-sm">
-        <thead class="thead-light">
-        <tr>
-            <th>Datum začátku</th>
-            <th>Datum konce</th>
-            <th>Z</th>
-            <th>Do</th>
-            <th>Schvalene</th>
-            <th>Vozidlo</th>
-            <th colspan="2">Upravit</th>
-        </tr>
-        </thead>
-    {% else %}
-        <p>Neevidujeme žádné záznamy aktivit.</p>
-    {% endif %}
-{% if me %}
-    {% for aktivita in me %}
-        {% if aktivita.begin > date  or aktivita.approved== False %}
+        {% if me %}
+            <table class="centertable table table-hover table-sm">
+            <thead class="thead-light">
             <tr>
-                <td>{{ aktivita.begin.strftime('%d/%m/%Y %H:%M') }}</td>
-                <td>{{ aktivita.end.strftime('%d/%m/%Y %H:%M') }}</td>
-                <td>{{ aktivita.from_place }}</td>
-                <td>{{ aktivita.to_place}}</td>
-                <td>{% if aktivita.approved == True %}
-                    Áno
-                {% elif aktivita.seen== False %}
-                    Neviděné
-                {% else %}
-                    Ne
-                {% endif %}</td>
-                <td>{% for car in cars %}
-                    {% if car.id_voz == aktivita.id_voz %}
-                        {{ car.znacka }} {{ car.model }}
-                    {% endif %}
-                {% endfor %}</td>
-                <td>
-                     <form method="GET" action="{{ url_for('activity-edit') }}">
-                    <input type="hidden" name="id" value="{{ aktivita.id_activity }}">
-                     <input type="submit" value=&#9998; class="btn edit_button" data-toggle="tooltip"
-                                       data-html="true" title="Editovat">
-                </form>
-                </td>
-                <td>
-                    <form method="POST"
-                          action="{{ url_for('activity-my-delete', id=aktivita.id_activity) }}">
-                        <input type="submit" value=&#x2718; class="btn deny_button" data-toggle="tooltip"
-                                       data-html="true" title="Smazat">
-                    </form>
-
-                </td>
+                <th>Datum začátku</th>
+                <th>Datum konce</th>
+                <th>Z</th>
+                <th>Do</th>
+                <th>Schvalene</th>
+                <th>Vozidlo</th>
+                <th colspan="2">Upravit</th>
             </tr>
+            </thead>
+        {% else %}
+            <p>Neevidujeme žádné záznamy aktivit.</p>
         {% endif %}
-    {% endfor %}
-
-    </table>
-{% endif %}
-
-     <h3><i class="fas fa-history"></i>   Historie aktivit</h3>
-
     {% if me %}
-        <table class="centertable table table-hover table-sm">
-        <thead class="thead-light">
-        <tr>
-            <th>Datum začátku</th>
-            <th>Datum konce</th>
-            <th>Z</th>
-            <th>Do</th>
-            <th>Do</th>
-        </tr>
-        </thead>
-    {% else %}
-        <p>Neevidujeme žádné záznamy aktivit.</p>
-    {% endif %}
-{% if me %}
-    {% for activity in me %}
-        {% if activity.end < date and activity.approved == True%}
-        <tr>
-            <td>{{ activity.begin.strftime('%d/%m/%Y %H:%M') }}</td>
-            <td>{{ activity.end.strftime('%d/%m/%Y %H:%M') }}</td>
-            <td>{{ activity.from_place }}</td>
-            <td>{{ activity.to_place }}</td>
-            <td>{% if activity.potvrzeni == True %}
-            Áno
-            {%  else %}
-            Ne
-            {% endif %}</td>
-        </tr>
-        {% endif %}
-    {% endfor %}
-
-    </table>
-{% endif %}
-
-
-
-
-
-
-
-
-
-
-
-
-                    <form class="form-inline my-2 my-lg-0" action="{{ url_for('activity-add') }}">
-                      <button class="btn btn-secondary my-0 my-sm-0" type="submit">Přidat aktivitu</button>
+        {% for aktivita in me %}
+            {% if aktivita.begin > date  or aktivita.approved== False %}
+                <tr>
+                    <td>{{ aktivita.begin.strftime('%d/%m/%Y %H:%M') }}</td>
+                    <td>{{ aktivita.end.strftime('%d/%m/%Y %H:%M') }}</td>
+                    <td>{{ aktivita.from_place }}</td>
+                    <td>{{ aktivita.to_place}}</td>
+                    <td>{% if aktivita.approved == True %}
+                        Áno
+                    {% elif aktivita.seen== False %}
+                        Neviděné
+                    {% else %}
+                        Ne
+                    {% endif %}</td>
+                    <td>{% for car in cars %}
+                        {% if car.id_voz == aktivita.id_voz %}
+                            {{ car.znacka }} {{ car.model }}
+                        {% endif %}
+                    {% endfor %}</td>
+                    <td>
+                         <form method="GET" action="{{ url_for('activity-edit') }}">
+                        <input type="hidden" name="id" value="{{ aktivita.id_activity }}">
+                         <input type="submit" value=&#9998; class="btn edit_button" data-toggle="tooltip"
+                                           data-html="true" title="Editovat">
                     </form>
+                    </td>
+                    <td>
+                        <form method="POST"
+                              action="{{ url_for('activity-my-delete', id=aktivita.id_activity) }}">
+                            <input type="submit" value=&#x2718; class="btn deny_button" data-toggle="tooltip"
+                                           data-html="true" title="Smazat">
+                        </form>
+
+                    </td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+
+        </table>
+    {% endif %}
+
+         <h3><i class="fas fa-history"></i>   Historie aktivit</h3>
+
+        {% if me %}
+            <table class="centertable table table-hover table-sm">
+            <thead class="thead-light">
+            <tr>
+                <th>Datum začátku</th>
+                <th>Datum konce</th>
+                <th>Z</th>
+                <th>Do</th>
+                <th>Do</th>
+            </tr>
+            </thead>
+        {% else %}
+            <p>Neevidujeme žádné záznamy aktivit.</p>
+        {% endif %}
+    {% if me %}
+        {% for activity in me %}
+            {% if activity.end < date and activity.approved == True%}
+            <tr>
+                <td>{{ activity.begin.strftime('%d/%m/%Y %H:%M') }}</td>
+                <td>{{ activity.end.strftime('%d/%m/%Y %H:%M') }}</td>
+                <td>{{ activity.from_place }}</td>
+                <td>{{ activity.to_place }}</td>
+                <td>{% if activity.potvrzeni == True %}
+                Áno
+                {%  else %}
+                Ne
+                {% endif %}</td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+
+        </table>
+    {% endif %}
 {% endblock %}

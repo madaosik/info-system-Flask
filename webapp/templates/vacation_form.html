@@ -3,7 +3,7 @@
 
 {% block title %}Dovolená{% endblock %}
 {% block body %}
-    <h3>Nová žádost o dovolenou</h3>
+    {% block heading %}<h3>Nová žádost o dovolenou</h3>{% endblock %}
 
     <form method="POST" action="{{ url_for('vacation-add', id_zam=current_user.id_zam)}}">
 

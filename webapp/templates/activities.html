@@ -1,14 +1,13 @@
-
 {% extends "base/base.html" %}
 {% from "base/_formhelpers.html" import render_field %}
+{% from "base/_navhelpers.html" import render_back_to_dashboard %}
 
 <!-- input: empl, all, cars, date-->
-{% block title %}Aktivity{% endblock %}
+{% block title %}Evidence aktivit{% endblock %}
+{% block heading %}<i class="fas fa-clipboard-list pr-3"></i>Evidence aktivit{% endblock %}
+{% block bodytopnav %}{{ render_back_to_dashboard(current_user) }}
+{% endblock %}
 {% block body %}
-    <form class="form-inline my-2 my-lg-0 pb-4 pt-3" action="{{ url_for('dashboard-boss') }}">
-          <button class="btn btn-primary my-0 my-sm-0" type="submit">Zpět na nástěnku</button>
-        </form>
-    <h3><i class="fas fa-clipboard-list"></i>   Aktivity k schválení</h3>
         {% set glob={} %}
     {% set _ = glob.update({'kschvaleni':False}) %}
     {% set _ = glob.update({'schvalene':False}) %}
@@ -16,7 +15,7 @@
     {% if all %}
 
         {% for act in all %}
-            {% if act.approved == False %}
+            {% if act.approved == False and act.seen == False%}
                 {% set _ = glob.update({'kschvaleni':True}) %}
             {% endif %}
             {% if act.approved == True and date < act.end  %}
@@ -29,6 +28,8 @@
         {% endfor %}
     {% endif %}
 
+
+    <span class="newstitle"><h4><i class="fas fa-bell pr-3"></i>Ke schválení</h4></span>
     {%  if glob['kschvaleni'] %}
         <table class="centertable table table-hover table-sm center">
             <thead class="thead-light">
@@ -39,15 +40,15 @@
                 <th>Datum konce</th>
                 <th>Typ</th>
                 <th>Vozidlo</th>
-                <th>Odmena v Kč</th>
+                <th>Odměna v Kč</th>
                 <th colspan="2">Potvrzení</th>
             </tr>
             </thead>
     {% else %}
-        <p>Neevidujeme žádné žádosti o aktivity.</p>
+        <p class = "pb-4 pt-3 ">Neevidujeme žádné žádosti ke schválení.</pclass>
     {% endif %}
     {% for one in all %}
-        {% if one.approved == False %}
+        {% if one.approved == False and one.seen == False %}
         <tr>
             {% for zamestnanec in empl %}
                     {% if zamestnanec.id_zam == one.id_zam %}
@@ -96,7 +97,7 @@
     {%  endif %}
 
 
-    <h3><i class="fas fa-clipboard-check"></i>   Schvalene nadcházející aktivity</h3>
+    <h4><i class="fas fa-clipboard-check pr-3 pt-3"></i>Již schválené</h4>
     {%  if glob['schvalene'] %}
         <table class="centertable table table-hover table-sm center">
             <thead class="thead-light">
@@ -107,12 +108,12 @@
                 <th>Datum konce</th>
                 <th>Typ</th>
                 <th>Vozidlo</th>
-                <th>Odmena</th>
+                <th>Odměna</th>
                 <th colspan="2">Potvrzení</th>
             </tr>
             </thead>
     {% else %}
-        <p>Neevidujeme žádné žádosti o aktivity.</p>
+        <p class="pb-4 pt-3" >Neevidujeme žádné již schválené aktivity.</p>
     {% endif %}
     {% for one in all %}
         {% if one.approved == True and date < one.end %}
@@ -189,7 +190,10 @@
         </table>
     {%  endif %}
 
-      <h3><i class="fas fa-history"></i>   Historie 30 dni</h3> {{ historie }}
+
+
+
+    <h4><i class="fas fa-history pr-3 pt-3"></i>Historie 30 dní</h4>
     {%  if glob['historie']  %}
         <table class="centertable table table-hover table-sm center">
             <thead class="thead-light">
@@ -205,7 +209,7 @@
             </tr>
             </thead>
     {% else %}
-        <p>Neevidujeme žádné žádosti o aktivity.</p>
+        <p class="pb-4 pt-3" >Neevidujeme žádnou historii.</p>
     {% endif %}
     {% for one in all %}
         {% if one.approved == True and (date - one.end).days < 30 and date > one.end%}
@@ -242,7 +246,7 @@
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                             </div>
                             <div class="modal-body">
-                                Editace odmeny:
+                                Editace odměny:
                                 <form method="POST" action="{{ url_for('activity-edit-payoff') }}">
                                     {% if form.payoff.errors %}
                                         <div class="form-group  required has-error">

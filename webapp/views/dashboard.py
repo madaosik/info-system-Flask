@@ -8,7 +8,8 @@ class EmplDashboard(MethodView):
     def get(self):
         vacations = db.fetch_unseen_zam_vacation(current_user.id_zam)
         act = db.fetch_unseen_zam_activity(current_user.id_zam)
-        return render_template('dashboard.html', title='IS - Zaměstnanec', notif_vac=vacations, notif_act=act)
+        zam = db.get_empl_from_user(current_user.id)
+        return render_template('dashboard.html', title='IS - Zaměstnanec', notif_vac=vacations, notif_act=act, zam=zam)
 
 
 class BossDashboard(MethodView):
@@ -17,11 +18,13 @@ class BossDashboard(MethodView):
         approvals_activites = db.fetch_all_pending_approvals()
         approvals_vacation = db.fetch_all_pending_vacation()
         notifications = db.fetch_notifications()
+        zam = db.get_empl_from_user(current_user.id)
         return render_template('dashboard.html',
                                title='Interní IS dopravní společnosti',
                                act=approvals_activites,
                                vac=approvals_vacation,
-                               notif=notifications)
+                               notif=notifications,
+                               zam=zam)
 
 def configure(app):
     app.add_url_rule('/dashboard-boss', view_func=BossDashboard.as_view('dashboard-boss'))

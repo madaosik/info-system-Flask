@@ -67,9 +67,6 @@ def create_user(**kwargs):
     session.commit()
     return login
 
-def first_login_edit(id,form_data_dict):
-    user
-
 def get_obj_by_clsname(classname,**kwargs):
     if 'initobject' in kwargs:
         instance = classname(obj=kwargs['initobject'])
@@ -142,12 +139,12 @@ def fetch_service_history(car_id):
 
 
 def fetch_all_pending_approvals():
-    return Activity.query.filter_by(approved=False).first()
+    return Activity.query.filter_by(approved=False, seen=False).first()
 
 
 
 def fetch_all_pending_vacation():
-    return Dovolena_zam_hist.query.filter_by(potvrzeni=False).first()
+    return Dovolena_zam_hist.query.filter_by(potvrzeni=False , seen=False).first()
 
 
 def fetch_notifications():
@@ -190,6 +187,11 @@ def car_deadline_add(car_id, deadline_type, expiry_date, deadline_types_dict):
     deadline = DeadlinesCar(id_type=deadline_types_dict[deadline_type],car_id=car_id,date_expiry=expiry_date)
     session.add(deadline)
     session.commit()
+
+def car_deadline_delete(deadline_id):
+    session.query(DeadlinesCar).filter_by(id_deadline=deadline_id).delete()
+    session.commit()
+
 
 #Vacation functions
 
