@@ -23,7 +23,7 @@
                                                         <input type="hidden" name="id" value="{{ car_profile['car'].id_voz }}">
                                                         <button class="btn btn-secondary pt-1 mt-2 pb-1" type="submit">{{ car_profile['car'].spz }}: {{ car_profile['car'].znacka }} {{ car_profile['car'].model }}</button>
                                                     </form>
-                                                    {{ render_status_icon(car_profile['car'],overdue_tresh,upcoming_tresh) }}
+                                                    {{ render_status_icon(car_profile,overdue_tresh,upcoming_tresh) }}
                                                 </div>
                                             </div>
                                         </div>

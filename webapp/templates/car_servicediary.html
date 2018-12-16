@@ -12,7 +12,7 @@
                 </form>
             </div>
             <div class="col-1 text-lg-right">
-                <form class="form-inline my-2 my-lg-0 pb-4 pt-3" action="#">
+                <form class="form-inline my-2 my-lg-0 pb-4 pt-3" method="GET" action="{{ url_for('car-service-add',car_id=car.id_voz) }}">
                     <button class="btn btn-primary my-0 my-sm-0" type="submit"><span class="add-icon"><i class="fas fa-plus" aria-hidden="true"></i></span></button>
                 </form>
             </div>

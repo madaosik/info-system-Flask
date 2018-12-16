@@ -1,0 +1,29 @@
+{% extends "base/base.html" %}
+{% from "base/_formhelpers.html" import render_field %}
+{% from "base/_navhelpers.html" import render_bodytopnav_specific %}
+
+<!-- input: employee, form-->
+{% block title %}Servisní deník{% endblock %}
+{% block heading %}
+    {% if service %}
+        <h3>Úprava servisního úkonu: xxx{</h3>
+    {% else %}
+        <h3>Přidat servisní úkon</h3>
+    {% endif %}
+{% endblock %}
+{% block bodytopnav %}{{ render_bodytopnav_specific('car-service-diary',"Zpět do servisního deníku") }}{% endblock %}
+{% block body %}
+
+    {% if service %}
+        <form method="GET" action="{{ url_for('car-service-mod', car_id=car_id, service_id=service.id) }}">
+    {% else %}
+        <form method="GET" action="{{ url_for('car-service-add', car_id=car_id) }}">
+    {% endif %}
+        {{ form.csrf_token }}
+                <table class="form_table">
+                    {% for field in form %}
+                        {{ render_field(field,form) }}
+                    {% endfor %}
+                </table>
+            </form>
+{% endblock %}

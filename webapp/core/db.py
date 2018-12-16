@@ -132,15 +132,15 @@ def get_cars_tuples():
     return car_tuples_arr
 
 def get_first_car_id():
-    pass
+    car = Vozidlo.query.first()
+    return car.id_voz
 
 def fetch_service_history(car_id):
-    pass
+    return ServiceHistory.query.filter_by(car_id=car_id).all()
 
 
 def fetch_all_pending_approvals():
     return Activity.query.filter_by(approved=False).first()
-
 
 
 def fetch_all_pending_vacation():
