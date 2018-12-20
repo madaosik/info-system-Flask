@@ -14,7 +14,11 @@ def get_obj_by_id_zam(classname, id):
 
 def get_user_by_attr(**kwargs):
     if 'login' in kwargs:
-        user = Uzivatel.query.filter_by(login=kwargs['login']).first()
+        try:
+            user = Uzivatel.query.filter_by(login=kwargs['login']).first()
+        except (AttributeError, sa.exc.OperationalError):
+            session.rollback()
+            user = get_user_by_attr(**kwargs)
     elif 'id' in kwargs:
         user = Uzivatel.query.get(kwargs['id'])
     return user

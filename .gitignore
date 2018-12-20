@@ -4,3 +4,6 @@ __pycache__/
 models.pyc
 .idea
 *.pyc
+webapp/alembic.ini
+run.py
+webapp/core/db_connector.py

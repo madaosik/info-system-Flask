@@ -15,9 +15,9 @@ from czech_holidays import Holidays
 class NewActivityForm(FlaskForm):
     type = StringField('Typ', default="Transport")
     vozidlo = SelectField('Vozidlo', coerce=int)
-    from_place = StringField('Odkud', default="Brno-Tuřany")
+    from_place = StringField('Odkud', default="Brno-Turany")
     via_place = StringField('Přes')
-    to_place = StringField('Kam', default="Brno-Tuřany")
+    to_place = StringField('Kam', default="Brno-Turany")
 
     begin = DateTimeLocalField('Datum a čas odjezdu', default=datetime.datetime.now, format="%Y-%m-%dT%H:%M",
                               validators=[InputRequired(message="Doplňte den začátku aktivity!")])

@@ -1,6 +1,6 @@
 {% macro render_bodytopnav_general(current_user,add_action) %}
     <div class="col-11 text-lg-left">
-        {% if current_user.role == 'admin' %}
+        {% if current_user.role == 'admin' or current_user.role == 'boss' %}
             <form class="form-inline my-2 my-lg-0 pb-4 pt-3" action="{{ url_for('dashboard-boss') }}">
               <button class="btn btn-primary my-0 my-sm-0" type="submit">Zpět na nástěnku</button>
             </form>
@@ -28,7 +28,7 @@
 
 {% macro render_back_to_dashboard(current_user) %}
     <div class="col-11 text-lg-left">
-        {% if current_user.role == 'admin' %}
+        {% if current_user.role == 'admin' or current_user.role == 'boss' %}
             <form class="form-inline my-2 my-lg-0 pb-4 pt-3" action="{{ url_for('dashboard-boss') }}">
               <button class="btn btn-primary my-0 my-sm-0" type="submit">Zpět na nástěnku</button>
             </form>

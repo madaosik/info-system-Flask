@@ -29,8 +29,9 @@
                         </form>
                          {% endif %}
                      {% if notif_act %}
-                      <form class="form-inline my-2 my-lg-0 pb-1 pt-3 pr-3" action="{{ url_for('activities-my', id=current_user.id_zam) }}">
+                      <form class="form-inline my-2 my-lg-0 pb-1 pt-3 pr-3" action="{{ url_for('activities-my',id=current_user.id_zam) }}">
                             <button class="btn btn-primary my-0 my-sm-0" type="submit">Schválené aktivity</button>
+                      </form>
                          {% endif %}
                      {% else %}
                      <h4><span style="font-size: 1.0em;"></span> Nemáte žádné novinky.</h4>
