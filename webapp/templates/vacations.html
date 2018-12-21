@@ -51,12 +51,16 @@
             <td>{{dovolena.celkem}}</td>
             <td>
                 <form method="POST" action="{{ url_for('vac_approve', id = dovolena.id_zaznamu) }}">
-                  <input type="submit" value=&#9745; class="btn approve_button" data-toggle="tooltip" data-html="true" title="Potvrdit">
+                  <button type="submit" value=&#9745; class="btn btn-primary" data-toggle="tooltip" data-html="true" title="Potvrdit">
+                      <i class="fas fa-check" aria-hidden="true"></i>
+                  </button>
                 </form>
             </td>
             <td>
                 <form method="POST" action="{{ url_for('vac_decline', id = dovolena.id_zaznamu) }}">
-                  <input type="submit" value=&#9746; class="btn deny_button" data-toggle="tooltip" data-html="true" title="Zamítnout">
+                  <button type="submit" value=&#9746; class="btn btn-primary" data-toggle="tooltip" data-html="true" title="Zamítnout">
+                        <i class="fas fa-times" aria-hidden="true"></i>
+                  </button>
                 </form>
             </td>
         </tr>
@@ -96,7 +100,9 @@
             <td>{{dovolena.celkem}}</td>
             <td>
                 <form method="POST" action="{{ url_for('vac_decline', id = dovolena.id_zaznamu) }}">
-                  <input type="submit" value=&#9746; class="btn deny_button" data-toggle="tooltip" data-html="true" title="Zamítnout">
+                  <button type="submit" value=&#9746; class="btn btn-secondary pr-2 pl-2" data-toggle="tooltip" data-html="true" title="Zamítnout">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                  </button>
                 </form>
             </td>
         </tr>

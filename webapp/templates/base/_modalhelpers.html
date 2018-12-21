@@ -53,8 +53,10 @@
                     {% endif %}
                     <input type="hidden" name="car_spz" value="{{ car.spz }}">
                     <input type="hidden" name="deadline_type" value="{{ deadline_type}}">
-                    <input type="submit" value=&#9745; class="btn approve_button" data-toggle="tooltip"
+                    <button type="submit" value=&#9745; class="btn btn-secondary pl-2 pr-2" data-toggle="tooltip"
                            data-html="true" title="Potvrdit">
+                        <i class="fas fa-check" aria-hidden="true"></i>
+                   </button>
                 </div>
                  </form>
             </div>

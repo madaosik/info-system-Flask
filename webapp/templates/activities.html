@@ -44,7 +44,7 @@
                 <th>Typ</th>
                 <th>Vozidlo</th>
                 <th>Odměna v Kč</th>
-                <th colspan="2">Potvrzení</th>
+                <th colspan="2">Akce</th>
             </tr>
             </thead>
     {% else %}
@@ -77,19 +77,19 @@
                     {% endfor %}
                     </div>
                 {% else %}
-                    <div class="form-group  required">
+                    <div class="required">
                     {{ form.payoff(id="payoff",required='required',type="number",value=one.payoff) }}
                     </div>
                 {% endif %}
               </td>
             <td>
                 <input type="hidden" name="id" value="{{one.id_activity }}">
-                  <input type="submit" value=&#9745; class="btn approve_button"  data-toggle="tooltip" data-html="true" title="Potvrdit">
+                  <button type="submit" value=&#9745; class="btn btn-primary pl-2 pr-2"  data-toggle="tooltip" data-html="true" title="Potvrdit"><i class="fas fa-check" aria-hidden="true"></i></button>
                 </form>
             </td>
             <td>
                 <form method="POST" action="{{ url_for('activity-decline', id=one.id_activity)}}">
-                  <input type="submit" value=&#9746; class="btn deny_button" data-toggle="tooltip" data-html="true" title="Zamítnout">
+                  <button type="submit" value=&#9746; class="btn btn-primary pl-2 pr-2" data-toggle="tooltip" data-html="true" title="Zamítnout"><i class="fas fa-times" aria-hidden="true"></i></button>
                 </form>
             </td>
         </tr>
@@ -112,7 +112,7 @@
                 <th>Typ</th>
                 <th>Vozidlo</th>
                 <th>Odměna</th>
-                <th colspan="2">Potvrzení</th>
+                <th colspan="2">Akce</th>
             </tr>
             </thead>
     {% else %}
@@ -140,7 +140,8 @@
             </td>
             <td>
                 <div data-toggle="tooltip" data-html="true" title="Editovat">
-                    <button type="button" class="btn edit_button" data-toggle="modal" data-target="#myEditModal{{ one.id_activity }}">&#x270D;
+                    <button type="button" class="btn btn-secondary pl-2 pr-2" data-toggle="modal" data-target="#myEditModal{{ one.id_activity }}">
+                        <i class="fas fa-edit" aria-hidden="true"></i>
                     </button>
                 </div>
 
@@ -164,16 +165,17 @@
                                             {% endfor %}
                                         </div>
                                     {% else %}
-                                        <div class="form-group  required">
+                                        <div class="required">
                                             {{ form.payoff(id="payoff",required='required',type="number",value=one.payoff) }}
                                         </div>
                                     {% endif %}
                             </div>
                             <div class="modal-footer">
                                 <input type="hidden" name="id" value="{{ one.id_activity }}">
-                                <input type="submit" value=&#9745; class="btn approve_button" data-toggle="tooltip"
+                                <button type="submit" value=&#9745; class="btn btn-secondary pl-2 pr-2" data-toggle="tooltip"
                                        data-html="true" title="Potvrdit">
-
+                                       <i class="fas fa-check" aria-hidden="true"></i>
+                                </button>
                             </div>
                              </form>
                         </div>
@@ -183,7 +185,9 @@
             </td>
             <td>
                 <form method="POST" action="{{ url_for('activity-decline', id=one.id_activity)}}">
-                  <input type="submit" value=&#9746; class="btn deny_button"  data-toggle="tooltip" data-html="true" title="Zamítnout">
+                  <button type="submit" value=&#9746; class="btn btn-secondary pl-2 pr-2"  data-toggle="tooltip" data-html="true" title="Zamítnout">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                  </button>
                 </form>
             </td>
         </tr>
@@ -208,7 +212,7 @@
                 <th>Typ</th>
                 <th>Vozidlo</th>
                 <th>Odmena</th>
-                <th colspan="2">Potvrzení</th>
+                <th colspan="2">Akce</th>
             </tr>
             </thead>
     {% else %}
@@ -235,7 +239,8 @@
             <td>
 
                 <div data-toggle="tooltip" data-html="true" title="Editovat">
-                    <button type="button" class="btn edit_button" data-toggle="modal" data-target="#myModal">&#x270D;
+                    <button type="button" class="btn btn-secondary pl-2 pr-2" data-toggle="modal" data-target="#myModal">
+                        <i class="fas fa-edit" aria-hidden="true"></i>
                     </button>
                 </div>
 
@@ -279,7 +284,9 @@
             </td>
             <td>
                 <form method="POST" action="{{ url_for('activity-decline', id=one.id_activity)}}">
-                  <input type="submit" value=&#9746; class="btn deny_button"  data-toggle="tooltip" data-html="true" title="Zamítnout">
+                  <button type="submit" value=&#9746; class="btn btn-secondary pl-2 pr-2"  data-toggle="tooltip" data-html="true" title="Zamítnout">
+                      <i class="fas fa-times" aria-hidden="true"></i>
+                  </button>
                 </form>
             </td>
         </tr>
