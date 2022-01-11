@@ -1,4 +1,4 @@
-# Informační systém dopravní společnosti
+# Web information system of a logistics company based on Python-Flask framework
 ## Technologie & moduly
 
 - Python (Flask framework) + MySQL (viz soubor requirements.txt)
